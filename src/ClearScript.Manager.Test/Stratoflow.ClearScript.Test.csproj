@@ -62,6 +62,7 @@
     <Compile Include="V8ScriptingTests.cs" />
     <Compile Include="WhenExecutingBasicJavaScript.cs" />
     <Compile Include="WhenExecutingWithHostObjects.cs" />
+    <Compile Include="WhenExecutingWithHostTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
