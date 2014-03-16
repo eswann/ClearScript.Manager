@@ -18,27 +18,28 @@ Along those lines, ClearScript.Manager does the following to make certain things
 	- Setting up a Task in which the script is run with a configurable timeout.
 	- Allow easy management of the memory usage of each instance of the V8 Runtime and sets the limits to a much lower threshold than the default V8 settings. 
 
-Configuration Parameters:
+Configuration Parameters
+------------------------
   
-V8 Max Executable Size in bytes.
+V8 Max Executable Size in bytes:
 int MaxExecutableBytes { get; }
         
-V8 Max Young Space in bytes.
+V8 Max Young Space in bytes:
 int MaxYoungSpaceBytes { get; }
         
-V8 Max Old Space in bytes.
+V8 Max Old Space in bytes:
 int MaxOldSpaceBytes { get; }
         
-Default script timeout in ms.
+Default script timeout in ms:
 int ScriptTimeoutMilliSeconds { get; }
         
-Max number of simultaneous V8 Runtimes.
+Max number of simultaneous V8 Runtimes:
 int RuntimeMaxCount { get; }
         
-Per Runtime, the maximum number of cached scripts.
+Per Runtime, the maximum number of cached scripts:
 int ScriptCacheMaxCount { get; }
         
-The default script cache expiration in seconds.
+The default script cache expiration in seconds:
 int ScriptCacheExpirationSeconds { get; }
 
 
