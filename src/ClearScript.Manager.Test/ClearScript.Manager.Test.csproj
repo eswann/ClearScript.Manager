@@ -7,8 +7,8 @@
     <ProjectGuid>{E7A8A86A-83AF-48CE-9266-E3094218F401}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Stratoflow.ClearScript.Test</RootNamespace>
-    <AssemblyName>Stratoflow.ClearScript.Test</AssemblyName>
+    <RootNamespace>ClearScript.Manager.Test</RootNamespace>
+    <AssemblyName>ClearScript.Manager.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -60,9 +60,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptSubject.cs" />
     <Compile Include="V8ScriptingTests.cs" />
+    <Compile Include="WhenCachingScripts.cs" />
     <Compile Include="WhenExecutingBasicJavaScript.cs" />
+    <Compile Include="WhenExecutingScriptWithTimeout.cs" />
     <Compile Include="WhenExecutingWithHostObjects.cs" />
-    <Compile Include="WhenExecutingWithHostTypes.cs" />
+    <Compile Include="WhenExecutingWithHostTypes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WhenUsingAManagerPool.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

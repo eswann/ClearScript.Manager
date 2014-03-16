@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
-using ClearScript.Manager;
 using NUnit.Framework;
 using Should;
 
-namespace Stratoflow.ClearScript.Test
+namespace ClearScript.Manager.Test
 {
     [TestFixture]
     public class WhenExecutingWithHostObjects

@@ -53,7 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Caching\CacheEntry.cs" />
+    <Compile Include="Caching\CachedV8Runtime.cs" />
     <Compile Include="Caching\HashUtilities.cs" />
     <Compile Include="Caching\IConcurrentDictionary.cs" />
     <Compile Include="Caching\IDictionaryEx.cs" />

@@ -1,4 +1,4 @@
-﻿namespace Stratoflow.ClearScript.Test
+﻿namespace ClearScript.Manager.Test
 {
     public class ScriptSubject
     {

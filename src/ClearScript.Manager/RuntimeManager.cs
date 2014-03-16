@@ -12,45 +12,47 @@ namespace ClearScript.Manager
     {
         bool AddConsoleReference { get; set; }
 
-        Task ExecuteAsync(string scriptId, string code, DateTime? useCachedIfCompiledAfter = null);
+        Task ExecuteAsync(string scriptId, string code, bool addToCache = true);
 
-        Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction,
-            DateTime? useCachedIfCompiledAfter = null);
+        Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, bool addToCache = true);
 
-        V8Script Compile(string scriptId, string code, DateTime? useCachedIfCompiledAfter = null);
+        Task ExecuteAsync(string scriptId, string code, IList<HostObject> hostObjects, IList<HostType> hostTypes, bool addToCache = true);
+
+        V8Script Compile(string scriptId, string code, bool addToCache = true, int? cacheExpirationSeconds = null);
+
+        bool TryGetCached(string scriptId, out CachedV8Script script);
     }
 
     public class RuntimeManager : IRuntimeManager
     {
         private readonly IManagerSettings _settings;
-        private readonly LruCache<string, CacheEntry<V8Script>> _scriptCache;
+        private readonly LruCache<string, CachedV8Script> _scriptCache;
 
         private readonly V8Runtime _v8Runtime;
 
         public RuntimeManager(IManagerSettings settings)
         {
             _settings = settings;
-            _scriptCache = new LruCache<string, CacheEntry<V8Script>>(LurchTableOrder.Access, settings.ScriptCacheMaxCount);
+            _scriptCache = new LruCache<string, CachedV8Script>(LurchTableOrder.Access, settings.ScriptCacheMaxCount);
 
             _v8Runtime = new V8Runtime(new V8RuntimeConstraints
             {
-                MaxExecutableSize = settings.StackAllocationMB,
-                MaxOldSpaceSize = settings.HeapAllocationMB,
-                MaxYoungSpaceSize = settings.HeapAllocationMB
+                MaxExecutableSize = settings.MaxExecutableBytes,
+                MaxOldSpaceSize = settings.MaxOldSpaceBytes,
+                MaxYoungSpaceSize = settings.MaxYoungSpaceBytes
             });
         }
 
         public bool AddConsoleReference { get; set; }
 
-        public async Task ExecuteAsync(string scriptId, string code, DateTime? useCachedIfCompiledAfter = null)
+        public async Task ExecuteAsync(string scriptId, string code, bool addToCache = true)
         {
-            await ExecuteAsync(scriptId, code, null, useCachedIfCompiledAfter);
+            await ExecuteAsync(scriptId, code, null, addToCache);
         }
 
-        public async Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, DateTime? useCachedIfCompiledAfter = null)
+        public async Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, bool addToCache = true)
         {
-
-            V8Script compiledScript = Compile(scriptId, code, useCachedIfCompiledAfter);
+            V8Script compiledScript = Compile(scriptId, code, addToCache);
 
             try
             {
@@ -82,8 +84,7 @@ namespace ClearScript.Manager
             }
         }
 
-        public async Task ExecuteAsync(string scriptId, string code, 
-            IList<HostObject> hostObjects, IList<HostType> hostTypes, DateTime? useCachedIfCompiledAfter = null)
+        public async Task ExecuteAsync(string scriptId, string code, IList<HostObject> hostObjects, IList<HostType> hostTypes, bool addToCache = true)
         {
 
             var configAction = new Action<V8ScriptEngine>(engine =>
@@ -112,7 +113,7 @@ namespace ClearScript.Manager
                                         }
                                     });
 
-            await ExecuteAsync(scriptId, code, configAction);
+            await ExecuteAsync(scriptId, code, configAction, addToCache);
         }
 
         private CancellationToken CreateCancellationToken(V8ScriptEngine engine)
@@ -124,24 +125,45 @@ namespace ClearScript.Manager
             return cancellationToken;
         }
 
-        public V8Script Compile(string scriptId, string code, DateTime? useCachedIfCompiledAfter = null)
+        public V8Script Compile(string scriptId, string code, bool addToCache = true, int? cacheExpirationSeconds = null)
         {
-            CacheEntry<V8Script> cachedScriptEntry;
-            if (_scriptCache.TryGetValue(scriptId, out cachedScriptEntry))
+            CachedV8Script cachedScript;
+            if (TryGetCached(scriptId, out cachedScript))
             {
-                if (cachedScriptEntry.CreateDate >= useCachedIfCompiledAfter.GetValueOrDefault())
-                {
-                    return cachedScriptEntry.Entry;
-                }
+                return cachedScript.Script;
             }
 
             V8Script compiledScript = _v8Runtime.Compile(scriptId, code);
 
-            var cacheEntry = new CacheEntry<V8Script>(compiledScript);
-            _scriptCache.AddOrUpdate(scriptId, cacheEntry, (key, original) => cacheEntry);
+            if (addToCache)
+            {
+                if (!cacheExpirationSeconds.HasValue)
+                {
+                    cacheExpirationSeconds = _settings.ScriptCacheExpirationSeconds;
+                }
+                if (cacheExpirationSeconds > 0)
+                {
+                    var cacheEntry = new CachedV8Script(compiledScript, cacheExpirationSeconds.Value);
+                    _scriptCache.AddOrUpdate(scriptId, cacheEntry, (key, original) => cacheEntry);
+                }
+            }
 
             return compiledScript;
         }
 
+        public bool TryGetCached(string scriptId, out CachedV8Script cachedScript)
+        {
+            if (_scriptCache.TryGetValue(scriptId, out cachedScript))
+            {
+                if (cachedScript.ExpiresOn > DateTime.UtcNow)
+                {
+                    cachedScript.CacheHits++;
+                    return true;
+                }
+                _scriptCache.TryRemove(scriptId, out cachedScript);
+            }
+            cachedScript = null;
+            return false;
+        }
     }
 }

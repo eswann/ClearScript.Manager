@@ -2,7 +2,7 @@
 using Microsoft.ClearScript.V8;
 using NUnit.Framework;
 
-namespace Stratoflow.ClearScript.Test
+namespace ClearScript.Manager.Test
 {
     [TestFixture]
     public class V8ScriptingTests
@@ -16,7 +16,6 @@ namespace Stratoflow.ClearScript.Test
                 engine.AddHostType("Console", typeof(Console)); 
 
                 engine.Execute("Console.WriteLine ('Length of MyString = {0}', MyString.length)");
-
             }
         }
 
