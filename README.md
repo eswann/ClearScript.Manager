@@ -3,9 +3,9 @@ ClearScript.Manager
 
 ClearScript Manager was created to encapsulate the use of the ClearScript V8 engine in multi-use scenarios, like in a hosted server project (Ex: for use in a Web App or Web API).
 
-ClearScript is an awesome library that was created to allow execution of JavaScript via V8 from the .Net runtime.  
-ClearScript also runs VBScript and JScript but those are not in the scope of ClearScript.Manager at the current time.
+ClearScript is an awesome library that was created to allow execution of JavaScript via V8 from the .Net runtime. 
 It's an awesome project but it needed a few extra things in certain situations that aren't in the core goals of ClearScript itself.
+ClearScript also runs VBScript and JScript but those are not in the scope of ClearScript.Manager at the current time.
 
 Here are a couple of the related discussions on the clearscript forum:
 
