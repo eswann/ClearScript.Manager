@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ClearScript.Manager.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,19 +30,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ClearScript.Manager.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClearScript, Version=5.3.11.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\ClearScript.dll</HintPath>
-    </Reference>
-    <Reference Include="ClearScriptV8-32, Version=5.3.11.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ClearScriptV8-32.dll</HintPath>
-    </Reference>
-    <Reference Include="ClearScriptV8-64, Version=5.3.11.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ClearScriptV8-64.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -68,20 +62,42 @@
     <Compile Include="ManagerSettings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\lib\ClearScriptV8-32.dll">
+      <Link>Lib\ClearScriptV8-32.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\lib\ClearScriptV8-32.pdb">
+      <Link>Lib\ClearScriptV8-32.pdb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\lib\ClearScriptV8-64.dll">
+      <Link>Lib\ClearScriptV8-64.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\lib\ClearScriptV8-64.pdb">
+      <Link>Lib\ClearScriptV8-64.pdb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\lib\v8-ia32.dll">
-      <Link>v8-ia32.dll</Link>
+      <Link>Lib\v8-ia32.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\lib\v8-ia32.pdb">
-      <Link>v8-ia32.pdb</Link>
+      <Link>Lib\v8-ia32.pdb</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\lib\v8-x64.dll">
-      <Link>v8-x64.dll</Link>
+      <Link>Lib\v8-x64.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\lib\v8-x64.pdb">
-      <Link>v8-x64.pdb</Link>
+      <Link>Lib\v8-x64.pdb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClearScript.Manager.nuspec" />
+    <Content Include="Installation\install.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

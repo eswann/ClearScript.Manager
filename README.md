@@ -43,4 +43,6 @@ The default script cache expiration in seconds:
 int ScriptCacheExpirationSeconds { get; }
 
 
-Examples are available in the unit tests on GitHub.
+
+
+More examples are available in the unit tests.
