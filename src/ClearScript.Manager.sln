@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager", "ClearScript.Manager\ClearScript.Manager.csproj", "{CFAB8382-B76F-4AA1-AB38-52674F932E52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Test", "ClearScript.Manager.Test\ClearScript.Manager.Test.csproj", "{E7A8A86A-83AF-48CE-9266-E3094218F401}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Artifacts", "Artifacts", "{7667EE17-051A-434A-BB9F-1DC685B1A471}"
+	ProjectSection(SolutionItems) = preProject
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Demo", "ClearScript.Manager.Demo\ClearScript.Manager.Demo.csproj", "{60385905-F78E-4933-9FB7-DD75D51CA2CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFAB8382-B76F-4AA1-AB38-52674F932E52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFAB8382-B76F-4AA1-AB38-52674F932E52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFAB8382-B76F-4AA1-AB38-52674F932E52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFAB8382-B76F-4AA1-AB38-52674F932E52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7A8A86A-83AF-48CE-9266-E3094218F401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7A8A86A-83AF-48CE-9266-E3094218F401}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7A8A86A-83AF-48CE-9266-E3094218F401}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60385905-F78E-4933-9FB7-DD75D51CA2CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60385905-F78E-4933-9FB7-DD75D51CA2CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60385905-F78E-4933-9FB7-DD75D51CA2CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
