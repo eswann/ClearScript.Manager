@@ -13,10 +13,9 @@ namespace ClearScript.Manager.Test
         public async void Script_With_Typed_Subject_Can_Be_Executed()
         {
             var subject = new TestObject();
-
             var manager = new RuntimeManager(new ManualManagerSettings());
 
-            await manager.ExecuteAsync("test", "subject.Count = 10;",
+            await manager.ExecuteAsync("testscript", "subject.Count = 10;",
                 new List<HostObject> {new HostObject {Name = "subject", Target = subject}}, null);
 
             subject.Name.ShouldEqual("Name");
