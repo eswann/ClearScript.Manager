@@ -28,26 +28,26 @@ Along those lines, ClearScript.Manager does the following to make certain things
 
 ## Configuration Parameters
   
-V8 Max Executable Size in bytes:  
-int MaxExecutableBytes { get; }
-        
-V8 Max Young Space in bytes:  
-int MaxYoungSpaceBytes { get; }
-        
-V8 Max Old Space in bytes:  
-int MaxOldSpaceBytes { get; }
-        
-Default script timeout in ms:
-int ScriptTimeoutMilliSeconds { get; }  
+    //V8 Max Executable Size in bytes:  
+    int MaxExecutableBytes { get; }
 
-Max number of simultaneous V8 Runtimes:  
-int RuntimeMaxCount { get; }
+    //V8 Max Young Space in bytes:
+    int MaxYoungSpaceBytes { get; }
         
-Per Runtime, the maximum number of cached scripts:  
-int ScriptCacheMaxCount { get; }
+	//V8 Max Old Space in bytes:  
+	int MaxOldSpaceBytes { get; }
         
-The default script cache expiration in seconds:  
-int ScriptCacheExpirationSeconds { get; }
+	//Default script timeout in ms:
+	int ScriptTimeoutMilliSeconds { get; }  
+
+	//Max number of simultaneous V8 Runtimes:  
+	int RuntimeMaxCount { get; }
+        
+	//Per Runtime, the maximum number of cached scripts:  
+	int ScriptCacheMaxCount { get; }
+        
+	//The default script cache expiration in seconds:  
+	int ScriptCacheExpirationSeconds { get; }
 
 
 ## Using the Runtime Manager
