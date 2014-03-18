@@ -99,4 +99,4 @@ Along those lines, ClearScript.Manager does the following to make certain things
 	ManagerPool.CurrentPool.ReturnToPool(runtimeManager);
 
 
-Additional examples are available in the unit tests...but I will add some simple guidance soon.
+Additional examples are available in the unit tests.
