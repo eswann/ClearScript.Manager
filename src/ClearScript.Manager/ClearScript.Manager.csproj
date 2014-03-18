@@ -62,46 +62,14 @@
     <Compile Include="ManagerSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\lib\ClearScriptV8-32.dll">
-      <Link>Lib\ClearScriptV8-32.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\lib\ClearScriptV8-32.pdb">
-      <Link>Lib\ClearScriptV8-32.pdb</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\lib\ClearScriptV8-64.dll">
-      <Link>Lib\ClearScriptV8-64.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\lib\ClearScriptV8-64.pdb">
-      <Link>Lib\ClearScriptV8-64.pdb</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\lib\v8-ia32.dll">
-      <Link>Lib\v8-ia32.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\lib\v8-ia32.pdb">
-      <Link>Lib\v8-ia32.pdb</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\lib\v8-x64.dll">
-      <Link>Lib\v8-x64.dll</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\lib\v8-x64.pdb">
-      <Link>Lib\v8-x64.pdb</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ClearScript.Manager.nuspec" />
-    <Content Include="Installation\install.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Installation\install.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

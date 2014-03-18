@@ -29,7 +29,7 @@ namespace ClearScript.Manager.Test
         }
 
         [Test]
-        public async void Javascript_Error_Is_Raised()
+        public void Javascript_Error_Is_Raised()
         {
             var manager = new RuntimeManager(new ManualManagerSettings());
 

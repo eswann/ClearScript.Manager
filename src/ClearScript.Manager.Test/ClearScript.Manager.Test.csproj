@@ -72,9 +72,43 @@
       <Name>ClearScript.Manager</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\lib\ClearScriptV8-32.dll">
+      <Link>Lib\ClearScriptV8-32.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\lib\ClearScriptV8-32.pdb">
+      <Link>Lib\ClearScriptV8-32.pdb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\lib\ClearScriptV8-64.dll">
+      <Link>Lib\ClearScriptV8-64.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\lib\ClearScriptV8-64.pdb">
+      <Link>Lib\ClearScriptV8-64.pdb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\lib\v8-ia32.dll">
+      <Link>Lib\v8-ia32.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\lib\v8-ia32.pdb">
+      <Link>Lib\v8-ia32.pdb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\lib\v8-x64.dll">
+      <Link>Lib\v8-x64.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\lib\v8-x64.pdb">
+      <Link>Lib\v8-x64.pdb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetDir)Lib\*.*" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetDir)Lib\*.*" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

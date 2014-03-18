@@ -32,8 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClearScript">
+      <HintPath>..\packages\ClearScript.Manager.0.9.4.13820\lib\net45\ClearScript.dll</HintPath>
+    </Reference>
     <Reference Include="ClearScript.Manager">
-      <HintPath>..\packages\ClearScript.Manager.0.9.3.15962\lib\net45\ClearScript.Manager.dll</HintPath>
+      <HintPath>..\packages\ClearScript.Manager.0.9.4.13820\lib\net45\ClearScript.Manager.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,42 +52,33 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Installation\install.ps1" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ClearScriptV8-32.dll" />
-    <Content Include="ClearScriptV8-32.pdb" />
-    <Content Include="ClearScriptV8-64.dll" />
-    <Content Include="ClearScriptV8-64.pdb" />
-    <Content Include="Lib\ClearScriptV8-32.dll">
+    <Content Include="ClearScriptV8-32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\ClearScriptV8-32.pdb">
+    <Content Include="ClearScriptV8-32.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\ClearScriptV8-64.dll">
+    <Content Include="ClearScriptV8-64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\ClearScriptV8-64.pdb">
+    <Content Include="ClearScriptV8-64.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\v8-ia32.dll">
+    <Content Include="v8-ia32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\v8-ia32.pdb">
+    <Content Include="v8-ia32.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\v8-x64.dll">
+    <Content Include="v8-x64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\v8-x64.pdb">
+    <Content Include="v8-x64.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="v8-ia32.dll" />
-    <Content Include="v8-ia32.pdb" />
-    <Content Include="v8-x64.dll" />
-    <Content Include="v8-x64.pdb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
