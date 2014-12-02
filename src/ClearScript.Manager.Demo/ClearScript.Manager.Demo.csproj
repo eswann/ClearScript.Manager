@@ -33,10 +33,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClearScript">
-      <HintPath>..\packages\ClearScript.Manager.0.9.4.13820\lib\net45\ClearScript.dll</HintPath>
+      <HintPath>..\packages\ClearScript.Installer.1.0.1.31662\lib\net45\ClearScript.dll</HintPath>
     </Reference>
     <Reference Include="ClearScript.Manager">
-      <HintPath>..\packages\ClearScript.Manager.0.9.4.13820\lib\net45\ClearScript.Manager.dll</HintPath>
+      <HintPath>..\packages\ClearScript.Manager.1.0.0.32920\lib\net45\ClearScript.Manager.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
