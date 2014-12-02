@@ -14,25 +14,12 @@
         <language />
         <tags>ClearScript V8 JavaScript</tags>
         <dependencies>
+          <dependency id="ClearScript.Installer" version="1.0.0" />
         </dependencies>
     </metadata>
   <files>
     <file src="bin\$configuration$\$id$.pdb" target="lib\net45" />
     <file src="bin\$configuration$\$id$.dll" target="lib\net45" />
     <file src="bin\$configuration$\$id$.xml" target="lib\net45" />
-    <file src="bin\$configuration$\ClearScript.dll" target="lib\net45" />
-    <file src="bin\$configuration$\ClearScript.pdb" target="lib\net45" />
-    <file src="bin\$configuration$\ClearScript.xml" target="lib\net45" />
-    
-    <file src="..\..\lib\ClearScriptV8-32.dll" target="content\" />
-    <file src="..\..\lib\ClearScriptV8-32.pdb" target="content\" />
-    <file src="..\..\lib\ClearScriptV8-64.dll" target="content\" />
-    <file src="..\..\lib\ClearScriptV8-64.pdb" target="content\" />
-    <file src="..\..\lib\v8-ia32.dll" target="content\" />
-    <file src="..\..\lib\v8-ia32.pdb" target="content\" />
-    <file src="..\..\lib\v8-x64.dll" target="content\" />
-    <file src="..\..\lib\v8-x64.pdb" target="content\" />
-    
-    <file src="Installation\install.ps1" target="tools\" />
   </files>
 </package>

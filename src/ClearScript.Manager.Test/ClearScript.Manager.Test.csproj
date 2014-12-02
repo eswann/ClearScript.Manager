@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="ClearScript, Version=5.3.11.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ClearScript.dll</HintPath>
+      <HintPath>..\packages\ClearScript.Installer.1.0.1.31662\lib\net45\ClearScript.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
@@ -73,36 +73,28 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\lib\ClearScriptV8-32.dll">
-      <Link>Lib\ClearScriptV8-32.dll</Link>
+    <Content Include="Lib\ClearScriptV8-32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\lib\ClearScriptV8-32.pdb">
-      <Link>Lib\ClearScriptV8-32.pdb</Link>
+    <Content Include="Lib\ClearScriptV8-32.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\lib\ClearScriptV8-64.dll">
-      <Link>Lib\ClearScriptV8-64.dll</Link>
+    <Content Include="Lib\ClearScriptV8-64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\lib\ClearScriptV8-64.pdb">
-      <Link>Lib\ClearScriptV8-64.pdb</Link>
+    <Content Include="Lib\ClearScriptV8-64.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\lib\v8-ia32.dll">
-      <Link>Lib\v8-ia32.dll</Link>
+    <Content Include="Lib\v8-ia32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\lib\v8-ia32.pdb">
-      <Link>Lib\v8-ia32.pdb</Link>
+    <Content Include="Lib\v8-ia32.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\lib\v8-x64.dll">
-      <Link>Lib\v8-x64.dll</Link>
+    <Content Include="Lib\v8-x64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\lib\v8-x64.pdb">
-      <Link>Lib\v8-x64.pdb</Link>
+    <Content Include="Lib\v8-x64.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
