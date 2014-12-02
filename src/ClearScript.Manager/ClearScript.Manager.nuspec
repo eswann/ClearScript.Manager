@@ -9,7 +9,7 @@
         <projectUrl>https://github.com/eswann/ClearScript.Manager</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>$description$</description>
-        <summary>ClearScript Manager encapsulates the use of the ClearScript V8 engine in multi-use scenarios.</summary>
+        <summary>$description$</summary>
         <copyright>Copyright 2014 Eric Swann, et. al. - All rights reserved.</copyright>
         <language />
         <tags>ClearScript V8 JavaScript</tags>

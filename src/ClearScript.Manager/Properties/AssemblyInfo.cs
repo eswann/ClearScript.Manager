@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ClearScript.Manager")]
-[assembly: AssemblyDescription("ClearScript Manager encapsulates the use of the ClearScript V8 engine in multi-use scenarios.")]
+[assembly: AssemblyDescription("ClearScript Manager encapsulates the use of the ClearScript V8 engine in multi-use scenarios.  Newest version supports ClearScript 5.4 on .Net 4.5")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ClearScript.Manager")]

@@ -6,7 +6,8 @@ ClearScript is an awesome library that was created to allow execution of JavaScr
 It's a great project but it needed a few extra things in certain situations that aren't in the core goals of ClearScript itself.
 ClearScript also runs VBScript and JScript but those are not in the scope of ClearScript.Manager at the current time.
 
-It should be noted that the package also installs the latest version of ClearScript.
+It should be noted that the package also installs the latest version of ClearScript (5.4) via ClearScript.Installer.
+In addition, both ClearScript and ClearScript.Manager are compiled against .Net 4.5.
 
 Here are a couple of the related discussions on the clearscript forum:
 
