@@ -1,7 +1,11 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 
 namespace ClearScript.Manager
 {
+    /// <summary>
+    /// Settings to apply to the RuntimeManager and to created runtimes.
+    /// </summary>
     public interface IManagerSettings
     {
         /// <summary>
@@ -10,8 +14,14 @@ namespace ClearScript.Manager
         int MaxExecutableBytes { get; }
 
         /// <summary>
+        /// V8 Max New Space in bytes.
+        /// </summary>
+        int MaxNewSpaceBytes { get; }
+
+        /// <summary>
         /// V8 Max Young Space in bytes.
         /// </summary>
+        [Obsolete("Use MaxNewSpaceBytes instead.")]
         int MaxYoungSpaceBytes { get; }
 
         /// <summary>
@@ -40,14 +50,38 @@ namespace ClearScript.Manager
         int ScriptCacheExpirationSeconds { get; }
     }
 
+    /// <summary>
+    /// Settings to apply to the RuntimeManager and to created runtimes.
+    /// </summary>
     public class ManagerSettings : IManagerSettings
     {
+        /// <summary>
+        /// Default MaxExecutableBytes if not present in settings.
+        /// </summary>
         public const int DefaultMaxExecutableBytes = 8 * 1024 * 1024;
-        public const int DefaultMaxYoungSpaceBytes = 16 * 1024 * 1024;
+        /// <summary>
+        /// Default MaxNewSpaceBytes if not present in settings.
+        /// </summary>
+        public const int DefaultMaxNewSpaceBytes = 16 * 1024 * 1024;
+        /// <summary>
+        /// Default tMaxOldSpaceBytes if not present in settings.
+        /// </summary>
         public const int DefaultMaxOldSpaceBytes = 16 * 1024 * 1024;
+        /// <summary>
+        /// Default ScriptTimeoutMilliSeconds if not present in settings.
+        /// </summary>
         public const int DefaultScriptTimeoutMilliSeconds = 60000;
+        /// <summary>
+        /// Default RuntimeMaxCount if not present in settings.
+        /// </summary>
         public const int DefaultRuntimeMaxCount = 8;
+        /// <summary>
+        /// Default ScriptCacheMaxCount if not present in settings.
+        /// </summary>
         public const int DefaultScriptCacheMaxCount = 1000;
+        /// <summary>
+        /// Default ScriptCacheExpirationSeconds if not present in settings.
+        /// </summary>
         public const int DefaultScriptCacheExpirationSeconds = 600;
 
         public int MaxExecutableBytes
@@ -55,9 +89,18 @@ namespace ClearScript.Manager
             get { return SettingToInt("MaxExecutableBytes", DefaultMaxExecutableBytes); }
         }
 
+        public int MaxNewSpaceBytes
+        {
+            get
+            {
+                return SettingToInt("MaxNewSpaceBytes", SettingToInt("MaxYoungSpaceBytes", DefaultMaxNewSpaceBytes));
+            }
+        }
+
+        [Obsolete("Use MaxNewSpaceBytes instead.")]
         public int MaxYoungSpaceBytes
         {
-            get { return SettingToInt("MaxYoungSpaceBytes", DefaultMaxYoungSpaceBytes); }
+            get { return MaxNewSpaceBytes; }
         }
 
         public int MaxOldSpaceBytes
@@ -86,6 +129,12 @@ namespace ClearScript.Manager
         }
 
 
+        /// <summary>
+        /// Parses the setting and converts it to an int or sets the default value if the setting is not present.
+        /// </summary>
+        /// <param name="settingName">Name of the setting to check.</param>
+        /// <param name="defaultValue">Default value if setting is not present.</param>
+        /// <returns>Setting or default value.</returns>
         public static int SettingToInt(string settingName, int defaultValue)
         {
             int? setting = null;
@@ -107,11 +156,14 @@ namespace ClearScript.Manager
     /// </summary>
     public class ManualManagerSettings : IManagerSettings
     {
+        /// <summary>
+        /// Creates a ManualManagerSettings.
+        /// </summary>
         public ManualManagerSettings()
         {
             MaxExecutableBytes = ManagerSettings.DefaultMaxExecutableBytes;
-            MaxYoungSpaceBytes = ManagerSettings.DefaultMaxOldSpaceBytes;
-            MaxOldSpaceBytes = ManagerSettings.DefaultMaxYoungSpaceBytes;
+            MaxNewSpaceBytes = ManagerSettings.DefaultMaxOldSpaceBytes;
+            MaxOldSpaceBytes = ManagerSettings.DefaultMaxNewSpaceBytes;
             ScriptTimeoutMilliSeconds = ManagerSettings.DefaultScriptTimeoutMilliSeconds;
             RuntimeMaxCount = ManagerSettings.DefaultRuntimeMaxCount;
             ScriptCacheMaxCount = ManagerSettings.DefaultScriptCacheMaxCount;
@@ -120,7 +172,14 @@ namespace ClearScript.Manager
 
         public int MaxExecutableBytes { get; set; }
 
-        public int MaxYoungSpaceBytes { get; set; }
+        public int MaxNewSpaceBytes { get; set; }
+
+        [Obsolete("Use MaxNewSpaceBytes instead.")]
+        public int MaxYoungSpaceBytes
+        {
+            get { return MaxNewSpaceBytes; }
+            set { MaxNewSpaceBytes = value; }
+        }
 
         public int MaxOldSpaceBytes { get; set; }
 

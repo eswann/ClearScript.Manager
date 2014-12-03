@@ -8,21 +8,69 @@ using Microsoft.ClearScript.V8;
 
 namespace ClearScript.Manager
 {
+    /// <summary>
+    /// Runtime Manager used to execute scripts within a runtime.
+    /// </summary>
     public interface IRuntimeManager
     {
+        /// <summary>
+        /// If True, automatically adds a reference to the .Net Console.
+        /// </summary>
         bool AddConsoleReference { get; set; }
 
+        /// <summary>
+        /// Executes the provided script.
+        /// </summary>
+        /// <param name="scriptId">Id of the script for caching purposes.</param>
+        /// <param name="code">Script text to execute.</param>
+        /// <param name="addToCache">Indicates that this script should be added to the script cache once compiled.  Default is True.</param>
+        /// <returns>Task to await.</returns>
         Task ExecuteAsync(string scriptId, string code, bool addToCache = true);
 
+        /// <summary>
+        /// Executes the provided script.
+        /// </summary>
+        /// <param name="scriptId">Id of the script for caching purposes.</param>
+        /// <param name="code">Script text to execute.</param>
+        /// <param name="configAction">An action that accepts the V8 script engine before it's use.</param>
+        /// <param name="addToCache">Indicates that this script should be added to the script cache once compiled.  Default is True.</param>
+        /// <returns>Task to await.</returns>
         Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, bool addToCache = true);
 
+        /// <summary>
+        /// Executes the provided script.
+        /// </summary>
+        /// <param name="scriptId">Id of the script for caching purposes.</param>
+        /// <param name="code">Script text to execute.</param>
+        /// <param name="addToCache">Indicates that this script should be added to the script cache once compiled.  Default is True.</param>
+        /// <param name="hostObjects">Objects to inject into the JavaScript runtime.</param>
+        /// <param name="hostTypes">Types to make available to the JavaScript runtime.</param>
+        /// <returns>Task to await.</returns>
         Task ExecuteAsync(string scriptId, string code, IList<HostObject> hostObjects, IList<HostType> hostTypes, bool addToCache = true);
 
+        /// <summary>
+        /// Compiles the provided script.
+        /// </summary>
+        /// <param name="scriptId">Id of the script for caching purposes.</param>
+        /// <param name="code">Script text to execute.</param>
+        /// <param name="addToCache">Indicates that this script should be added to the script cache once compiled.  Default is True.</param>
+        /// <param name="cacheExpirationSeconds">Number of seconds that the V8 Script will be cached.</param>
+        /// <returns>Compiled V8 script.</returns>
         V8Script Compile(string scriptId, string code, bool addToCache = true, int? cacheExpirationSeconds = null);
 
+        /// <summary>
+        /// Attempts to get the cached script by Id.
+        /// </summary>
+        /// <param name="scriptId">Id to search on.</param>
+        /// <param name="script">Cached script (output)</param>
+        /// <returns>Bool indicating that cached script was located.</returns>
         bool TryGetCached(string scriptId, out CachedV8Script script);
     }
 
+
+    /// <summary>
+    /// Runtime Manager used to execute scripts within a runtime.
+    /// </summary>
     public class RuntimeManager : IRuntimeManager
     {
         private readonly IManagerSettings _settings;
@@ -30,6 +78,10 @@ namespace ClearScript.Manager
 
         private readonly V8Runtime _v8Runtime;
 
+        /// <summary>
+        /// Creates a new Runtime Manager.
+        /// </summary>
+        /// <param name="settings">Settings to apply to the Runtime Manager and the scripts it runs.</param>
         public RuntimeManager(IManagerSettings settings)
         {
             _settings = settings;
@@ -39,7 +91,7 @@ namespace ClearScript.Manager
             {
                 MaxExecutableSize = settings.MaxExecutableBytes,
                 MaxOldSpaceSize = settings.MaxOldSpaceBytes,
-                MaxYoungSpaceSize = settings.MaxYoungSpaceBytes
+                MaxNewSpaceSize = settings.MaxNewSpaceBytes
             });
         }
 
@@ -114,6 +166,7 @@ namespace ClearScript.Manager
                                     });
 
             await ExecuteAsync(scriptId, code, configAction, addToCache);
+
         }
 
         private CancellationToken CreateCancellationToken(V8ScriptEngine engine)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.ClearScript;
 using NUnit.Framework;
+using Should;
 
 namespace ClearScript.Manager.Test
 {

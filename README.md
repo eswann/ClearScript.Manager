@@ -30,6 +30,7 @@ Along those lines, ClearScript.Manager does the following to make certain things
 	- Allow easy management of the memory usage of each instance of the V8 Runtime and sets the limits to a much lower threshold than the default V8 settings. 
 
 ## Configuration Parameters
+These settings can be set manually or added to the AppSettings of your application config file.
   
     //V8 Max Executable Size in bytes:  
     int MaxExecutableBytes { get; }
@@ -42,13 +43,13 @@ Along those lines, ClearScript.Manager does the following to make certain things
         
 	//Default script timeout in ms:
 	int ScriptTimeoutMilliSeconds { get; }  
+    
+    //Max number of simultaneous V8 Runtimes:  
+    int RuntimeMaxCount { get; }
+    
+    //Per Runtime, the maximum number of cached scripts:  
+    int ScriptCacheMaxCount { get; }
 
-	//Max number of simultaneous V8 Runtimes:  
-	int RuntimeMaxCount { get; }
-        
-	//Per Runtime, the maximum number of cached scripts:  
-	int ScriptCacheMaxCount { get; }
-        
 	//The default script cache expiration in seconds:  
 	int ScriptCacheExpirationSeconds { get; }
 
