@@ -16,7 +16,7 @@ namespace ClearScript.Manager.Test
             var manager = new RuntimeManager(new ManualManagerSettings());
 
             await manager.ExecuteAsync("testscript", "subject.Count = 10;",
-                new List<HostObject> {new HostObject {Name = "subject", Target = subject}}, null);
+                new List<HostObject> {new HostObject {Name = "subject", Target = subject}});
 
             subject.Name.ShouldEqual("Name");
             subject.Count.ShouldEqual(10);
@@ -32,7 +32,7 @@ namespace ClearScript.Manager.Test
             var manager = new RuntimeManager(new ManualManagerSettings());
 
             await manager.ExecuteAsync("test", "subject.Count = 10;",
-                new List<HostObject> { new HostObject { Name = "subject", Target = subject } }, null);
+                new List<HostObject> { new HostObject { Name = "subject", Target = subject } });
 
             //Should craps out on dynamics
             Assert.AreEqual(subject.Name, "Name");

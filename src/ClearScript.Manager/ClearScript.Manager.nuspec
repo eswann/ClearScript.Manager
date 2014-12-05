@@ -15,6 +15,7 @@
         <tags>ClearScript V8 JavaScript</tags>
         <dependencies>
           <dependency id="ClearScript.Installer" version="1.0.0" />
+          <dependency id="Microsoft.Net.Http" version="2.2.28" />
         </dependencies>
     </metadata>
   <files>

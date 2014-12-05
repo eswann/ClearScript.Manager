@@ -35,13 +35,13 @@ These settings can be set manually or added to the AppSettings of your applicati
     //V8 Max Executable Size in bytes:  
     int MaxExecutableBytes { get; }
 
-    //V8 Max Young Space in bytes:
-    int MaxYoungSpaceBytes { get; }
-        
-	//V8 Max Old Space in bytes:  
+    //V8 Max New Space in bytes:
+    int MaxNewSpaceBytes { get; }
+     
+    //V8 Max Old Space in bytes:  
 	int MaxOldSpaceBytes { get; }
         
-	//Default script timeout in ms:
+	//Default script timeout in ms.  If the script timeout is set to 0, the script will not execute within a Task with a timeout.
 	int ScriptTimeoutMilliSeconds { get; }  
     
     //Max number of simultaneous V8 Runtimes:  
@@ -61,15 +61,32 @@ These settings can be set manually or added to the AppSettings of your applicati
     var manager = new RuntimeManager(new ManagerSettings());  
     await manager.ExecuteAsync("test", "var i = 0; i++;");
 
-### Passing in Host Objects
+### Execution Options
+Execution options are the new way of passing options to the ClearScript runtime manager.
+
+    /// Objects to inject into the JavaScript runtime.
+    public IEnumerable<HostObject> HostObjects
+
+    /// Types to make available to the JavaScript runtime.
+    public IEnumerable<HostType> HostTypes
+
+    /// Indicates that this script should be added to the script cache once compiled.  Default is True.
+    public bool AddToCache
+
+    /// External JavaScripts to import before executing the current script.
+    public IList<IncludeScript> Scripts
+
+#### Passing in Host Objects
+Host objects are a way of passing an object instance to JavaScript from .Net.
 
     var subject = new TestObject{Name = "Name", Count = 0};
     var manager = new RuntimeManager(new ManualManagerSettings());
 
     await manager.ExecuteAsync("testscript", "subject.Count = 10;",
-        new List<HostObject> {new HostObject {Name = "subject", Target = subject}}, null);
+        new ExecutionOptions{HostObjects = new List<HostObject> {new HostObject {Name = "subject", Target = subject}}});
 
-### Passing in Host Types
+#### Passing in Host Types
+Host types allow you to instantiate a .Net type or types in the JavaScript runtime. 
 
     var manager = new RuntimeManager(new ManagerSettings());
     var hostType = new HostType
@@ -80,8 +97,32 @@ These settings can be set manually or added to the AppSettings of your applicati
     var subject = new TestObject();
 
     await manager.ExecuteAsync("testscript", "subject.Result = MathStuff.Pow(10,2);", 
-        new List<HostObject> { new HostObject { Name = "subject", Target = subject } }, 
-        new List<HostType> { hostType });
+        new ExecutionOptions{
+            HostObjects = new List<HostObject> { new HostObject { Name = "subject", Target = subject } }, 
+            HostTypes = new List<HostType> { hostType }});
+
+#### Passing in External Scripts
+External scripts can also be run by setting the IncludeScripts property on the ExecutionOptions.  These scripts are 
+intended to set up reused libraries and will be run before the execution of the main script.  
+
+A script can be set up in a couple of ways:
+* Set a file path or url in the Uri property.
+* Set the code property to the code to execute.
+
+The script will be compiled and cached in the same way as a normal script.
+
+    public class IncludeScript
+    {
+        /// Unique name of the script to execute.
+        public string Name { get; set; }
+
+        /// Uri (file or Url) of the script to execute.  Need to include script code or script Url.
+        public string Uri { get; set; }
+
+        /// Code of the script to include.  Need to include script code or script Url.
+        public string Code { get; set; }
+    }
+    
 
 ### Using the Manager Pool
 

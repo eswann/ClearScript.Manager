@@ -1,0 +1,1 @@
+﻿var x = 'test string1';

@@ -23,5 +23,40 @@ namespace ClearScript.Manager.Test
     
         }
 
+
+        [Test]
+        public async void Script_Not_Exceeding_Timeout_Works()
+        {
+            var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 500 })
+            {
+                AddConsoleReference = true
+            };
+
+            var script = "Console.WriteLine('Started:' + new Date().toJSON()); " +
+                         "var now = new Date().getTime(); " +
+                         "Console.WriteLine('Finished:' + new Date().toJSON());";
+
+
+            await manager.ExecuteAsync("test", script);
+
+        }
+
+        [Test]
+        public async void Script_With_0_Timeout_Works()
+        {
+            var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 })
+            {
+                AddConsoleReference = true
+            };
+
+            var script = "Console.WriteLine('Started:' + new Date().toJSON()); " +
+                         "var now = new Date().getTime(); " +
+                         "Console.WriteLine('Finished:' + new Date().toJSON());";
+
+
+            await manager.ExecuteAsync("test", script);
+
+        }
+
     }
 }

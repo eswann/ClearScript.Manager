@@ -54,6 +54,7 @@
     <Compile Include="V8ScriptingTests.cs" />
     <Compile Include="WhenCachingScripts.cs" />
     <Compile Include="WhenExecutingBasicJavaScript.cs" />
+    <Compile Include="WhenExecutingScriptWithIncludeScripts.cs" />
     <Compile Include="WhenExecutingScriptWithTimeout.cs" />
     <Compile Include="WhenExecutingWithHostObjects.cs" />
     <Compile Include="WhenExecutingWithHostTypes.cs">
@@ -96,6 +97,9 @@
     </Content>
     <Content Include="Lib\v8-x64.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestIncludeScript.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

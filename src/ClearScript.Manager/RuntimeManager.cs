@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using ClearScript.Manager.Caching;
@@ -23,18 +26,10 @@ namespace ClearScript.Manager
         /// </summary>
         /// <param name="scriptId">Id of the script for caching purposes.</param>
         /// <param name="code">Script text to execute.</param>
+        /// <param name="configAction">An action that accepts the V8 script engine before it's use and configures it.</param>
         /// <param name="addToCache">Indicates that this script should be added to the script cache once compiled.  Default is True.</param>
         /// <returns>Task to await.</returns>
-        Task ExecuteAsync(string scriptId, string code, bool addToCache = true);
-
-        /// <summary>
-        /// Executes the provided script.
-        /// </summary>
-        /// <param name="scriptId">Id of the script for caching purposes.</param>
-        /// <param name="code">Script text to execute.</param>
-        /// <param name="configAction">An action that accepts the V8 script engine before it's use.</param>
-        /// <param name="addToCache">Indicates that this script should be added to the script cache once compiled.  Default is True.</param>
-        /// <returns>Task to await.</returns>
+        [Obsolete("Obsolete, use the overload accepting ExecutionOptions instead.")]
         Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, bool addToCache = true);
 
         /// <summary>
@@ -46,7 +41,27 @@ namespace ClearScript.Manager
         /// <param name="hostObjects">Objects to inject into the JavaScript runtime.</param>
         /// <param name="hostTypes">Types to make available to the JavaScript runtime.</param>
         /// <returns>Task to await.</returns>
-        Task ExecuteAsync(string scriptId, string code, IList<HostObject> hostObjects, IList<HostType> hostTypes, bool addToCache = true);
+        [Obsolete("Obsolete, use the overload accepting ExecutionOptions instead.")]
+        Task ExecuteAsync(string scriptId, string code, IList<HostObject> hostObjects, IList<HostType> hostTypes = null, bool addToCache = true);
+
+        /// <summary>
+        /// Executes the provided script.
+        /// </summary>
+        /// <param name="scriptId">Id of the script for caching purposes.</param>
+        /// <param name="code">Script text to execute.</param>
+        /// <param name="configAction">An action that accepts the V8 script engine before it's use and configures it.</param>
+        /// <param name="options">Options to apply to script execution.  HostObjects and HostTypes are ignored by this call.</param>
+        /// <returns>Task to await.</returns>
+        Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, ExecutionOptions options = null);
+
+        /// <summary>
+        /// Executes the provided script.
+        /// </summary>
+        /// <param name="scriptId">Id of the script for caching purposes.</param>
+        /// <param name="code">Script text to execute.</param>
+        /// <param name="options">Options to apply to script execution.  HostObjects and HostTypes are ignored by this call.</param>
+        /// <returns>Task to await.</returns>
+        Task ExecuteAsync(string scriptId, string code, ExecutionOptions options = null);
 
         /// <summary>
         /// Compiles the provided script.
@@ -97,14 +112,17 @@ namespace ClearScript.Manager
 
         public bool AddConsoleReference { get; set; }
 
-        public async Task ExecuteAsync(string scriptId, string code, bool addToCache = true)
-        {
-            await ExecuteAsync(scriptId, code, null, addToCache);
-        }
-
         public async Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, bool addToCache = true)
         {
-            V8Script compiledScript = Compile(scriptId, code, addToCache);
+            await ExecuteAsync(scriptId, code, configAction, new ExecutionOptions {AddToCache = addToCache});
+        }
+
+        public async Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, ExecutionOptions options = null)
+        {
+            if(options == null)
+                options = new ExecutionOptions();
+
+            V8Script compiledScript = Compile(scriptId, code, options.AddToCache);
 
             try
             {
@@ -119,11 +137,42 @@ namespace ClearScript.Manager
                     {
                         configAction(engine);
                     }
-                    
-                    var cancellationToken = CreateCancellationToken(engine);
 
-                    // ReSharper disable once AccessToDisposedClosure
-                    await Task.Run(() => engine.Evaluate(compiledScript), cancellationToken);
+                    if (options.Scripts != null)
+                    {
+                        foreach (var script in options.Scripts)
+                        {
+                            if (string.IsNullOrEmpty(script.Name))
+                            {
+                                if (!string.IsNullOrEmpty(script.Uri))
+                                {
+                                    script.Name = script.Uri;
+                                }
+                                else if(!string.IsNullOrEmpty(script.Code))
+                                {
+                                    script.Name = script.Code.GetHashCode().ToString(CultureInfo.InvariantCulture);
+                                }
+                            }
+
+                            var compiledInclude = await Compile(script, options.AddToCache);
+                            if (compiledInclude != null)
+                            {
+                                engine.Execute(compiledInclude);
+                            }
+                        }
+                    }
+
+                    CancellationToken cancellationToken;
+
+                    //Only create a wrapping task if the script has a timeout.
+                    if (TryCreateCancellationToken(engine, out cancellationToken))
+                    {
+                        await Task.Run(() => engine.Execute(compiledScript), cancellationToken);
+                    }
+                    else
+                    {
+                        engine.Execute(compiledScript);
+                    }
                 }
             }
             catch (ScriptInterruptedException ex)
@@ -136,22 +185,37 @@ namespace ClearScript.Manager
             }
         }
 
-        public async Task ExecuteAsync(string scriptId, string code, IList<HostObject> hostObjects, IList<HostType> hostTypes, bool addToCache = true)
+
+        public async Task ExecuteAsync(string scriptId, string code, IList<HostObject> hostObjects,
+            IList<HostType> hostTypes = null, bool addToCache = true)
         {
+            await ExecuteAsync(scriptId, code, new ExecutionOptions {HostObjects = hostObjects, HostTypes = hostTypes, AddToCache = addToCache});
+        }
+
+
+        public async Task ExecuteAsync(string scriptId, string code, ExecutionOptions options = null)
+        {
+            if(options == null)
+                options = new ExecutionOptions();
+
+            if (string.IsNullOrEmpty(scriptId) && !string.IsNullOrEmpty(code))
+            {
+                scriptId = code.GetHashCode().ToString(CultureInfo.InvariantCulture);
+            }
 
             var configAction = new Action<V8ScriptEngine>(engine =>
                                     {
-                                        if (hostObjects != null)
+                                        if (options.HostObjects != null)
                                         {
-                                            foreach (HostObject hostObject in hostObjects)
+                                            foreach (HostObject hostObject in options.HostObjects)
                                             {
                                                 engine.AddHostObject(hostObject.Name, hostObject.Flags, hostObject.Target);
                                             }
                                         }
 
-                                        if (hostTypes != null)
+                                        if (options.HostTypes != null)
                                         {
-                                            foreach (HostType hostType in hostTypes)
+                                            foreach (HostType hostType in options.HostTypes)
                                             {
                                                 if (hostType.Type != null)
                                                 {
@@ -165,17 +229,65 @@ namespace ClearScript.Manager
                                         }
                                     });
 
-            await ExecuteAsync(scriptId, code, configAction, addToCache);
+            await ExecuteAsync(scriptId, code, configAction, options);
 
         }
 
-        private CancellationToken CreateCancellationToken(V8ScriptEngine engine)
+        private bool TryCreateCancellationToken(V8ScriptEngine engine, out CancellationToken token)
         {
+            if (_settings.ScriptTimeoutMilliSeconds <= 0)
+            {
+                token = new CancellationToken();
+                return false;
+            }
+
             var cancellationSource = new CancellationTokenSource(_settings.ScriptTimeoutMilliSeconds);
-            var cancellationToken = cancellationSource.Token;
-            cancellationToken.ThrowIfCancellationRequested();
-            cancellationToken.Register(engine.Interrupt);
-            return cancellationToken;
+            token = cancellationSource.Token;
+            token.ThrowIfCancellationRequested();
+            token.Register(engine.Interrupt);
+
+            return true;
+        }
+
+        private async Task<V8Script> Compile(IncludeScript script, bool addToCache = true, int? cacheExpirationSeconds = null)
+        {
+            CachedV8Script cachedScript;
+
+            if (TryGetCached(script.Name, out cachedScript))
+            {
+                return cachedScript.Script;
+            }
+
+            if (string.IsNullOrEmpty(script.Code) && !string.IsNullOrEmpty(script.Uri))
+            {
+                bool isFile = true;
+                Uri uri = null;
+                if (Uri.IsWellFormedUriString(script.Uri, UriKind.RelativeOrAbsolute))
+                {
+                    uri = new Uri(script.Uri);
+                    isFile = uri.IsFile;
+                }
+
+                if (isFile)
+                {
+                    using (var reader = File.OpenText(script.Uri))
+                    {
+                        script.Code = await reader.ReadToEndAsync();
+                    }
+                }
+                else
+                {
+                    using (var httpClient = new HttpClient())
+                    {
+                        script.Code = await httpClient.GetStringAsync(uri);
+                    }
+                }
+            }
+            if (!string.IsNullOrEmpty(script.Code))
+            {
+                return Compile(script.Name, script.Code, addToCache, cacheExpirationSeconds);
+            }
+            return null;
         }
 
         public V8Script Compile(string scriptId, string code, bool addToCache = true, int? cacheExpirationSeconds = null)
