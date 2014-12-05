@@ -56,7 +56,7 @@ namespace ClearScript.Manager.Test
                 new ExecutionOptions
                 {
                     HostObjects = new List<HostObject> {new HostObject {Name = "subject", Target = subject}},
-                    Scripts = new List<IncludeScript> {new IncludeScript {Uri = "http://localhost:9510/TestIncludeScript.js", Name = "testScript"}}
+                    Scripts = new List<IncludeScript> { new IncludeScript { Uri = "https://gist.githubusercontent.com/eswann/3215f3afff3a602c0f3a/raw/a9ace53fca80fdcdefba60c4f7bf803bf5239905/gistfile1.txt", Name = "testScript" } }
                 });
 
             subject.Name.ShouldEqual("Name");
