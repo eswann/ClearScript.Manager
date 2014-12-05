@@ -41,7 +41,8 @@ These settings can be set manually or added to the AppSettings of your applicati
     //V8 Max Old Space in bytes:  
 	int MaxOldSpaceBytes { get; }
         
-	//Default script timeout in ms.  If the script timeout is set to 0, the script will not execute within a Task with a timeout.
+	//Default script timeout in ms.  
+    //If the script timeout is set to 0, the script will not execute within a Task with a timeout.
 	int ScriptTimeoutMilliSeconds { get; }  
     
     //Max number of simultaneous V8 Runtimes:  
@@ -67,11 +68,11 @@ To run multiple scripts, use the ExecuteAsync that accepts an enumerable of scri
 Settings will be applied to all scripts in the collection.  Scripts can be actual code, a local file path or a Uri.
 
     await manager.ExecuteAsync(new List<IncludeScript>
-                {
-                    new IncludeScript {Uri = ".\\TestMainScript.js", ScriptId = "testScript"},
-                    new IncludeScript {Code = "subject.TestString = 'test string3';", ScriptId = "testScript3"},
-                    new IncludeScript {Uri = "https://gist.githubusercontent.com/eswann/62fc90e542f7697263db/raw/026c42ef0043a70a8c3b720e3026ecee9c691a06/gistfile1.txt", ScriptId = "TestScript4"}
-                });
+    {
+        new IncludeScript {Uri = ".\\TestMainScript.js", ScriptId = "testScript"},
+        new IncludeScript {Code = "subject.TestString = 'test string3';", ScriptId = "testScript3"},
+        new IncludeScript {Uri = "https://www.myscriptishere.org/script.txt", ScriptId = "TestScript4"}
+    });
     
 
 ### Execution Options
@@ -83,7 +84,8 @@ Execution options are the new way of passing options to the ClearScript runtime 
     /// Types to make available to the JavaScript runtime.
     public IEnumerable<HostType> HostTypes
 
-    /// Indicates that this script should be added to the script cache once compiled.  Default is True.
+    /// Indicates that this script should be added to the script cache once compiled.  
+    /// Default is True.
     public bool AddToCache
 
     /// External JavaScripts to import before executing the current script.
@@ -96,7 +98,8 @@ Host objects are a way of passing an object instance to JavaScript from .Net.
     var manager = new RuntimeManager(new ManualManagerSettings());
 
     await manager.ExecuteAsync("testscript", "subject.Count = 10;",
-        new ExecutionOptions{HostObjects = new List<HostObject> {new HostObject {Name = "subject", Target = subject}}});
+        new ExecutionOptions{HostObjects = 
+            new List<HostObject> {new HostObject {Name = "subject", Target = subject}}});
 
 #### Passing in Host Types
 Host types allow you to instantiate a .Net type or types in the JavaScript runtime. 
@@ -111,8 +114,8 @@ Host types allow you to instantiate a .Net type or types in the JavaScript runti
 
     await manager.ExecuteAsync("testscript", "subject.Result = MathStuff.Pow(10,2);", 
         new ExecutionOptions{
-            HostObjects = new List<HostObject> { new HostObject { Name = "subject", Target = subject } }, 
-            HostTypes = new List<HostType> { hostType }});
+        HostObjects = new List<HostObject> { new HostObject { Name = "subject", Target = subject } }, 
+        HostTypes = new List<HostType> { hostType }});
 
 #### Passing in Included Scripts
 Included scripts can also be run by setting the IncludeScripts property on the ExecutionOptions.  These scripts are 
