@@ -29,6 +29,11 @@ namespace ClearScript.Manager
         }
 
         /// <summary>
+        /// Indicates the duration that a script should be cached.
+        /// </summary>
+        public int? CacheExpirationSeconds { get; set; }
+
+        /// <summary>
         /// External JavaScripts to import before executing the current script.
         /// </summary>
         public IList<IncludeScript> Scripts { get; set; }

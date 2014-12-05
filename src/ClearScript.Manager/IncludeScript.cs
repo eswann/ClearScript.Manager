@@ -8,7 +8,7 @@
         /// <summary>
         /// Unique name of the script to execute.
         /// </summary>
-        public string Name { get; set; }
+        public string ScriptId { get; set; }
 
         /// <summary>
         /// Uri (file or Url) of the script to execute.  Need to include script code or script Url.

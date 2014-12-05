@@ -70,6 +70,7 @@
     <Compile Include="ManagerPool.cs" />
     <Compile Include="ManagerScope.cs" />
     <Compile Include="ManagerSettings.cs" />
+    <Compile Include="ScriptCompiler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClearScript.Manager.nuspec" />

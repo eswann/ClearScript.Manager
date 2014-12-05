@@ -19,9 +19,8 @@ namespace ClearScript.Manager.Test
                 new ExecutionOptions
                 {
                     HostObjects = new List<HostObject> {new HostObject {Name = "subject", Target = subject}},
-                    Scripts = new List<IncludeScript> {new IncludeScript {Code = preScript, Name = "testScript"}}
+                    Scripts = new List<IncludeScript> {new IncludeScript {Code = preScript, ScriptId = "testScript2"}}
                 });
-                
 
             subject.Name.ShouldEqual("Name");
             subject.Count.ShouldEqual(10);
@@ -38,7 +37,7 @@ namespace ClearScript.Manager.Test
                 new ExecutionOptions
                 {
                     HostObjects = new List<HostObject> {new HostObject {Name = "subject", Target = subject}},
-                    Scripts = new List<IncludeScript> {new IncludeScript {Uri = ".\\TestIncludeScript.js", Name = "testScript"}}
+                    Scripts = new List<IncludeScript> {new IncludeScript {Uri = ".\\TestIncludeScript.js", ScriptId = "testScript2"}}
                 });
 
             subject.Name.ShouldEqual("Name");
@@ -56,7 +55,7 @@ namespace ClearScript.Manager.Test
                 new ExecutionOptions
                 {
                     HostObjects = new List<HostObject> {new HostObject {Name = "subject", Target = subject}},
-                    Scripts = new List<IncludeScript> { new IncludeScript { Uri = "https://gist.githubusercontent.com/eswann/3215f3afff3a602c0f3a/raw/a9ace53fca80fdcdefba60c4f7bf803bf5239905/gistfile1.txt", Name = "testScript" } }
+                    Scripts = new List<IncludeScript> { new IncludeScript { Uri = "https://gist.githubusercontent.com/eswann/3215f3afff3a602c0f3a/raw/a9ace53fca80fdcdefba60c4f7bf803bf5239905/gistfile1.txt", ScriptId = "testScript2" } }
                 });
 
             subject.Name.ShouldEqual("Name");
