@@ -57,9 +57,22 @@ These settings can be set manually or added to the AppSettings of your applicati
 ## Using the Runtime Manager
 
 ### Running Basic JavaScript
+Grab a runtime manager and use the ExecuteAsync method. 
 
     var manager = new RuntimeManager(new ManagerSettings());  
     await manager.ExecuteAsync("test", "var i = 0; i++;");
+
+### Running Multiple Scripts
+To run multiple scripts, use the ExecuteAsync that accepts an enumerable of scripts.  Scripts will be run in order.  
+Settings will be applied to all scripts in the collection.  Scripts can be actual code, a local file path or a Uri.
+
+    await manager.ExecuteAsync(new List<IncludeScript>
+                {
+                    new IncludeScript {Uri = ".\\TestMainScript.js", ScriptId = "testScript"},
+                    new IncludeScript {Code = "subject.TestString = 'test string3';", ScriptId = "testScript3"},
+                    new IncludeScript {Uri = "https://gist.githubusercontent.com/eswann/62fc90e542f7697263db/raw/026c42ef0043a70a8c3b720e3026ecee9c691a06/gistfile1.txt", ScriptId = "TestScript4"}
+                });
+    
 
 ### Execution Options
 Execution options are the new way of passing options to the ClearScript runtime manager.
@@ -101,8 +114,8 @@ Host types allow you to instantiate a .Net type or types in the JavaScript runti
             HostObjects = new List<HostObject> { new HostObject { Name = "subject", Target = subject } }, 
             HostTypes = new List<HostType> { hostType }});
 
-#### Passing in External Scripts
-External scripts can also be run by setting the IncludeScripts property on the ExecutionOptions.  These scripts are 
+#### Passing in Included Scripts
+Included scripts can also be run by setting the IncludeScripts property on the ExecutionOptions.  These scripts are 
 intended to set up reused libraries and will be run before the execution of the main script.  
 
 A script can be set up in a couple of ways:
