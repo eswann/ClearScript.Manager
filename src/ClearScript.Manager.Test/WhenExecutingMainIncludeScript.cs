@@ -76,8 +76,7 @@ namespace ClearScript.Manager.Test
             await manager.ExecuteAsync(new List<IncludeScript>
                 {
                     new IncludeScript {Uri = ".\\TestMainScript.js", ScriptId = "testScript"},
-                    new IncludeScript {Code = "subject.TestString = 'test string3';", ScriptId = "testScript3"},
-                    new IncludeScript {Uri = "https://gist.githubusercontent.com/eswann/62fc90e542f7697263db/raw/026c42ef0043a70a8c3b720e3026ecee9c691a06/gistfile1.txt", ScriptId = "TestScript4"}
+                    new IncludeScript {Code = "subject.TestString = 'test string3';", ScriptId = "testScript3"}
                 },
                 new ExecutionOptions
                 {
@@ -85,7 +84,7 @@ namespace ClearScript.Manager.Test
                 });
 
             subject.Name.ShouldEqual("Name");
-            subject.Count.ShouldEqual(20);
+            subject.Count.ShouldEqual(10);
             subject.TestString.ShouldEqual("test string3");
         }
 
@@ -96,23 +95,6 @@ namespace ClearScript.Manager.Test
             var manager = new RuntimeManager(new ManualManagerSettings());
 
             await manager.ExecuteAsync(new List<IncludeScript> { new IncludeScript { Uri = ".\\TestMainScript.js", ScriptId = "testScript" } },
-                new ExecutionOptions
-                {
-                    HostObjects = new List<HostObject> { new HostObject { Name = "subject", Target = subject } },
-                });
-
-            subject.Name.ShouldEqual("Name");
-            subject.Count.ShouldEqual(10);
-            subject.TestString.ShouldEqual("test string1");
-        }
-
-        [Test]
-        public async void Script_With_Http_Reference_Is_Run()
-        {
-            var subject = new TestObject();
-            var manager = new RuntimeManager(new ManualManagerSettings());
-
-            await manager.ExecuteAsync(new List<IncludeScript> { new IncludeScript { Uri = "https://gist.githubusercontent.com/eswann/66796164c1904b6135ea/raw/5491642164a45ae34af2926137950de3249d1e91/gistfile1.txt", ScriptId = "testScript" } },
                 new ExecutionOptions
                 {
                     HostObjects = new List<HostObject> { new HostObject { Name = "subject", Target = subject } },

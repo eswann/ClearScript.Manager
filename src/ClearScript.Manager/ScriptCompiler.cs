@@ -1,8 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using ClearScript.Manager.Caching;
+using ClearScript.Manager.Loaders;
 using Microsoft.ClearScript.V8;
 
 namespace ClearScript.Manager
@@ -57,28 +56,7 @@ namespace ClearScript.Manager
 
             if (string.IsNullOrEmpty(script.Code) && !string.IsNullOrEmpty(script.Uri))
             {
-                bool isFile = true;
-                Uri uri = null;
-                if (Uri.IsWellFormedUriString(script.Uri, UriKind.RelativeOrAbsolute))
-                {
-                    uri = new Uri(script.Uri);
-                    isFile = uri.IsFile;
-                }
-
-                if (isFile)
-                {
-                    using (var reader = File.OpenText(script.Uri))
-                    {
-                        script.Code = await reader.ReadToEndAsync();
-                    }
-                }
-                else
-                {
-                    using (var httpClient = new HttpClient())
-                    {
-                        script.Code = await httpClient.GetStringAsync(uri);
-                    }
-                }
+                await ScriptLoadManager.LoadScript(script);
             }
             if (!string.IsNullOrEmpty(script.Code))
             {
