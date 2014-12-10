@@ -30,11 +30,11 @@ namespace ClearScript.Manager.Http.Loaders
             return false;
         }
 
-        public async Task LoadCodeAsync(IncludeScript script)
+        public void LoadCode(IncludeScript script)
         {
             using (var httpClient = new HttpClient())
             {
-                script.Code = await httpClient.GetStringAsync(script.Uri);
+                script.Code = httpClient.GetStringAsync(script.Uri).Result;
             }
         }
     }

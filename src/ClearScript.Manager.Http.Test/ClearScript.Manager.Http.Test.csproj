@@ -51,6 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WhenExecutingMainIncludeScript.cs" />
     <Compile Include="WhenExecutingScriptWithIncludeScripts.cs" />
+    <Compile Include="WhenMakingHttpCall.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

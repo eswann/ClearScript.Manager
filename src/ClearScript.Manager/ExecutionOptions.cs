@@ -8,16 +8,27 @@ namespace ClearScript.Manager
     public class ExecutionOptions
     {
         private bool _addToCache = true;
+        private IList<HostObject> _hostObjects;
+        private IList<HostType> _hostTypes;
+        private IList<IncludeScript> _scripts;
 
         /// <summary>
         /// Objects to inject into the JavaScript runtime.
         /// </summary>
-        public IEnumerable<HostObject> HostObjects { get; set; }
+        public IList<HostObject> HostObjects
+        {
+            get { return _hostObjects ?? (_hostObjects = new List<HostObject>()); }
+            set { _hostObjects = value; }
+        }
 
         /// <summary>
         /// Types to make available to the JavaScript runtime.
         /// </summary>
-        public IEnumerable<HostType> HostTypes { get; set; }
+        public IList<HostType> HostTypes
+        {
+            get { return _hostTypes ?? (_hostTypes = new List<HostType>()); }
+            set { _hostTypes = value; }
+        }
 
         /// <summary>
         /// Indicates that this script should be added to the script cache once compiled.  Default is True.
@@ -36,6 +47,10 @@ namespace ClearScript.Manager
         /// <summary>
         /// External JavaScripts to import before executing the current script.
         /// </summary>
-        public IList<IncludeScript> Scripts { get; set; }
+        public IList<IncludeScript> Scripts
+        {
+            get { return _scripts ?? (_scripts = new List<IncludeScript>()); }
+            set { _scripts = value; }
+        }
     }
 }

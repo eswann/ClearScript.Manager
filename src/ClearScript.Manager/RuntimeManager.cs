@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ClearScript.Manager.Caching;
+using ClearScript.Manager.Extensions;
+using ClearScript.Manager.Loaders;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
 
@@ -149,11 +151,7 @@ namespace ClearScript.Manager
             if (options == null)
                 options = new ExecutionOptions();
 
-            IEnumerable<V8Script> compiledScripts =
-                await
-                    Task.WhenAll(
-                        scriptList.Select(
-                            x => _scriptCompiler.Compile(x, options.AddToCache, options.CacheExpirationSeconds)));
+            IEnumerable<V8Script> compiledScripts = scriptList.Select(x => _scriptCompiler.Compile(x, options.AddToCache, options.CacheExpirationSeconds));
 
             using (V8ScriptEngine engine = _v8Runtime.CreateScriptEngine(V8ScriptEngineFlags.DisableGlobalMembers))
             {
@@ -161,6 +159,8 @@ namespace ClearScript.Manager
                 {
                     engine.AddHostType("Console", typeof (Console));
                 }
+
+                Requirer.Build(_scriptCompiler, engine);
 
                 if (configAction != null)
                 {
@@ -171,19 +171,7 @@ namespace ClearScript.Manager
                 {
                     foreach (var script in options.Scripts)
                     {
-                        if (string.IsNullOrEmpty(script.ScriptId))
-                        {
-                            if (!string.IsNullOrEmpty(script.Uri))
-                            {
-                                script.ScriptId = script.Uri;
-                            }
-                            else if (!string.IsNullOrEmpty(script.Code))
-                            {
-                                script.ScriptId = script.Code.GetHashCode().ToString(CultureInfo.InvariantCulture);
-                            }
-                        }
-
-                        var compiledInclude = await _scriptCompiler.Compile(script, options.AddToCache);
+                        var compiledInclude = _scriptCompiler.Compile(script, options.AddToCache);
                         if (compiledInclude != null)
                         {
                             engine.Execute(compiledInclude);
@@ -200,14 +188,11 @@ namespace ClearScript.Manager
                         try
                         {
                             V8Script script = compiledScript;
-                            await Task.Run(() => engine.Execute(script), cancellationToken);
+                            await Task.Run(() => engine.Execute(script), cancellationToken).ConfigureAwait(false);
                         }
                         catch (ScriptInterruptedException ex)
                         {
-                            var newEx =
-                                new ScriptInterruptedException(
-                                    "Script interruption occurred, this often indicates a script timeout.  Examine the data and inner exception for more information.",
-                                    ex);
+                            var newEx = new ScriptInterruptedException("Script interruption occurred, this often indicates a script timeout.  Examine the data and inner exception for more information.", ex);
                             newEx.Data.Add("Timeout", _settings.ScriptTimeoutMilliSeconds);
                             newEx.Data.Add("ScriptId", compiledScript.Name);
 
@@ -241,9 +226,6 @@ namespace ClearScript.Manager
             if (scriptList == null)
                 return;
 
-            if (options == null)
-                options = new ExecutionOptions();
-
             foreach (var includeScript in scriptList)
             {
                 if (string.IsNullOrEmpty(includeScript.ScriptId) && !string.IsNullOrEmpty(includeScript.Code))
@@ -252,31 +234,10 @@ namespace ClearScript.Manager
                 }
             }
 
-            var configAction = new Action<V8ScriptEngine>(engine =>
-            {
-                if (options.HostObjects != null)
-                {
-                    foreach (HostObject hostObject in options.HostObjects)
-                    {
-                        engine.AddHostObject(hostObject.Name, hostObject.Flags, hostObject.Target);
-                    }
-                }
+            if (options == null)
+                options = new ExecutionOptions();
 
-                if (options.HostTypes != null)
-                {
-                    foreach (HostType hostType in options.HostTypes)
-                    {
-                        if (hostType.Type != null)
-                        {
-                            engine.AddHostType(hostType.Name, hostType.Type);
-                        }
-                        else if (hostType.HostTypeCollection != null)
-                        {
-                            engine.AddHostType(hostType.Name, hostType.Type);
-                        }
-                    }
-                }
-            });
+            var configAction = new Action<V8ScriptEngine>(engine => engine.ApplyOptions(options));
 
             await ExecuteAsync(scriptList, configAction, options);
         }

@@ -56,10 +56,17 @@
     <Compile Include="Caching\LruCache.cs" />
     <Compile Include="Caching\LruCacheCorruptionException.cs" />
     <Compile Include="ExecutionOptions.cs" />
+    <Compile Include="Extensions\DynamicExtensions.cs" />
+    <Compile Include="Extensions\EngineExtensions.cs" />
     <Compile Include="Loaders\FileScriptLoader.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Loaders\ScriptLoader.cs" />
+    <Compile Include="Loaders\RequireManager.cs" />
+    <Compile Include="Loaders\RequiredPackage.cs" />
+    <Compile Include="Loaders\IScriptLoader.cs" />
+    <Compile Include="Loaders\Requirer.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Loaders\ScriptLoadManager.cs" />
     <Compile Include="IncludeScript.cs" />
     <Compile Include="HostObject.cs" />

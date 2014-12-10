@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace ClearScript.Manager.Loaders
 {
@@ -25,11 +24,11 @@ namespace ClearScript.Manager.Loaders
             return true;
         }
 
-        public async Task LoadCodeAsync(IncludeScript script)
+        public void LoadCode(IncludeScript script)
         {
             using (var reader = File.OpenText(script.Uri))
             {
-                script.Code = await reader.ReadToEndAsync();
+                script.Code = reader.ReadToEnd();
             }
         }
     }

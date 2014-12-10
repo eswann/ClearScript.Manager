@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ClearScript.Manager.Loaders
 {
@@ -14,7 +13,7 @@ namespace ClearScript.Manager.Loaders
         /// Register a script loader with the manager.
         /// </summary>
         /// <param name="loader">The script loader to register.</param>
-        public static void RegisterLoader(IScriptLoader loader)
+        public static void RegisterLoader(this IScriptLoader loader)
         {
             _loaders.Add(loader);
         }
@@ -23,12 +22,12 @@ namespace ClearScript.Manager.Loaders
         /// Uses the manager to load a script.
         /// </summary>
         /// <param name="script">The script to load.</param>
-        public static async Task LoadScript(IncludeScript script)
+        public static void LoadScript(this IncludeScript script)
         {
             foreach (var scriptLoader in _loaders)
             {
                 if (scriptLoader.ShouldUse(script))
-                    await scriptLoader.LoadCodeAsync(script);
+                    scriptLoader.LoadCode(script);
             }
         }
 

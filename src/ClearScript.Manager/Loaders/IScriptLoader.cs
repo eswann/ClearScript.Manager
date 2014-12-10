@@ -17,8 +17,8 @@ namespace ClearScript.Manager.Loaders
         /// <summary>
         /// Loads the scripts Code property from the other available properties of the IncludeScript, typically using hte Uri.
         /// </summary>
-        /// <param name="script"></param>
-        Task LoadCodeAsync(IncludeScript script);
+        /// <param name="script">Script to load</param>
+        void LoadCode(IncludeScript script);
     }
 
 }

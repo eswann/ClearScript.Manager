@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Text;
 using ClearScript.Manager.Caching;
 using ClearScript.Manager.Loaders;
 using Microsoft.ClearScript.V8;
@@ -45,9 +45,11 @@ namespace ClearScript.Manager
             return compiledScript;
         }
 
-        public async Task<V8Script> Compile(IncludeScript script, bool addToCache = true, int? cacheExpirationSeconds = null)
+        public V8Script Compile(IncludeScript script, bool addToCache = true, int? cacheExpirationSeconds = null)
         {
             CachedV8Script cachedScript;
+
+            script.EnsureScriptId();
 
             if (TryGetCached(script.ScriptId, out cachedScript))
             {
@@ -56,10 +58,16 @@ namespace ClearScript.Manager
 
             if (string.IsNullOrEmpty(script.Code) && !string.IsNullOrEmpty(script.Uri))
             {
-                await ScriptLoadManager.LoadScript(script);
+                script.LoadScript();
             }
             if (!string.IsNullOrEmpty(script.Code))
             {
+                if (!string.IsNullOrEmpty(script.PrependCode) || !string.IsNullOrEmpty(script.AppendCode))
+                {
+                    var builder = new StringBuilder();
+                    builder.Append(script.PrependCode).Append(script.Code).Append(script.AppendCode);
+                    return Compile(script.ScriptId, builder.ToString(), addToCache, cacheExpirationSeconds); 
+                }
                 return Compile(script.ScriptId, script.Code, addToCache, cacheExpirationSeconds);
             }
             return null;
