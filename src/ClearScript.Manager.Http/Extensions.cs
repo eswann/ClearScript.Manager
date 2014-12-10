@@ -5,6 +5,8 @@ namespace ClearScript.Manager.Http
 {
     public static class Extensions
     {
+
+
         private static readonly Type _nodeHttpType = typeof(NodeHttp);
 
         public static ExecutionOptions AddHttpHelperObjects(this ExecutionOptions options)

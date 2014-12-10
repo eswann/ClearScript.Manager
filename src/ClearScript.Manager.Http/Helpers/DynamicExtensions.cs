@@ -4,19 +4,13 @@ using System.Dynamic;
 
 namespace ClearScript.Manager.Http.Helpers
 {
-    public static class DynamicObjectExtensions
+    public static class DynamicExtensions
     {
-        public static bool HasField(this DynamicObject obj, string field)
+        public static bool TryGetMember(this DynamicObject source, string name, out object outField)
         {
-            return !(obj.AsDynamic().field is Microsoft.ClearScript.Undefined);
-        }
-
-        public static bool TryGetField(this DynamicObject obj, string field, out object outField)
-        {
-
-            outField = obj.AsDynamic().field;
+            
+            outField = ((dynamic)source).field;
             return !(outField is Microsoft.ClearScript.Undefined);
-
         }
 
         public static dynamic AsDynamic(this DynamicObject obj)
@@ -33,18 +27,18 @@ namespace ClearScript.Manager.Http.Helpers
             foreach (var varName in obj.GetDynamicMemberNames())
             {
                 object prop;
-                if (obj.TryGetField(varName, out prop))
+                if (obj.TryGetMember(varName, out prop))
                 {
                     yield return new KeyValuePair<string, object>(varName, prop);
                 }
             }
         }
 
-        public static T GetField<T>(this DynamicObject obj, string field, T defaultValue = default(T))
+        public static T GetMember<T>(this DynamicObject source, string name, T defaultValue = default(T))
         {
             Object outField;
 
-            if (obj.TryGetMember(new SimpleGetMemberBinder(field), out outField))
+            if (source.TryGetMember(new SimpleGetMemberBinder(name), out outField))
             {
                 if (outField is Microsoft.ClearScript.Undefined)
                 {
@@ -56,11 +50,11 @@ namespace ClearScript.Manager.Http.Helpers
             return defaultValue;
         }
 
-        public static T GetField<T>(this DynamicObject obj, string field, Func<object, T> converter, T defaultValue = default(T))
+        public static T GetMember<T>(this DynamicObject source, string name, Func<object, T> converter, T defaultValue = default(T))
         {
             Object outField;
 
-            if (obj.TryGetMember(new SimpleGetMemberBinder(field), out outField))
+            if (source.TryGetMember(new SimpleGetMemberBinder(name), out outField))
             {
                 if (outField is Microsoft.ClearScript.Undefined)
                 {
@@ -71,6 +65,18 @@ namespace ClearScript.Manager.Http.Helpers
 
             return defaultValue;
         }
+    }
 
+    internal class SimpleGetMemberBinder : GetMemberBinder
+    {
+        public SimpleGetMemberBinder(string name)
+            : base(name, true)
+        {
+        }
+
+        public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
+        {
+            return null;
+        }
     }
 }

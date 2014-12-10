@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Http;
-using System.Threading.Tasks;
 using ClearScript.Manager.Loaders;
 
 namespace ClearScript.Manager.Http.Loaders
@@ -12,7 +11,7 @@ namespace ClearScript.Manager.Http.Loaders
     {
         public static void Register()
         {
-            ScriptLoadManager.RegisterLoader(new HttpScriptLoader());
+            new HttpScriptLoader().RegisterLoader();
         }
 
         public bool ShouldUse(IncludeScript script)

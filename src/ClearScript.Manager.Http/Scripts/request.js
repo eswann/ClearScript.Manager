@@ -1,4 +1,6 @@
-﻿function request(options, callback) {
+﻿var http = require('http');
+
+function requestFactory(options, callback) {
 
     var cfg = options;
     if (typeof options === 'string') {
@@ -7,7 +9,7 @@
 
     cfg.callback = callback || options.callback;
 
-    return new request.Request(cfg);
+    return new requestFactory.Request(cfg);
 }
 
 
@@ -18,10 +20,10 @@ function Request(options) {
 }
 
 Request.prototype.go = function () {
-    var http = require('http'),
-        me = this,
-        strings = [],
-        buffer;
+    var me = this;
+    var strings = [];
+    var buffer;
+
     me.req = http.request(me.options, function (res) {
         if (me.options.callback) {
             res.on('data', function (chunk) {
@@ -89,4 +91,6 @@ if (typeof module != 'undefined' && module != null) {
     module.exports = request;
 }
 
-request.Request = Request;
+requestFactory.Request = Request;
+
+request = requestFactory;

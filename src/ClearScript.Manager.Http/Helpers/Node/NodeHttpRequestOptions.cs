@@ -7,15 +7,15 @@ namespace ClearScript.Manager.Http.Helpers.Node
     {
         public NodeHttpRequestOptions(DynamicObject config)
         {
-            host = config.GetField<string>("host");
-            scheme = config.GetField("scheme", "http");
-            hostname = config.GetField<string>("hostname") ?? host;
+            host = config.GetMember<string>("host");
+            scheme = config.GetMember("scheme", "http");
+            hostname = config.GetMember<string>("hostname") ?? host;
 
-            url = config.GetField<object>("uri") ?? config.GetField<object>("url");
-            method = config.GetField<string>("method");
-            headers = config.GetField<DynamicObject>("headers");
+            url = config.GetMember<object>("uri") ?? config.GetMember<object>("url");
+            method = config.GetMember<string>("method");
+            headers = config.GetMember<DynamicObject>("headers");
 
-            port = config.GetField("port", Convert.ToInt32, 80);
+            port = config.GetMember("port", Convert.ToInt32, 80);
         }
 
         public string host

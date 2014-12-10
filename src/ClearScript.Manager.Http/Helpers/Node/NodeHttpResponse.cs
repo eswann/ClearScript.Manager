@@ -23,20 +23,20 @@ namespace ClearScript.Manager.Http.Helpers.Node
 
             if (!resp.IsFaulted)
             {
-                this.statusCode = (int)resp.Result.StatusCode;
+                statusCode = (int)resp.Result.StatusCode;
 
-                this.headers = new PropertyBag();
+                headers = new PropertyBag();
 
                 foreach (var kvp in resp.Result.Headers)
                 {
-                    this.headers[kvp.Key] = kvp.Value.FirstOrDefault();
+                    headers[kvp.Key] = kvp.Value.FirstOrDefault();
                 }
 
                 if (resp.Result.Content != null)
                 {
                     foreach (var kvp in resp.Result.Content.Headers)
                     {
-                        this.headers[kvp.Key] = kvp.Value.FirstOrDefault();
+                        headers[kvp.Key] = kvp.Value.FirstOrDefault();
                     }
                 }
             }
@@ -46,11 +46,12 @@ namespace ClearScript.Manager.Http.Helpers.Node
         {
             _resp.Result.Content.ReadAsStreamAsync().ContinueWith(x =>
             {
-                this.InnerStream = x.Result;
-                this.OnData();
+                InnerStream = x.Result;
+                OnData();
             });
         }
         public object body { get; set; }
+
         internal HttpResponseMessage GetHttpResponseMessage()
         {
             return _resp.Result;
@@ -81,12 +82,10 @@ namespace ClearScript.Manager.Http.Helpers.Node
             List<dynamic> listeners;
             if (_listeners.TryGetValue("data", out listeners))
             {
-
                 listeners.ForEach(listener => listener.call(null, this));
             }
             if (_listeners.TryGetValue("end", out listeners))
             {
-
                 listeners.ForEach(listener => listener.call(null));
             }
         }

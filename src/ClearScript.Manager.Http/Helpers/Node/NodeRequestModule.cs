@@ -13,17 +13,16 @@ namespace ClearScript.Manager.Http.Helpers.Node
         internal static void MakeRequest(DynamicObject config, DynamicObject callback, Microsoft.ClearScript.V8.V8ScriptEngine engine)
         {
             var options = new NodeHttpRequestOptions(config);
-            var uriObj = new Uri((config.GetField<object>("uri") ?? config.GetField<object>("url")).ToString());
-            options.url = (config.GetField<object>("uri") ?? config.GetField<object>("url"));
+            var uriObj = new Uri((config.GetMember<object>("uri") ?? config.GetMember<object>("url")).ToString());
+            options.url = (config.GetMember<object>("uri") ?? config.GetMember<object>("url"));
             options.host = uriObj.Host;
             options.hostname = uriObj.Host;
             options.scheme = uriObj.Scheme;
             options.path = uriObj.PathAndQuery;
             options.port = uriObj.Port;
-            options.method = config.GetField("method", "GET");
-            options.headers = config.GetField<DynamicObject>("headers");
-            bool isJson = config.GetField("json", false);
-
+            options.method = config.GetMember("method", "GET");
+            options.headers = config.GetMember<DynamicObject>("headers");
+            bool isJson = config.GetMember("json", false);
 
             var req = new NodeHttpRequest(new HttpClient(), new HttpRequestMessage(), options);
             Action<NodeHttpResponse> wrapperCallback = resp =>

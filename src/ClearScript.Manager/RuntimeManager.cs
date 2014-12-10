@@ -15,7 +15,7 @@ namespace ClearScript.Manager
     /// <summary>
     /// Runtime Manager used to execute scripts within a runtime.
     /// </summary>
-    public interface IRuntimeManager
+    public interface IRuntimeManager : IDisposable
     {
         /// <summary>
         /// If True, automatically adds a reference to the .Net Console.
@@ -98,6 +98,11 @@ namespace ClearScript.Manager
         /// <param name="script">Cached script (output)</param>
         /// <returns>Bool indicating that cached script was located.</returns>
         bool TryGetCached(string scriptId, out CachedV8Script script);
+
+        /// <summary>
+        /// Cleans up resources in the current runtime.
+        /// </summary>
+        void Cleanup();
     }
 
 
@@ -110,6 +115,8 @@ namespace ClearScript.Manager
 
         private readonly V8Runtime _v8Runtime;
         private readonly ScriptCompiler _scriptCompiler;
+        private V8ScriptEngine _scriptEngine;
+        private bool _disposed = false;
 
         /// <summary>
         /// Creates a new Runtime Manager.
@@ -153,56 +160,55 @@ namespace ClearScript.Manager
 
             IEnumerable<V8Script> compiledScripts = scriptList.Select(x => _scriptCompiler.Compile(x, options.AddToCache, options.CacheExpirationSeconds));
 
-            using (V8ScriptEngine engine = _v8Runtime.CreateScriptEngine(V8ScriptEngineFlags.DisableGlobalMembers))
+            _scriptEngine = _v8Runtime.CreateScriptEngine(V8ScriptEngineFlags.DisableGlobalMembers);
+
+            if (AddConsoleReference)
             {
-                if (AddConsoleReference)
-                {
-                    engine.AddHostType("Console", typeof (Console));
-                }
+                _scriptEngine.AddHostType("Console", typeof (Console));
+            }
 
-                Requirer.Build(_scriptCompiler, engine);
+            Requirer.Build(_scriptCompiler, _scriptEngine);
 
-                if (configAction != null)
-                {
-                    configAction(engine);
-                }
+            if (configAction != null)
+            {
+                configAction(_scriptEngine);
+            }
 
-                if (options.Scripts != null)
+            if (options.Scripts != null)
+            {
+                foreach (var script in options.Scripts)
                 {
-                    foreach (var script in options.Scripts)
+                    var compiledInclude = _scriptCompiler.Compile(script, options.AddToCache);
+                    if (compiledInclude != null)
                     {
-                        var compiledInclude = _scriptCompiler.Compile(script, options.AddToCache);
-                        if (compiledInclude != null)
-                        {
-                            engine.Execute(compiledInclude);
-                        }
+                        _scriptEngine.Execute(compiledInclude);
                     }
                 }
+            }
 
-                foreach (var compiledScript in compiledScripts)
+            foreach (var compiledScript in compiledScripts)
+            {
+                //Only create a wrapping task if the script has a timeout.
+                CancellationToken cancellationToken;
+                if (TryCreateCancellationToken(_scriptEngine, out cancellationToken))
                 {
-                    //Only create a wrapping task if the script has a timeout.
-                    CancellationToken cancellationToken;
-                    if (TryCreateCancellationToken(engine, out cancellationToken))
+                    try
                     {
-                        try
-                        {
-                            V8Script script = compiledScript;
-                            await Task.Run(() => engine.Execute(script), cancellationToken).ConfigureAwait(false);
-                        }
-                        catch (ScriptInterruptedException ex)
-                        {
-                            var newEx = new ScriptInterruptedException("Script interruption occurred, this often indicates a script timeout.  Examine the data and inner exception for more information.", ex);
-                            newEx.Data.Add("Timeout", _settings.ScriptTimeoutMilliSeconds);
-                            newEx.Data.Add("ScriptId", compiledScript.Name);
+                        V8Script script = compiledScript;
+                        await Task.Run(() => _scriptEngine.Execute(script), cancellationToken).ConfigureAwait(false);
+                    }
+                    catch (ScriptInterruptedException ex)
+                    {
+                        var newEx = new ScriptInterruptedException("Script interruption occurred, this often indicates a script timeout.  Examine the data and inner exception for more information.", ex);
+                        newEx.Data.Add("Timeout", _settings.ScriptTimeoutMilliSeconds);
+                        newEx.Data.Add("ScriptId", compiledScript.Name);
 
-                            throw newEx;
-                        }
+                        throw newEx;
                     }
-                    else
-                    {
-                        engine.Execute(compiledScript);
-                    }
+                }
+                else
+                {
+                    _scriptEngine.Execute(compiledScript);
                 }
             }
 
@@ -252,6 +258,15 @@ namespace ClearScript.Manager
             return _scriptCompiler.TryGetCached(scriptId, out script);
         }
 
+        public void Cleanup()
+        {
+            if (_scriptEngine != null)
+            {
+                _scriptEngine.Dispose();
+                _scriptEngine = null;
+            }
+        }
+
         private bool TryCreateCancellationToken(V8ScriptEngine engine, out CancellationToken token)
         {
             if (_settings.ScriptTimeoutMilliSeconds <= 0)
@@ -277,6 +292,37 @@ namespace ClearScript.Manager
 
             return scriptList.Count == 0 ? null : scriptList;
         }
+
+        #region Dispose
+
+        public void Dispose()
+        {
+            Dispose(true); 
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Disposing the current object.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                _disposed = true;
+                if (disposing)
+                {
+                    Cleanup();
+                }
+            }
+        }
+
+        ~RuntimeManager()
+        {
+            Dispose(false);
+        }
+
+        #endregion
 
     }
 }

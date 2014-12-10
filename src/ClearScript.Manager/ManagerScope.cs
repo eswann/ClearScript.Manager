@@ -29,7 +29,8 @@ namespace ClearScript.Manager
         {
             if (!_disposed)
             {
-               ManagerPool.CurrentPool.ReturnToPool(RuntimeManager);
+                RuntimeManager.Cleanup();
+                ManagerPool.CurrentPool.ReturnToPool(RuntimeManager);
                 _disposed = true;
             }
         }

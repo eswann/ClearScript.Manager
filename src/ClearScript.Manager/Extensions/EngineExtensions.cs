@@ -2,7 +2,7 @@
 
 namespace ClearScript.Manager.Extensions
 {
-    public static class EngineExtensions
+    internal static class EngineExtensions
     {
         public static ScriptEngine AddHostObject(this ScriptEngine engine, HostObject hostObject)
         {

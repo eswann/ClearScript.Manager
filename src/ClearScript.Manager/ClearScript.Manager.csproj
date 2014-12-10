@@ -58,6 +58,7 @@
     <Compile Include="ExecutionOptions.cs" />
     <Compile Include="Extensions\DynamicExtensions.cs" />
     <Compile Include="Extensions\EngineExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Loaders\FileScriptLoader.cs">
       <SubType>Code</SubType>
     </Compile>

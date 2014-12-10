@@ -12,13 +12,18 @@ namespace ClearScript.Manager.Loaders
         private ScriptCompiler _compiler;
         private V8ScriptEngine _engine;
         
-
+        /// <summary>
+        /// Register a packaged for potential requirement.
+        /// </summary>
+        /// <param name="package">The package to register.</param>
         public static void RegisterPackage(RequiredPackage package)
         {
             _packages.Add(package.PackageId, package);
         }
 
-
+        /// <summary>
+        /// Clears all registered packages.
+        /// </summary>
         public static void ClearPackages()
         {
             _packages.Clear();
@@ -38,6 +43,11 @@ namespace ClearScript.Manager.Loaders
             return requirer;
         }
 
+        /// <summary>
+        /// Called via a javascript to require and return the requested package.
+        /// </summary>
+        /// <param name="packageId"></param>
+        /// <returns></returns>
         public object Require(string packageId)
         {
             RequiredPackage package;
@@ -55,13 +65,20 @@ namespace ClearScript.Manager.Loaders
 
             _engine.ApplyOptions(options);
 
-            var compiledScript = _compiler.Compile(new IncludeScript { Uri = package.ScriptUri, PrependCode = packageId + "={};" });
+            if (!string.IsNullOrEmpty(package.ScriptUri))
+            {
+                var compiledScript = _compiler.Compile(new IncludeScript {Uri = package.ScriptUri});
 
-            _engine.Execute(compiledScript);
+                _engine.Execute(compiledScript);
 
-            var result = DynamicExtensions.GetProperty(_engine.Script, packageId);
+                var outputObject = DynamicExtensions.GetProperty(_engine.Script, packageId);
+                return outputObject;
+            }
 
-            return result;
+            if (options.HostObjects.SafeAny())
+                return options.HostObjects[0];
+
+            return null;
         }
 
     }
