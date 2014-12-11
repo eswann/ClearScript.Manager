@@ -54,6 +54,12 @@ These settings can be set manually or added to the AppSettings of your applicati
 	//The default script cache expiration in seconds:  
 	int ScriptCacheExpirationSeconds { get; }
 
+    //Is V8 debugging enabled
+    bool V8DebugEnabled {get;}
+
+    //What is the V8 Debug port to connect on.  Default is 9222.
+    bool V8DebugPort {get;}
+
 
 ## Using the Runtime Manager
 
