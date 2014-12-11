@@ -48,6 +48,16 @@ namespace ClearScript.Manager
         /// The default script cache expiration in seconds.
         /// </summary>
         int ScriptCacheExpirationSeconds { get; }
+
+        /// <summary>
+        /// Is debugging enabled.
+        /// </summary>
+        bool V8DebugEnabled { get; }
+
+        /// <summary>
+        /// What is the debug port.
+        /// </summary>
+        int V8DebugPort { get; }
     }
 
     /// <summary>
@@ -83,6 +93,10 @@ namespace ClearScript.Manager
         /// Default ScriptCacheExpirationSeconds if not present in settings.
         /// </summary>
         public const int DefaultScriptCacheExpirationSeconds = 600;
+        /// <summary>
+        /// Default ScriptCacheExpirationSeconds if not present in settings.
+        /// </summary>
+        public const int DefaultDebugPort = 9222;
 
         public int MaxExecutableBytes
         {
@@ -128,6 +142,16 @@ namespace ClearScript.Manager
             get { return SettingToInt("ScriptCacheExpirationSeconds", DefaultScriptCacheExpirationSeconds); }
         }
 
+        public bool V8DebugEnabled
+        {
+            get { return SettingToBool("DebugEnabled"); }
+        }
+
+        public int V8DebugPort
+        {
+            get { return SettingToInt("DebugPort", DefaultDebugPort); }
+        }
+
 
         /// <summary>
         /// Parses the setting and converts it to an int or sets the default value if the setting is not present.
@@ -143,6 +167,27 @@ namespace ClearScript.Manager
 
             int result;
             if (int.TryParse(stringSetting, out result))
+            {
+                setting = result;
+            }
+
+            return setting.GetValueOrDefault(defaultValue);
+        }
+
+        /// <summary>
+        /// Parses the setting and converts it to a bool or sets the default value if the setting is not present.
+        /// </summary>
+        /// <param name="settingName">Name of the setting to check.</param>
+        /// <param name="defaultValue">Default value if setting is not present.</param>
+        /// <returns>Setting or default value.</returns>
+        public static bool SettingToBool(string settingName, bool defaultValue = false)
+        {
+            bool? setting = null;
+
+            string stringSetting = ConfigurationManager.AppSettings[settingName];
+
+            bool result;
+            if (bool.TryParse(stringSetting, out result))
             {
                 setting = result;
             }
@@ -190,6 +235,10 @@ namespace ClearScript.Manager
         public int ScriptCacheMaxCount { get; set; }
 
         public int ScriptCacheExpirationSeconds { get; set; }
+
+        public bool V8DebugEnabled { get; set; }
+
+        public int V8DebugPort { get; set; }
 
     }
 }

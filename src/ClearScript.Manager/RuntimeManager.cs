@@ -160,7 +160,11 @@ namespace ClearScript.Manager
 
             IEnumerable<V8Script> compiledScripts = scriptList.Select(x => _scriptCompiler.Compile(x, options.AddToCache, options.CacheExpirationSeconds));
 
-            _scriptEngine = _v8Runtime.CreateScriptEngine(V8ScriptEngineFlags.DisableGlobalMembers);
+            V8ScriptEngineFlags flags = _settings.V8DebugEnabled
+                ? V8ScriptEngineFlags.DisableGlobalMembers | V8ScriptEngineFlags.EnableDebugging
+                : V8ScriptEngineFlags.DisableGlobalMembers;
+
+            _scriptEngine = _v8Runtime.CreateScriptEngine(flags, _settings.V8DebugPort);
 
             if (AddConsoleReference)
             {
