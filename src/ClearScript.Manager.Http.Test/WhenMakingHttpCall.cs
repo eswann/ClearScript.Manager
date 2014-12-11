@@ -43,7 +43,7 @@ namespace ClearScript.Manager.Http.Test
             subject.StatusCode.ShouldEqual(200);
         }
 
-        [Test, Ignore]
+        [Test]
         public async void Basic_Http_Get_Body_Is_Retrieved()
         {
             var subject = new TestObject();

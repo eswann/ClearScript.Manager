@@ -39,7 +39,8 @@ namespace ClearScript.Manager.Http.Helpers.Node
 
         protected Stream InnerStream { get; set; }
 
-        public string toString(object enc = null, int? start = null, int? end = null)
+
+        public string asString(object enc = null, int? start = null, int? end = null)
         {
             string encoding = null;
             long pos = InnerStream.Position;
@@ -48,11 +49,11 @@ namespace ClearScript.Manager.Http.Helpers.Node
 
             if (string.IsNullOrWhiteSpace(encoding))
             {
-                ret = new StreamReader(this.InnerStream, true).ReadToEnd();
+                ret = new StreamReader(InnerStream, true).ReadToEnd();
             }
             else
             {
-                ret = new StreamReader(this.InnerStream, System.Text.Encoding.GetEncoding(encoding)).ReadToEnd();
+                ret = new StreamReader(InnerStream, System.Text.Encoding.GetEncoding(encoding)).ReadToEnd();
             }
 
             InnerStream.Position = pos;
