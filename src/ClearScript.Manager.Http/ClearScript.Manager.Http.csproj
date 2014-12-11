@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
-    <Compile Include="Helpers\CallBacker.cs" />
+    <Compile Include="Helpers\ScriptAwaiter.cs" />
     <Compile Include="Helpers\DynamicExtensions.cs" />
     <Compile Include="Helpers\Node\NodeBuffer.cs" />
     <Compile Include="Helpers\Node\NodeHttp.cs" />
