@@ -7,6 +7,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using ClearScript.Manager.WebDemo.Models;
+using Microsoft.ClearScript;
+using Microsoft.ClearScript.V8;
 
 namespace ClearScript.Manager.WebDemo.Controllers
 {
@@ -28,18 +30,22 @@ namespace ClearScript.Manager.WebDemo.Controllers
         public async Task<dynamic> Post([FromBody]Script script)
         {
             var scriptId = Guid.NewGuid();
-            using (var scope = new ManagerScope())
-            {
+            //using (var scope = new ManagerScope())
+            //{
                 //dynamic host = new ExpandoObject();
                 var host = new TestModel();
                 var option = new ExecutionOptions
                     {
                         HostObjects = new List<HostObject> {new HostObject {Name = "host", Target = host}}
                     };
-                await scope.RuntimeManager.ExecuteAsync(scriptId.ToString(), script.Text, option);
+
+            var engine = new V8ScriptEngine();
+            engine.AddHostObject("host", HostItemFlags.None, host);
+            engine.Execute(script.Text);
+                //await scope.RuntimeManager.ExecuteAsync(scriptId.ToString(), script.Text, option);
 
                 return host;
-            }
+            //}
         }
 
         // PUT api/values/5
