@@ -190,20 +190,24 @@ namespace ClearScript.Manager
             {
                 //Only create a wrapping task if the script has a timeout.
                 CancellationToken cancellationToken;
-                if (TryCreateCancellationToken(_scriptEngine, out cancellationToken))
+                if (TryCreateCancellationToken(out cancellationToken))
                 {
-                    try
+                    using (cancellationToken.Register(_scriptEngine.Interrupt))
                     {
-                        V8Script script = compiledScript;
-                        await Task.Run(() => _scriptEngine.Execute(script), cancellationToken).ConfigureAwait(false);
-                    }
-                    catch (ScriptInterruptedException ex)
-                    {
-                        var newEx = new ScriptInterruptedException("Script interruption occurred, this often indicates a script timeout.  Examine the data and inner exception for more information.", ex);
-                        newEx.Data.Add("Timeout", _settings.ScriptTimeoutMilliSeconds);
-                        newEx.Data.Add("ScriptId", compiledScript.Name);
+                        try
+                        {
+                            V8Script script = compiledScript;
+                            await Task.Run(() => _scriptEngine.Execute(script), cancellationToken).ConfigureAwait(false);
+                        }
+                        catch (ScriptInterruptedException ex)
+                        {
+                            var newEx = new ScriptInterruptedException(
+                                "Script interruption occurred, this often indicates a script timeout.  Examine the data and inner exception for more information.", ex);
+                            newEx.Data.Add("Timeout", _settings.ScriptTimeoutMilliSeconds);
+                            newEx.Data.Add("ScriptId", compiledScript.Name);
 
-                        throw newEx;
+                            throw newEx;
+                        }
                     }
                 }
                 else
@@ -267,7 +271,7 @@ namespace ClearScript.Manager
             }
         }
 
-        private bool TryCreateCancellationToken(V8ScriptEngine engine, out CancellationToken token)
+        private bool TryCreateCancellationToken(out CancellationToken token)
         {
             if (_settings.ScriptTimeoutMilliSeconds <= 0)
             {
@@ -278,7 +282,6 @@ namespace ClearScript.Manager
             var cancellationSource = new CancellationTokenSource(_settings.ScriptTimeoutMilliSeconds);
             token = cancellationSource.Token;
             token.ThrowIfCancellationRequested();
-            token.Register(engine.Interrupt);
 
             return true;
         }

@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Http", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Http.Test", "ClearScript.Manager.Http.Test\ClearScript.Manager.Http.Test.csproj", "{76F7C7E8-EB54-4840-989C-124DCC30128D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.WebDemo", "ClearScript.Manager.WebDemo\ClearScript.Manager.WebDemo.csproj", "{15DC9470-1862-4F28-B3D9-55EC94BBA695}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{76F7C7E8-EB54-4840-989C-124DCC30128D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76F7C7E8-EB54-4840-989C-124DCC30128D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76F7C7E8-EB54-4840-989C-124DCC30128D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15DC9470-1862-4F28-B3D9-55EC94BBA695}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15DC9470-1862-4F28-B3D9-55EC94BBA695}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15DC9470-1862-4F28-B3D9-55EC94BBA695}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15DC9470-1862-4F28-B3D9-55EC94BBA695}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
