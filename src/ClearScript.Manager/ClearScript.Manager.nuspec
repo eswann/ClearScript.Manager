@@ -7,6 +7,7 @@
         <authors>eric_swann</authors>
         <owners>eric_swann</owners>
         <projectUrl>https://github.com/eswann/ClearScript.Manager</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/eswann/ClearScript.Manager/master/img/clearscript.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>$description$</description>
         <summary>$description$</summary>
