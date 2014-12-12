@@ -10,4 +10,6 @@ powershell -NoProfile -ExecutionPolicy unrestricted -Command "& {.\publish.ps1 -
 powershell -NoProfile -ExecutionPolicy unrestricted -Command "& {.\publish.ps1 -PackageName 'ClearScript.Manager.Http'; exit $error.Count}"
 
 
+
+
 pause
