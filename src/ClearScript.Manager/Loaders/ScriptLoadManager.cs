@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ClearScript.Manager.Loaders
 {
@@ -27,8 +28,21 @@ namespace ClearScript.Manager.Loaders
             foreach (var scriptLoader in _loaders)
             {
                 if (scriptLoader.ShouldUse(script))
-                    scriptLoader.LoadCode(script);
+                {
+                    try { 
+                        scriptLoader.LoadCode(script);
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ArgumentException(string.Format("{0} failed to load script with Script ID:{1} and Script Uri:{2}. Check InnerException for more info.",
+                                scriptLoader.Name, script.ScriptId, script.Uri), ex);
+                    }
+                }
             }
+
+            throw new ArgumentException(
+                string.Format("The provided script could not be loaded with any of the available script loaders. Script ID:{0}  Script Uri:{1}.", script.ScriptId, script.Uri));
         }
 
     }

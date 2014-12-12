@@ -72,11 +72,13 @@ Grab a runtime manager and use the ExecuteAsync method.
 ### Running Multiple Scripts
 To run multiple scripts, use the ExecuteAsync that accepts an enumerable of scripts.  Scripts will be run in order.  
 Settings will be applied to all scripts in the collection.  Scripts can be actual code, a local file path or a Uri.
+Using an http Uri is dependent on the ClearScript.Manager.Http package as that installs the newest Microsoft.Net.Http package.
 
     await manager.ExecuteAsync(new List<IncludeScript>
     {
         new IncludeScript {Uri = ".\\TestMainScript.js", ScriptId = "testScript"},
         new IncludeScript {Code = "subject.TestString = 'test string3';", ScriptId = "testScript3"},
+        //Requires ClearScript.Manager.Http
         new IncludeScript {Uri = "https://www.myscriptishere.org/script.txt", ScriptId = "TestScript4"}
     });
     
@@ -145,6 +147,29 @@ The script will be compiled and cached in the same way as a normal script.
         public string Code { get; set; }
     }
     
+#### Using Require
+Another way to include scripts and host objects is to use the require. Require is meant to bring in dependencies for the current script
+in the manner that javascript frameworks (like node) do.  So instead of including scripts, your script can instead use require
+in the script itself.
+
+    //In javscript, import the request object/library
+    //FYI: request is a require package included as part of the ClearScript.Manager.Http nuget package
+    var request = require('request');
+    //Now use it to perform a request
+    request({url: 'http://api.icndb.com/jokes/random/1', json: true},
+            function (error, response, body) {
+                subject.Response = response; 
+                subject.Body = body; 
+                subject.Joke = body.value[0].joke; 
+                scriptAwaiter.Callback();
+            });
+    
+
+#### Require can accept:
+* The name of an existing RequirePackage
+* A file path to a local script
+* An http Uri to a script (if ClearScript.Manager.Http is installed)
+
 
 ### Using the Manager Pool
 
@@ -164,6 +189,49 @@ The script will be compiled and cached in the same way as a normal script.
 
 	var runtimeManager = ManagerPool.CurrentPool.GetRuntime()
 	ManagerPool.CurrentPool.ReturnToPool(runtimeManager);
+
+
+##ClearScript.Manager.Http
+This package enables a couple of things.  As mentioned [above](#running-multiple-scripts), 
+it lets script references use an http uri as a loading source.  But in addition, it also allows you to make node-like http calls from
+within your script.  Currently, this has only been tested in Http Get scenarios, will add better support shortly.
+
+    public async void Basic_Http_Get_Body_Is_Retrieved()
+    {
+        var subject = new TestObject();
+        var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
+
+        //Add packages that will be required to perform an http request.
+        //These packages are included as part of ClearScript.Manager.Http.
+        Requirer.RegisterPackage(new HttpPackage());
+        Requirer.RegisterPackage(new RequestPackage());
+
+        //Add in the host object to operate on
+        var options = new ExecutionOptions();
+        options.HostObjects.Add(new HostObject { Name = "subject", Target = subject });
+
+        //Create a script awaiter...this is to force .net to wait until the javascript is finished on the callback
+        //Notice that the scriptAwaiter.Callback is called in javscript http callback.
+        //The ScriptAwaiter is included in the ClearScript.Manager.Http package.
+        var scriptAwaiter = new ScriptAwaiter();
+        options.HostObjects.Add(new HostObject { Name = "scriptAwaiter", Target = scriptAwaiter });
+
+        //Grab a random Chuck Norris joke and assign it to our object in the callback
+        var code = "var request = require('request');" +
+                    "request({url: 'http://api.icndb.com/jokes/random/1', json: true}," +
+                    " function (error, response, body) {subject.Response = response; subject.Body = body; subject.Joke = body.value[0].joke; scriptAwaiter.Callback();});";
+
+        //Execute the script and await the script awaiter so that we pause until the javascript callback has completed.
+        await manager.ExecuteAsync("testScript", code, options);
+        await scriptAwaiter.T;
+
+         //Hilarity ensues
+        subject.Joke.ShouldNotBeNull();
+    }
+
+#### Included Require Packages
+* HttpPackage (http) - Gives access to the .Net Http object.
+* RequestPackage (request) - Gives access to a node-like request object.
 
 
 Additional examples are available in the unit tests.

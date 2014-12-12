@@ -8,6 +8,11 @@ namespace ClearScript.Manager.Loaders
     public interface IScriptLoader
     {
         /// <summary>
+        /// Name of the script loader.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Determines if this script loader should be used at all.
         /// </summary>
         /// <param name="script">Script to evaluate.</param>

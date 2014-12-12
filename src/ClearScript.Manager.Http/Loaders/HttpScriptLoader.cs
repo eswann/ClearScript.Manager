@@ -9,6 +9,8 @@ namespace ClearScript.Manager.Http.Loaders
     /// </summary>
     public class HttpScriptLoader : IScriptLoader
     {
+        public string Name { get { return "FileScriptLoader"; } }
+
         public static void Register()
         {
             new HttpScriptLoader().RegisterLoader();

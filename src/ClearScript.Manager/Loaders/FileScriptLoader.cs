@@ -8,6 +8,8 @@ namespace ClearScript.Manager.Loaders
     /// </summary>
     public class FileScriptLoader : IScriptLoader
     {
+        public string Name { get { return "FileScriptLoader"; } }
+
         public bool ShouldUse(IncludeScript script)
         {
             if (!string.IsNullOrEmpty(script.Code))

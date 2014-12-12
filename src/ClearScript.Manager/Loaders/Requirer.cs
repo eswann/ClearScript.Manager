@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using ClearScript.Manager.Extensions;
 using Microsoft.ClearScript.V8;
 
 namespace ClearScript.Manager.Loaders
 {
+    /// <summary>
+    /// Used to register require packages and also provided to scripts to return required resources via the "require" call.
+    /// </summary>
     public class Requirer
     {
-        private static readonly Dictionary<string, RequiredPackage> _packages = new Dictionary<string, RequiredPackage>();
+        private static readonly ConcurrentDictionary<string, RequiredPackage> _packages = new ConcurrentDictionary<string, RequiredPackage>();
 
         private ScriptCompiler _compiler;
         private V8ScriptEngine _engine;
@@ -18,7 +22,7 @@ namespace ClearScript.Manager.Loaders
         /// <param name="package">The package to register.</param>
         public static void RegisterPackage(RequiredPackage package)
         {
-            _packages.Add(package.PackageId, package);
+            _packages.TryAdd(package.PackageId, package);
         }
 
         /// <summary>
@@ -46,15 +50,24 @@ namespace ClearScript.Manager.Loaders
         /// <summary>
         /// Called via a javascript to require and return the requested package.
         /// </summary>
-        /// <param name="packageId"></param>
-        /// <returns></returns>
+        /// <param name="packageId">ID of the RequirePackage to require.</param>
+        /// <returns>The return object to use for the require. Either the export from the require script or the returned HostObject if not script is present.</returns>
         public object Require(string packageId)
         {
             RequiredPackage package;
+            bool addPackage = false;
 
             if (!_packages.TryGetValue(packageId, out package))
             {
-                throw new KeyNotFoundException(string.Format("The package with ID {0} was not found, did you register this package?", packageId));
+                if (packageId.Contains("/") || packageId.Contains("\\"))
+                {
+                    package = new RequiredPackage { PackageId = packageId, ScriptUri = packageId };
+                    addPackage = true;
+                }
+                else
+                {
+                    throw new KeyNotFoundException(string.Format("The package with ID {0} was not found, did you register this package?", packageId));
+                }
             }
 
             var options = new ExecutionOptions
@@ -72,6 +85,12 @@ namespace ClearScript.Manager.Loaders
                 _engine.Execute(compiledScript);
 
                 var outputObject = DynamicExtensions.GetProperty(_engine.Script, packageId);
+
+                if (addPackage)
+                {
+                    RegisterPackage(package);
+                }
+
                 return outputObject;
             }
 
