@@ -116,7 +116,7 @@ namespace ClearScript.Manager
         private readonly V8Runtime _v8Runtime;
         private readonly ScriptCompiler _scriptCompiler;
         private V8ScriptEngine _scriptEngine;
-        private bool _disposed = false;
+        private bool _disposed;
 
         /// <summary>
         /// Creates a new Runtime Manager.
@@ -171,7 +171,7 @@ namespace ClearScript.Manager
                 _scriptEngine.AddHostType("Console", typeof (Console));
             }
 
-            Requirer.Build(_scriptCompiler, _scriptEngine);
+            RequireManager.BuildRequirer(_scriptCompiler, _scriptEngine);
 
             if (configAction != null)
             {

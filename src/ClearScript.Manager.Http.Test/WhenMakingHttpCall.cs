@@ -14,7 +14,7 @@ namespace ClearScript.Manager.Http.Test
         [SetUp]
         public void Setup()
         {
-            Requirer.ClearPackages();
+            RequireManager.ClearPackages();
         }
 
         [Test]
@@ -23,8 +23,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings{ScriptTimeoutMilliSeconds = 0});
 
-            Requirer.RegisterPackage(new HttpPackage());
-            Requirer.RegisterPackage(new RequestPackage());
+            PackageHelpers.RegisterRequestPackages();
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
@@ -49,8 +48,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            Requirer.RegisterPackage(new HttpPackage());
-            Requirer.RegisterPackage(new RequestPackage());
+            PackageHelpers.RegisterRequestPackages();
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
@@ -75,8 +73,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            Requirer.RegisterPackage(new HttpPackage());
-            Requirer.RegisterPackage(new RequestPackage());
+            PackageHelpers.RegisterRequestPackages();
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();

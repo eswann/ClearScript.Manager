@@ -147,7 +147,7 @@ The script will be compiled and cached in the same way as a normal script.
         public string Code { get; set; }
     }
     
-#### Using Require
+### Using Require
 Another way to include scripts and host objects is to use the require. Require is meant to bring in dependencies for the current script
 in the manner that javascript frameworks (like node) do.  So instead of including scripts, your script can instead use require
 in the script itself.
@@ -166,9 +166,50 @@ in the script itself.
     
 
 #### Require can accept:
+
 * The name of an existing RequirePackage
+
+    var subject = new TestObject();
+    var manager = new RuntimeManager(new ManualManagerSettings {ScriptTimeoutMilliSeconds = 0});
+    
+    //Use the require manager to add a package - probably at startup
+    RequireManager.RegisterPackage(
+        new RequiredPackage { PackageId = "testRequire", ScriptUri = ".\\TestRequire.js" });
+
+    //Require the package from inside of javascript
+    await manager.ExecuteAsync("testscript",
+        "var testObject = require('testRequire'); subject.Count = 10; 
+            subject.TestString = testObject.getText();",
+        new ExecutionOptions
+        {
+            HostObjects = new List<HostObject> {new HostObject {Name = "subject", Target = subject}},
+        });
+
 * A file path to a local script
+
+    var subject = new TestObject();
+    var manager = new RuntimeManager(new ManualManagerSettings {ScriptTimeoutMilliSeconds = 0});
+
+    await manager.ExecuteAsync("testscript",
+        @"var testObject = require('.\\TestRequire.js'); subject.Count = 10; 
+            subject.TestString = testObject.getText();",
+        new ExecutionOptions
+        {
+            HostObjects = new List<HostObject> {new HostObject {Name = "subject", Target = subject}},
+        });
+
 * An http Uri to a script (if ClearScript.Manager.Http is installed)
+
+    var subject = new TestObject();
+    var manager = new RuntimeManager(new ManualManagerSettings {ScriptTimeoutMilliSeconds = 0});
+
+    await manager.ExecuteAsync("testscript",
+            @"var testObject = require('https://randomendpoint.com/testRequire'); subject.Count = 10; 
+                subject.TestString = testObject.getText();",
+            new ExecutionOptions
+            {
+                HostObjects = new List<HostObject> {new HostObject {Name = "subject", Target = subject}},
+            });
 
 
 ### Using the Manager Pool

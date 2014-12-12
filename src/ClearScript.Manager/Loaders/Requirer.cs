@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using ClearScript.Manager.Extensions;
+using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
 
 namespace ClearScript.Manager.Loaders
@@ -11,41 +11,8 @@ namespace ClearScript.Manager.Loaders
     /// </summary>
     public class Requirer
     {
-        private static readonly ConcurrentDictionary<string, RequiredPackage> _packages = new ConcurrentDictionary<string, RequiredPackage>();
-
-        private ScriptCompiler _compiler;
-        private V8ScriptEngine _engine;
-        
-        /// <summary>
-        /// Register a packaged for potential requirement.
-        /// </summary>
-        /// <param name="package">The package to register.</param>
-        public static void RegisterPackage(RequiredPackage package)
-        {
-            _packages.TryAdd(package.PackageId, package);
-        }
-
-        /// <summary>
-        /// Clears all registered packages.
-        /// </summary>
-        public static void ClearPackages()
-        {
-            _packages.Clear();
-        }
-
-        internal static Requirer Build(ScriptCompiler compiler, V8ScriptEngine engine)
-        {
-            var requirer = new Requirer
-            {
-                _compiler = compiler,
-                _engine = engine
-            };
-            
-            //Need to add this as a host object to the script
-            requirer._engine.AddHostObject("require", new Func<string, object>(requirer.Require));
-
-            return requirer;
-        }
+        internal ScriptCompiler Compiler { get; set; }
+        internal V8ScriptEngine Engine { get; set; }
 
         /// <summary>
         /// Called via a javascript to require and return the requested package.
@@ -54,20 +21,46 @@ namespace ClearScript.Manager.Loaders
         /// <returns>The return object to use for the require. Either the export from the require script or the returned HostObject if not script is present.</returns>
         public object Require(string packageId)
         {
-            RequiredPackage package;
-            bool addPackage = false;
+            return Require(packageId, null);
+        }
 
-            if (!_packages.TryGetValue(packageId, out package))
+
+        /// <summary>
+        /// Called via a javascript to require and return the requested package.
+        /// </summary>
+        /// <param name="packageId">ID of the RequirePackage to require.</param>
+        /// <param name="scriptUri">A script uri.  This is only needed if the packageId doesn't meet the script convention name and the package is not a registered package.</param>
+        /// <returns>The return object to use for the require. Either the export from the require script or the returned HostObject if not script is present.</returns>
+        public object Require(string packageId, string scriptUri)
+        {
+            RequiredPackage package;
+            bool hasUri = !String.IsNullOrEmpty(scriptUri);
+            bool packageCreated = false;
+
+            if (packageId.Contains("/") || packageId.Contains("\\"))
             {
-                if (packageId.Contains("/") || packageId.Contains("\\"))
+                if (!hasUri)
                 {
-                    package = new RequiredPackage { PackageId = packageId, ScriptUri = packageId };
-                    addPackage = true;
+                    scriptUri = packageId;
+                    hasUri = true;
                 }
-                else
+
+                packageId = DerivePackageIdFromUri(scriptUri);
+                
+                if (packageId.Length == 0)
+                    throw new ArgumentException(
+                        "The provided packageId is not a valid package name. The packageId must be a valid file path or uri if path characters are contained in the name.");
+            }
+
+            if (!RequireManager.TryGetPackage(packageId, out package))
+            {
+                if (!hasUri)
                 {
-                    throw new KeyNotFoundException(string.Format("The package with ID {0} was not found, did you register this package?", packageId));
+                    throw new KeyNotFoundException(String.Format("The package with ID {0} was not found, did you register this package?", packageId));
                 }
+                
+                package = new RequiredPackage {PackageId = packageId, ScriptUri = scriptUri};
+                packageCreated = true;
             }
 
             var options = new ExecutionOptions
@@ -76,22 +69,28 @@ namespace ClearScript.Manager.Loaders
                 HostTypes = package.HostTypes
             };
 
-            _engine.ApplyOptions(options);
+            Engine.ApplyOptions(options);
 
-            if (!string.IsNullOrEmpty(package.ScriptUri))
+            if (!String.IsNullOrEmpty(package.ScriptUri))
             {
-                var compiledScript = _compiler.Compile(new IncludeScript {Uri = package.ScriptUri});
+                var compiledScript = Compiler.Compile(new IncludeScript {Uri = package.ScriptUri, PrependCode = "var " + packageId + " = {};"});
 
-                _engine.Execute(compiledScript);
+                Engine.Execute(compiledScript);
 
-                var outputObject = DynamicExtensions.GetProperty(_engine.Script, packageId);
+                var outputObject = DynamicExtensions.GetProperty(Engine.Script, packageId);
 
-                if (addPackage)
+                if (outputObject is Undefined)
                 {
-                    RegisterPackage(package);
+                    //try to find pascal case if camel is not present.
+                    outputObject = DynamicExtensions.GetProperty(Engine.Script, packageId.ToPascalCase());
                 }
 
-                return outputObject;
+                if (packageCreated)
+                {
+                    RequireManager.RegisterPackage(package);
+                }
+
+                return outputObject.exports;
             }
 
             if (options.HostObjects.SafeAny())
@@ -100,5 +99,21 @@ namespace ClearScript.Manager.Loaders
             return null;
         }
 
+        private string DerivePackageIdFromUri(string path)
+        {
+            string[] segments = path.Split(new []{'/','\\'}, StringSplitOptions.RemoveEmptyEntries);
+
+            var resource = segments[segments.Length - 1];
+
+            var periodIndex = resource.IndexOfAny(new[]{'.','?'});
+
+            if (periodIndex > 0)
+            {
+                resource = resource.Substring(0, periodIndex);
+            }
+
+            return resource.ToCamelCase();
+
+        }
     }
 }

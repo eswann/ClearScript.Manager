@@ -91,4 +91,4 @@ if (typeof module != 'undefined' && module != null) {
 
 requestFactory.Request = Request;
 
-request = requestFactory;
+request.exports = requestFactory;

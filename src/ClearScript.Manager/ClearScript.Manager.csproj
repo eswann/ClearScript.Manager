@@ -59,11 +59,15 @@
     <Compile Include="Extensions\DynamicExtensions.cs" />
     <Compile Include="Extensions\EngineExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Loaders\FileScriptLoader.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Loaders\RequiredPackage.cs" />
     <Compile Include="Loaders\IScriptLoader.cs" />
+    <Compile Include="Loaders\RequireManager.cs" />
     <Compile Include="Loaders\Requirer.cs">
       <SubType>Code</SubType>
     </Compile>

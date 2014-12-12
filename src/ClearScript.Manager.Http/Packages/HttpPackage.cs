@@ -1,5 +1,4 @@
-﻿using System;
-using ClearScript.Manager.Http.Helpers.Node;
+﻿using ClearScript.Manager.Http.Helpers.Node;
 using ClearScript.Manager.Loaders;
 
 namespace ClearScript.Manager.Http.Packages
