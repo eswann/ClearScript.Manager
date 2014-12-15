@@ -64,7 +64,6 @@
     <Compile Include="Helpers\Node\NodeRequestModule.cs" />
     <Compile Include="Loaders\HttpScriptLoader.cs" />
     <Compile Include="Packages\HttpPackage.cs" />
-    <Compile Include="Packages\PackageHelpers.cs" />
     <Compile Include="Packages\RequestPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
