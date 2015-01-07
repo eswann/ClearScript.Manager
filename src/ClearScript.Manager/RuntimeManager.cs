@@ -52,7 +52,7 @@ namespace ClearScript.Manager
         /// <param name="configAction">An action that accepts the V8 script engine before it's use and configures it.</param>
         /// <param name="options">Options to apply to script execution.  HostObjects and HostTypes are ignored by this call.</param>
         /// <returns>Task to await.</returns>
-        Task ExecuteAsync(IEnumerable<IncludeScript> scripts, Action<V8ScriptEngine> configAction, ExecutionOptions options = null);
+        Task<V8ScriptEngine> ExecuteAsync(IEnumerable<IncludeScript> scripts, Action<V8ScriptEngine> configAction, ExecutionOptions options = null);
 
         /// <summary>
         /// Executes the provided script.
@@ -60,7 +60,7 @@ namespace ClearScript.Manager
         /// <param name="scripts">A list of include scripts to run.</param>
         /// <param name="options">Options to apply to script execution.  HostObjects and HostTypes are ignored by this call.</param>
         /// <returns>Task to await.</returns>
-        Task ExecuteAsync(IEnumerable<IncludeScript> scripts, ExecutionOptions options = null);
+        Task<V8ScriptEngine> ExecuteAsync(IEnumerable<IncludeScript> scripts, ExecutionOptions options = null);
 
         /// <summary>
         /// Executes the provided script.
@@ -70,7 +70,7 @@ namespace ClearScript.Manager
         /// <param name="configAction">An action that accepts the V8 script engine before it's use and configures it.</param>
         /// <param name="options">Options to apply to script execution.  HostObjects and HostTypes are ignored by this call.</param>
         /// <returns>Task to await.</returns>
-        Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, ExecutionOptions options = null);
+        Task<V8ScriptEngine> ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, ExecutionOptions options = null);
 
         /// <summary>
         /// Executes the provided script.
@@ -79,7 +79,7 @@ namespace ClearScript.Manager
         /// <param name="code">Script text to execute.</param>
         /// <param name="options">Options to apply to script execution.  HostObjects and HostTypes are ignored by this call.</param>
         /// <returns>Task to await.</returns>
-        Task ExecuteAsync(string scriptId, string code, ExecutionOptions options = null);
+        Task<V8ScriptEngine> ExecuteAsync(string scriptId, string code, ExecutionOptions options = null);
 
         /// <summary>
         /// Compiles the provided script.
@@ -144,27 +144,23 @@ namespace ClearScript.Manager
             await ExecuteAsync(scriptId, code, configAction, new ExecutionOptions {AddToCache = addToCache});
         }
 
-        public async Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, ExecutionOptions options = null)
+        public async Task<V8ScriptEngine> ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, ExecutionOptions options = null)
         {
-            await ExecuteAsync(new[] {new IncludeScript {Code = code, ScriptId = scriptId}}, configAction, options);
+            return await ExecuteAsync(new[] {new IncludeScript {Code = code, ScriptId = scriptId}}, configAction, options);
         }
 
-        public async Task ExecuteAsync(IEnumerable<IncludeScript> scripts, Action<V8ScriptEngine> configAction, ExecutionOptions options = null)
+        public async Task<V8ScriptEngine> ExecuteAsync(IEnumerable<IncludeScript> scripts, Action<V8ScriptEngine> configAction, ExecutionOptions options = null)
         {
             var scriptList = PrecheckScripts(scripts);
             if (scriptList == null)
-                return;
+                return null;
 
             if (options == null)
                 options = new ExecutionOptions();
 
             IEnumerable<V8Script> compiledScripts = scriptList.Select(x => _scriptCompiler.Compile(x, options.AddToCache, options.CacheExpirationSeconds));
 
-            V8ScriptEngineFlags flags = _settings.V8DebugEnabled
-                ? V8ScriptEngineFlags.DisableGlobalMembers | V8ScriptEngineFlags.EnableDebugging
-                : V8ScriptEngineFlags.DisableGlobalMembers;
-
-            _scriptEngine = _v8Runtime.CreateScriptEngine(flags, _settings.V8DebugPort);
+            GetEngine();
 
             if (AddConsoleReference)
             {
@@ -220,6 +216,8 @@ namespace ClearScript.Manager
                 }
             }
 
+            return _scriptEngine;
+
         }
 
         [Obsolete("Obsolete, use the overload accepting ExecutionOptions instead.")]
@@ -229,16 +227,16 @@ namespace ClearScript.Manager
                     new ExecutionOptions {HostObjects = hostObjects, HostTypes = hostTypes, AddToCache = addToCache});
         }
 
-        public async Task ExecuteAsync(string scriptId, string code, ExecutionOptions options = null)
+        public async Task<V8ScriptEngine> ExecuteAsync(string scriptId, string code, ExecutionOptions options = null)
         {
-            await ExecuteAsync(new[] {new IncludeScript {ScriptId = scriptId, Code = code}}, options);
+            return await ExecuteAsync(new[] {new IncludeScript {ScriptId = scriptId, Code = code}}, options);
         }
 
-        public async Task ExecuteAsync(IEnumerable<IncludeScript> scripts, ExecutionOptions options = null)
+        public async Task<V8ScriptEngine> ExecuteAsync(IEnumerable<IncludeScript> scripts, ExecutionOptions options = null)
         {
             var scriptList = PrecheckScripts(scripts);
             if (scriptList == null)
-                return;
+                return null;
 
             foreach (var includeScript in scriptList)
             {
@@ -253,7 +251,24 @@ namespace ClearScript.Manager
 
             var configAction = new Action<V8ScriptEngine>(engine => engine.ApplyOptions(options));
 
-            await ExecuteAsync(scriptList, configAction, options);
+            return await ExecuteAsync(scriptList, configAction, options);
+        }
+
+        /// <summary>
+        /// Retrieves the script engine for the current runtime manager.
+        /// </summary>
+        /// <returns></returns>
+        public V8ScriptEngine GetEngine()
+        {
+            if (_scriptEngine == null)
+            {
+                V8ScriptEngineFlags flags = _settings.V8DebugEnabled
+                    ? V8ScriptEngineFlags.DisableGlobalMembers | V8ScriptEngineFlags.EnableDebugging
+                    : V8ScriptEngineFlags.DisableGlobalMembers;
+
+                _scriptEngine = _v8Runtime.CreateScriptEngine(flags, _settings.V8DebugPort);
+            }
+            return _scriptEngine;
         }
 
         public V8Script Compile(string scriptId, string code, bool addToCache = true, int? cacheExpirationSeconds = null)

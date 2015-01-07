@@ -1,6 +1,5 @@
 ﻿using Microsoft.ClearScript;
 using NUnit.Framework;
-using Should;
 
 namespace ClearScript.Manager.Test
 {
@@ -36,6 +35,16 @@ namespace ClearScript.Manager.Test
 
             Assert.Throws<ScriptEngineException>(async () =>
             await manager.ExecuteAsync("test", "Console.WriteLine('wrote this to the console');"));
+        }
+
+        [Test]
+        public async void Script_Returns_Engine()
+        {
+            var manager = new RuntimeManager(new ManualManagerSettings());
+
+            var engine = await manager.ExecuteAsync("test", "var i = 0; i++;");
+
+            Assert.AreEqual(1, engine.Script.i);
         }
 
     }

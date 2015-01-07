@@ -69,6 +69,13 @@ Grab a runtime manager and use the ExecuteAsync method.
     var manager = new RuntimeManager(new ManagerSettings());  
     await manager.ExecuteAsync("test", "var i = 0; i++;");
 
+The V8 scripting engine can be accessed as the return from ExecuteAsync() in order to access the script variables via dynamic properties.
+
+    var manager = new RuntimeManager(new ManagerSettings());  
+    var engine = await manager.ExecuteAsync("test", "var i = 0; i++;");
+    var val = engine.Script.i;
+
+
 ### Running Multiple Scripts
 To run multiple scripts, use the ExecuteAsync that accepts an enumerable of scripts.  Scripts will be run in order.  
 Settings will be applied to all scripts in the collection.  Scripts can be actual code, a local file path or a Uri.
@@ -147,6 +154,7 @@ The script will be compiled and cached in the same way as a normal script.
         public string Code { get; set; }
     }
     
+
 ### Using Require
 Another way to include scripts and host objects is to use the require. Require is meant to bring in dependencies for the current script
 in the manner that javascript frameworks (like node) do.  So instead of including scripts, your script can instead use require

@@ -64,6 +64,10 @@ namespace ClearScript.Manager
 
         public IRuntimeManager GetRuntime()
         {
+            IRuntimeManager manager;
+            if (_availableRuntimes.TryTake(out manager))
+                return manager;
+            
             int runtimeMaxCount = _settings.RuntimeMaxCount;
             if (RuntimeCurrentCount < runtimeMaxCount)
             {

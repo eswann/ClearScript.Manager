@@ -45,6 +45,24 @@ namespace ClearScript.Manager.Test
             subject.TestString.ShouldEqual("test string1");
         }
 
+        [Test]
+        public async void Included_Variables_Are_Accessible_Via_Script_Object()
+        {
+            var subject = new TestObject();
+            var manager = new RuntimeManager(new ManualManagerSettings());
+
+            var engine = await manager.ExecuteAsync("testscript", "subject.Count = 10; subject.TestString = x;",
+                new ExecutionOptions
+                {
+                    HostObjects = new List<HostObject> { new HostObject { Name = "subject", Target = subject } },
+                    Scripts = new List<IncludeScript> { new IncludeScript { Uri = ".\\TestIncludeScript.js", ScriptId = "testScript2" } }
+                });
+
+            subject.Name.ShouldEqual("Name");
+            subject.Count.ShouldEqual(10);
+            subject.TestString.ShouldEqual("test string1");
+            engine.Script.x = "test string1";
+        }
 
         public class TestObject
         {
