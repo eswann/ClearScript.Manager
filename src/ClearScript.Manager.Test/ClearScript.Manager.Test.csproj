@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptSubject.cs" />
+    <Compile Include="WhenUsingGetEngine.cs" />
     <Content Include="TestDiffNameRequire.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

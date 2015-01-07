@@ -100,6 +100,12 @@ namespace ClearScript.Manager
         bool TryGetCached(string scriptId, out CachedV8Script script);
 
         /// <summary>
+        /// Retrieves the script engine for the current runtime manager.
+        /// </summary>
+        /// <returns></returns>
+        V8ScriptEngine GetEngine();
+
+        /// <summary>
         /// Cleans up resources in the current runtime.
         /// </summary>
         void Cleanup();
