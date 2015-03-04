@@ -68,15 +68,15 @@ namespace ClearScript.Manager
         /// <summary>
         /// Default MaxExecutableBytes if not present in settings.
         /// </summary>
-        public const int DefaultMaxExecutableBytes = 8 * 1024 * 1024;
+        public const int DefaultMaxExecutableBytes = 0;
         /// <summary>
         /// Default MaxNewSpaceBytes if not present in settings.
         /// </summary>
-        public const int DefaultMaxNewSpaceBytes = 16 * 1024 * 1024;
+        public const int DefaultMaxNewSpaceBytes = 0;
         /// <summary>
         /// Default tMaxOldSpaceBytes if not present in settings.
         /// </summary>
-        public const int DefaultMaxOldSpaceBytes = 16 * 1024 * 1024;
+        public const int DefaultMaxOldSpaceBytes = 0;
         /// <summary>
         /// Default ScriptTimeoutMilliSeconds if not present in settings.
         /// </summary>
