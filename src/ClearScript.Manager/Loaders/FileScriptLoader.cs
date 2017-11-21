@@ -8,10 +8,14 @@ namespace ClearScript.Manager.Loaders
     /// </summary>
     public class FileScriptLoader : IScriptLoader
     {
-        public string Name { get { return "FileScriptLoader"; } }
+        /// <inheritdoc />
+        public string Name => "FileScriptLoader";
 
+        /// <inheritdoc />
         public bool ShouldUse(IncludeScript script)
         {
+            if (script == null) throw new ArgumentNullException(nameof(script));
+
             if (!string.IsNullOrEmpty(script.Code))
                 return false;
 
@@ -26,8 +30,11 @@ namespace ClearScript.Manager.Loaders
             return true;
         }
 
+        /// <inheritdoc />
         public void LoadCode(IncludeScript script)
         {
+            if (script == null) throw new ArgumentNullException(nameof(script));
+
             using (var reader = File.OpenText(script.Uri))
             {
                 script.Code = reader.ReadToEnd();

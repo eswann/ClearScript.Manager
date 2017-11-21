@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ClearScript.Manager.Caching;
 using ClearScript.Manager.Extensions;
 using ClearScript.Manager.Loaders;
+using JetBrains.Annotations;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
 
@@ -43,7 +44,7 @@ namespace ClearScript.Manager
         /// <param name="hostTypes">Types to make available to the JavaScript runtime.</param>
         /// <returns>Task to await.</returns>
         [Obsolete("Obsolete, use the overload accepting ExecutionOptions instead.")]
-        Task ExecuteAsync(string scriptId, string code, IList<HostObject> hostObjects, IList<HostType> hostTypes = null, bool addToCache = true);
+        Task ExecuteAsync(string scriptId, string code, [CanBeNull] IList<HostObject> hostObjects, [CanBeNull] IList<HostType> hostTypes = null, bool addToCache = true);
 
         /// <summary>
         /// Executes the provided script.
@@ -52,7 +53,8 @@ namespace ClearScript.Manager
         /// <param name="configAction">An action that accepts the V8 script engine before it's use and configures it.</param>
         /// <param name="options">Options to apply to script execution.  HostObjects and HostTypes are ignored by this call.</param>
         /// <returns>Task to await.</returns>
-        Task<V8ScriptEngine> ExecuteAsync(IEnumerable<IncludeScript> scripts, Action<V8ScriptEngine> configAction, ExecutionOptions options = null);
+        Task<V8ScriptEngine> ExecuteAsync([CanBeNull] IEnumerable<IncludeScript> scripts,
+            [CanBeNull] Action<V8ScriptEngine> configAction, [CanBeNull] ExecutionOptions options = null);
 
         /// <summary>
         /// Executes the provided script.
@@ -60,7 +62,7 @@ namespace ClearScript.Manager
         /// <param name="scripts">A list of include scripts to run.</param>
         /// <param name="options">Options to apply to script execution.  HostObjects and HostTypes are ignored by this call.</param>
         /// <returns>Task to await.</returns>
-        Task<V8ScriptEngine> ExecuteAsync(IEnumerable<IncludeScript> scripts, ExecutionOptions options = null);
+        Task<V8ScriptEngine> ExecuteAsync([CanBeNull] IEnumerable<IncludeScript> scripts, [CanBeNull] ExecutionOptions options = null);
 
         /// <summary>
         /// Executes the provided script.
@@ -119,9 +121,15 @@ namespace ClearScript.Manager
     {
         private readonly IManagerSettings _settings;
 
+        [NotNull]
         private readonly V8Runtime _v8Runtime;
+
+        [NotNull]
         private readonly ScriptCompiler _scriptCompiler;
+
+        [CanBeNull]
         private V8ScriptEngine _scriptEngine;
+
         private bool _disposed;
 
         /// <summary>
@@ -142,19 +150,23 @@ namespace ClearScript.Manager
             _scriptCompiler = new ScriptCompiler(_v8Runtime, settings);
         }
 
+        /// <inheritdoc />
         public bool AddConsoleReference { get; set; }
 
+        /// <inheritdoc />
         [Obsolete("Obsolete, use the overload accepting ExecutionOptions instead.")]
         public async Task ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, bool addToCache = true)
         {
             await ExecuteAsync(scriptId, code, configAction, new ExecutionOptions {AddToCache = addToCache});
         }
 
+        /// <inheritdoc />
         public async Task<V8ScriptEngine> ExecuteAsync(string scriptId, string code, Action<V8ScriptEngine> configAction, ExecutionOptions options = null)
         {
             return await ExecuteAsync(new[] {new IncludeScript {Code = code, ScriptId = scriptId}}, configAction, options);
         }
 
+        /// <inheritdoc />
         public async Task<V8ScriptEngine> ExecuteAsync(IEnumerable<IncludeScript> scripts, Action<V8ScriptEngine> configAction, ExecutionOptions options = null)
         {
             var scriptList = PrecheckScripts(scripts);
@@ -164,21 +176,18 @@ namespace ClearScript.Manager
             if (options == null)
                 options = new ExecutionOptions();
 
-            IEnumerable<V8Script> compiledScripts = scriptList.Select(x => _scriptCompiler.Compile(x, options.AddToCache, options.CacheExpirationSeconds));
+            var compiledScripts = scriptList.Select(x => _scriptCompiler.Compile(x, options.AddToCache, options.CacheExpirationSeconds));
 
-            GetEngine();
+            var scriptEngine = GetEngine();
 
             if (AddConsoleReference)
             {
-                _scriptEngine.AddHostType("Console", typeof (Console));
+                scriptEngine.AddHostType("Console", typeof (Console));
             }
 
-            RequireManager.BuildRequirer(_scriptCompiler, _scriptEngine);
+            RequireManager.BuildRequirer(_scriptCompiler, scriptEngine);
 
-            if (configAction != null)
-            {
-                configAction(_scriptEngine);
-            }
+            configAction?.Invoke(scriptEngine);
 
             if (options.Scripts != null)
             {
@@ -187,7 +196,7 @@ namespace ClearScript.Manager
                     var compiledInclude = _scriptCompiler.Compile(script, options.AddToCache);
                     if (compiledInclude != null)
                     {
-                        _scriptEngine.Execute(compiledInclude);
+                        scriptEngine.Execute(compiledInclude);
                     }
                 }
             }
@@ -195,15 +204,14 @@ namespace ClearScript.Manager
             foreach (var compiledScript in compiledScripts)
             {
                 //Only create a wrapping task if the script has a timeout.
-                CancellationToken cancellationToken;
-                if (TryCreateCancellationToken(out cancellationToken))
+                if (TryCreateCancellationToken(out var cancellationToken))
                 {
-                    using (cancellationToken.Register(_scriptEngine.Interrupt))
+                    using (cancellationToken.Register(scriptEngine.Interrupt))
                     {
                         try
                         {
-                            V8Script script = compiledScript;
-                            await Task.Run(() => _scriptEngine.Execute(script), cancellationToken).ConfigureAwait(false);
+                            var script = compiledScript;
+                            await Task.Run(() => scriptEngine.Execute(script), cancellationToken).ConfigureAwait(false);
                         }
                         catch (ScriptInterruptedException ex)
                         {
@@ -218,14 +226,14 @@ namespace ClearScript.Manager
                 }
                 else
                 {
-                    _scriptEngine.Execute(compiledScript);
+                    scriptEngine.Execute(compiledScript);
                 }
             }
 
-            return _scriptEngine;
-
+            return scriptEngine;
         }
 
+        /// <inheritdoc />
         [Obsolete("Obsolete, use the overload accepting ExecutionOptions instead.")]
         public async Task ExecuteAsync(string scriptId, string code, IList<HostObject> hostObjects, IList<HostType> hostTypes = null, bool addToCache = true)
         {
@@ -233,11 +241,13 @@ namespace ClearScript.Manager
                     new ExecutionOptions {HostObjects = hostObjects, HostTypes = hostTypes, AddToCache = addToCache});
         }
 
+        /// <inheritdoc />
         public async Task<V8ScriptEngine> ExecuteAsync(string scriptId, string code, ExecutionOptions options = null)
         {
             return await ExecuteAsync(new[] {new IncludeScript {ScriptId = scriptId, Code = code}}, options);
         }
 
+        /// <inheritdoc />
         public async Task<V8ScriptEngine> ExecuteAsync(IEnumerable<IncludeScript> scripts, ExecutionOptions options = null)
         {
             var scriptList = PrecheckScripts(scripts);
@@ -260,33 +270,37 @@ namespace ClearScript.Manager
             return await ExecuteAsync(scriptList, configAction, options);
         }
 
-        /// <summary>
-        /// Retrieves the script engine for the current runtime manager.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
+        [NotNull]
         public V8ScriptEngine GetEngine()
         {
             if (_scriptEngine == null)
             {
-                V8ScriptEngineFlags flags = _settings.V8DebugEnabled
+                var flags = _settings.V8DebugEnabled
                     ? V8ScriptEngineFlags.DisableGlobalMembers | V8ScriptEngineFlags.EnableDebugging
                     : V8ScriptEngineFlags.DisableGlobalMembers;
 
                 _scriptEngine = _v8Runtime.CreateScriptEngine(flags, _settings.V8DebugPort);
+
+                if (_scriptEngine == null)
+                    throw new InvalidOperationException("Failed to create v8 script engine");
             }
             return _scriptEngine;
         }
 
+        /// <inheritdoc />
         public V8Script Compile(string scriptId, string code, bool addToCache = true, int? cacheExpirationSeconds = null)
         {
             return _scriptCompiler.Compile(scriptId, code, addToCache, cacheExpirationSeconds);
         }
 
+        /// <inheritdoc />
         public bool TryGetCached(string scriptId, out CachedV8Script script)
         {
             return _scriptCompiler.TryGetCached(scriptId, out script);
         }
 
+        /// <inheritdoc />
         public void Cleanup()
         {
             if (_scriptEngine != null)
@@ -311,7 +325,8 @@ namespace ClearScript.Manager
             return true;
         }
 
-        private static IList<IncludeScript> PrecheckScripts(IEnumerable<IncludeScript> scripts)
+        [CanBeNull]
+        private static IList<IncludeScript> PrecheckScripts([CanBeNull] IEnumerable<IncludeScript> scripts)
         {
             if (scripts == null)
                 return null;
@@ -323,6 +338,7 @@ namespace ClearScript.Manager
 
         #region Dispose
 
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true); 
@@ -345,6 +361,7 @@ namespace ClearScript.Manager
             }
         }
 
+        /// <inheritdoc />
         ~RuntimeManager()
         {
             Dispose(false);

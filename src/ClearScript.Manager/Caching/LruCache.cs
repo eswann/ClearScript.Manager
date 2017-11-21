@@ -17,11 +17,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using JetBrains.Annotations;
 
 namespace ClearScript.Manager.Caching
 {
     /// <summary>
-    /// Defines if and how items added to a LurchTable are linked together, this defines
+    /// Defines if and how items added to a <see cref="LruCache{TKey,TValue}"/> are linked together, this defines
     /// the value returned from Peek/Dequeue as the oldest entry of the specified operation.
     /// </summary>
     public enum LurchTableOrder
@@ -37,8 +38,8 @@ namespace ClearScript.Manager.Caching
     }
 
     /// <summary>
-    /// LurchTable stands for "Least Used Recently Concurrent Hash Table" and has definate
-    /// similarities to both the .NET 4 ConcurrentDictionary as well as Java's LinkedHashMap.
+    /// LurchTable stands for "Least Used Recently Concurrent Hash Table" and has definite
+    /// similarities to both the .NET's <see cref="T:System.Collections.Concurrent.ConcurrentDictionary`2"/> as well as Java's LinkedHashMap.
     /// This gives you a thread-safe dictionary/hashtable that stores element ordering by
     /// insertion, updates, or access.  In addition it can be configured to use a 'hard-limit'
     /// count of items that will automatically 'pop' the oldest item in the collection.
@@ -60,15 +61,21 @@ namespace ClearScript.Manager.Caching
         private const int OverAlloc = 128;
         private const int FreeSlots = 32;
 
+        [NotNull]
         private readonly IEqualityComparer<TKey> _comparer;
         private readonly int _hsize, _lsize, _limit;
         private readonly int _allocSize, _shift, _shiftMask;
         private readonly LurchTableOrder _ordering;
+        [NotNull]
         private readonly object[] _locks;
+        [NotNull]
         private readonly int[] _buckets;
+        [NotNull]
         private readonly FreeList[] _free;
 
+        [CanBeNull]
         private Entry[][] _entries;
+
         private int _used, _count;
         private int _allocNext, _freeVersion;
 
@@ -101,15 +108,16 @@ namespace ClearScript.Manager.Caching
         /// <param name="allocSize">The number of entries to allocate at a time, usually 1/16 estimated capacity</param>
         /// <param name="lockSize">The number of concurrency locks to preallocate, usually 1/256 estimated capacity</param>
         /// <param name="comparer">The element hash generator for keys</param>
-        public LruCache(LurchTableOrder ordering, int limit, int hashSize, int allocSize, int lockSize, IEqualityComparer<TKey> comparer)
+        public LruCache(LurchTableOrder ordering, int limit, int hashSize, int allocSize, int lockSize,
+            [NotNull] IEqualityComparer<TKey> comparer)
         {
             if (limit <= 0)
-                throw new ArgumentOutOfRangeException("limit");
+                throw new ArgumentOutOfRangeException(nameof(limit), limit, "Cannot be less than 1");
             if (ordering == LurchTableOrder.None && limit < int.MaxValue)
-                throw new ArgumentOutOfRangeException("ordering");
+                throw new ArgumentOutOfRangeException(nameof(ordering));
 
             _limit = limit <= 0 ? int.MaxValue : limit;
-            _comparer = comparer;
+            _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             _ordering = ordering;
 
             allocSize = (int)Math.Min((long)allocSize + OverAlloc, 0x3fffffff);
@@ -123,7 +131,7 @@ namespace ClearScript.Manager.Caching
 
             _lsize = HashUtilities.SelectPrimeNumber(lockSize);
             _locks = new object[_lsize];
-            for (int i = 0; i < _lsize; i++)
+            for (var i = 0; i < _lsize; i++)
                 _locks[i] = new object();
 
             _free = new FreeList[FreeSlots];
@@ -146,22 +154,25 @@ namespace ClearScript.Manager.Caching
         /// <summary>
         /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
         /// </summary>
-        public int Count { get { return _count; } }
+        public int Count => _count;
+
         /// <summary>
         /// Retrieves the LurchTableOrder Ordering enumeration this instance was created with.
         /// </summary>
-        public LurchTableOrder Ordering { get { return _ordering; } }
-        /// <summary>
-        /// Retrives the key comparer being used by this instance.
-        /// </summary>
-        public IEqualityComparer<TKey> Comparer { get { return _comparer; } }
-        /// <summary>
-        /// Retrives the record limit allowed in this instance.
-        /// </summary>
-        public int Limit { get { return _limit; } }
+        public LurchTableOrder Ordering => _ordering;
 
         /// <summary>
-        /// WARNING: not thread-safe, reinitializes all internal structures.  Use Clear() for a thread-safe
+        /// Retrieves the key comparer being used by this instance.
+        /// </summary>
+        public IEqualityComparer<TKey> Comparer => _comparer;
+
+        /// <summary>
+        /// Retrieves the record limit allowed in this instance.
+        /// </summary>
+        public int Limit => _limit;
+
+        /// <summary>
+        /// WARNING: not thread-safe, reinitializes all internal structures.  Use <see cref="Clear"/> for a thread-safe
         /// delete all.  If you have externally provided exclusive access this method may be used to more
         /// efficiently clear the collection.
         /// </summary>
@@ -175,7 +186,7 @@ namespace ClearScript.Manager.Caching
 
                 Array.Clear(_buckets, 0, _hsize);
                 _entries = new[] { new Entry[_allocSize] };
-                for (int slot = 0; slot < FreeSlots; slot++)
+                for (var slot = 0; slot < FreeSlots; slot++)
                 {
                     var index = Interlocked.CompareExchange(ref _used, _used + 1, _used);
                     if (index != slot + 1)
@@ -197,19 +208,21 @@ namespace ClearScript.Manager.Caching
         /// </summary>
         public void Clear()
         {
-            if (_entries == null) throw new ObjectDisposedException(GetType().Name);
+            if (_entries == null)
+                throw new ObjectDisposedException(GetType().Name);
+
             foreach (var item in this)
                 Remove(item.Key);
         }
 
         /// <summary>
-        /// Determines whether the <see cref="T:System.Collections.Generic.IDictionary`2"/> contains an element with the specified key.
+        /// Determines whether the <see cref="T:System.Collections.Generic.IDictionary`2"/> contains an element 
+        /// with the specified key.
         /// </summary>
-        public bool ContainsKey(TKey key)
+        public bool ContainsKey([CanBeNull] TKey key)
         {
             if (_entries == null) throw new ObjectDisposedException(GetType().Name);
-            TValue value;
-            return TryGetValue(key, out value);
+            return TryGetValue(key, out _);
         }
 
         /// <summary>
@@ -224,9 +237,8 @@ namespace ClearScript.Manager.Caching
             }
             get
             {
-                TValue value;
-                if (!TryGetValue(key, out value))
-                    throw new ArgumentOutOfRangeException();
+                if (!TryGetValue(key, out var value))
+                    throw new KeyNotFoundException();
                 return value;
             }
         }
@@ -235,11 +247,18 @@ namespace ClearScript.Manager.Caching
         /// Gets the value associated with the specified key.
         /// </summary>
         /// <returns>
-        /// true if the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"/> contains an element with the specified key; otherwise, false.
+        /// true if the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"/> contains 
+        /// an element with the specified key; otherwise, false.
         /// </returns>
-        public bool TryGetValue(TKey key, out TValue value)
+        public bool TryGetValue([CanBeNull] TKey key, out TValue value)
         {
-            int hash = _comparer.GetHashCode(key) & int.MaxValue;
+            if (key == null)
+            {
+                value = default(TValue);
+                return false;
+            }
+
+            var hash = _comparer.GetHashCode(key) & int.MaxValue;
             return InternalGetValue(hash, key, out value);
         }
 
@@ -248,6 +267,8 @@ namespace ClearScript.Manager.Caching
         /// </summary>
         public void Add(TKey key, TValue value)
         {
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
             var info = new AddInfo { Value = value };
             if (InsertResult.Inserted != Insert(key, ref info))
                 throw new ArgumentOutOfRangeException();
@@ -257,7 +278,8 @@ namespace ClearScript.Manager.Caching
         /// Removes the element with the specified key from the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </summary>
         /// <returns>
-        /// true if the element is successfully removed; otherwise, false.  This method also returns false if <paramref name="key"/> was not found in the original <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// true if the element is successfully removed; otherwise, false.  This method also returns false if <paramref name="key"/> 
+        /// was not found in the original <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </returns>
         /// <param name="key">The key of the element to remove.</param>
         public bool Remove(TKey key)
@@ -323,7 +345,9 @@ namespace ClearScript.Manager.Caching
         /// Removes the element with the specified key from the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </summary>
         /// <returns>
-        /// true if the element is successfully removed; otherwise, false.  This method also returns false if <paramref name="key"/> was not found in the original <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// true if the element is successfully removed; otherwise, false.  This method also returns 
+        /// false if <paramref name="key"/> was not found in the original 
+        /// <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </returns>
         /// <param name="key">The key of the element to remove.</param>
         /// <param name="value">The value that was removed.</param>
@@ -436,10 +460,7 @@ namespace ClearScript.Manager.Caching
 
         #region ICollection<KeyValuePair<TKey,TValue>> Members
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
-        {
-            get { return false; }
-        }
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
         {
@@ -448,8 +469,7 @@ namespace ClearScript.Manager.Caching
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
         {
-            TValue test;
-            if (TryGetValue(item.Key, out test))
+            if (TryGetValue(item.Key, out var test))
                 return EqualityComparer<TValue>.Default.Equals(item.Value, test);
             return false;
         }
@@ -527,7 +547,7 @@ namespace ClearScript.Manager.Caching
                 _state.Unlock();
             }
 
-            object IEnumerator.Current { get { return Current; } }
+            object IEnumerator.Current => Current;
 
             /// <summary>
             /// Gets the element in the collection at the current position of the enumerator.
@@ -536,7 +556,7 @@ namespace ClearScript.Manager.Caching
             {
                 get
                 {
-                    int index = _state.Current;
+                    var index = _state.Current;
                     if (index <= 0)
                         throw new InvalidOperationException();
                     if (_owner._entries == null)
@@ -613,10 +633,7 @@ namespace ClearScript.Manager.Caching
             /// <summary>
             /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
             /// </summary>
-            public int Count
-            {
-                get { return _owner.Count; }
-            }
+            public int Count => _owner.Count;
 
             /// <summary>
             /// Returns an enumerator that iterates through the collection.
@@ -649,7 +666,7 @@ namespace ClearScript.Manager.Caching
                     _state.Unlock();
                 }
 
-                object IEnumerator.Current { get { return Current; } }
+                object IEnumerator.Current => Current;
 
                 /// <summary>
                 /// Gets the element in the collection at the current position of the enumerator.
@@ -658,7 +675,7 @@ namespace ClearScript.Manager.Caching
                 {
                     get
                     {
-                        int index = _state.Current;
+                        var index = _state.Current;
                         if (index <= 0)
                             throw new InvalidOperationException();
                         if (_owner._entries == null)
@@ -684,6 +701,7 @@ namespace ClearScript.Manager.Caching
                     _state.Init();
                 }
             }
+
             [Obsolete]
             IEnumerator<TKey> IEnumerable<TKey>.GetEnumerator()
             {
@@ -695,10 +713,8 @@ namespace ClearScript.Manager.Caching
                 return new Enumerator(_owner);
             }
             [Obsolete]
-            bool ICollection<TKey>.IsReadOnly
-            {
-                get { return true; }
-            }
+            bool ICollection<TKey>.IsReadOnly => true;
+
             [Obsolete]
             void ICollection<TKey>.Add(TKey item)
             {
@@ -719,12 +735,16 @@ namespace ClearScript.Manager.Caching
         }
 
         private KeyCollection _keyCollection;
+
         /// <summary>
         /// Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys of the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </summary>
-        public KeyCollection Keys { get { return _keyCollection ?? (_keyCollection = new KeyCollection(this)); } }
+        [NotNull]
+        public KeyCollection Keys => _keyCollection ?? (_keyCollection = new KeyCollection(this));
+
         [Obsolete]
-        ICollection<TKey> IDictionary<TKey, TValue>.Keys { get { return Keys; } }
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys => Keys;
+
         #endregion
 
         #region ValueCollection
@@ -768,10 +788,7 @@ namespace ClearScript.Manager.Caching
             /// <summary>
             /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
             /// </summary>
-            public int Count
-            {
-                get { return _owner.Count; }
-            }
+            public int Count => _owner.Count;
 
             /// <summary>
             /// Returns an enumerator that iterates through the collection.
@@ -804,7 +821,7 @@ namespace ClearScript.Manager.Caching
                     _state.Unlock();
                 }
 
-                object IEnumerator.Current { get { return Current; } }
+                object IEnumerator.Current => Current;
 
                 /// <summary>
                 /// Gets the element in the collection at the current position of the enumerator.
@@ -813,7 +830,7 @@ namespace ClearScript.Manager.Caching
                 {
                     get
                     {
-                        int index = _state.Current;
+                        var index = _state.Current;
                         if (index <= 0)
                             throw new InvalidOperationException();
                         if (_owner._entries == null)
@@ -850,10 +867,8 @@ namespace ClearScript.Manager.Caching
                 return new Enumerator(_owner);
             }
             [Obsolete]
-            bool ICollection<TValue>.IsReadOnly
-            {
-                get { return true; }
-            }
+            bool ICollection<TValue>.IsReadOnly => true;
+
             [Obsolete]
             void ICollection<TValue>.Add(TValue item)
             {
@@ -877,9 +892,10 @@ namespace ClearScript.Manager.Caching
         /// <summary>
         /// Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </summary>
-        public ValueCollection Values { get { return _valueCollection ?? (_valueCollection = new ValueCollection(this)); } }
+        public ValueCollection Values => _valueCollection ?? (_valueCollection = new ValueCollection(this));
+
         [Obsolete]
-        ICollection<TValue> IDictionary<TKey, TValue>.Values { get { return Values; } }
+        ICollection<TValue> IDictionary<TKey, TValue>.Values => Values;
 
         #endregion
 
@@ -899,17 +915,17 @@ namespace ClearScript.Manager.Caching
 
             while (true)
             {
-                int index = Interlocked.CompareExchange(ref _entries[0][0].Prev, 0, 0);
+                var index = Interlocked.CompareExchange(ref _entries[0][0].Prev, 0, 0);
                 if (index == 0)
                 {
                     value = default(KeyValuePair<TKey, TValue>);
                     return false;
                 }
 
-                int hash = _entries[index >> _shift][index & _shiftMask].Hash;
+                var hash = _entries[index >> _shift][index & _shiftMask].Hash;
                 if (hash >= 0)
                 {
-                    int bucket = hash % _hsize;
+                    var bucket = hash % _hsize;
                     lock (_locks[bucket % _lsize])
                     {
                         if (index == _entries[0][0].Prev &&
@@ -928,7 +944,7 @@ namespace ClearScript.Manager.Caching
 
         /// <summary>
         /// Removes the oldest entry in the collection based on the ordering supplied to the constructor.
-        /// If an item is not available a busy-wait loop is used to wait for for an item.
+        /// If an item is not available a busy-wait loop is used to wait for an item.
         /// </summary>
         /// <returns>The Key/Value pair removed.</returns>
         /// <exception cref="System.InvalidOperationException">Raised if the table is unordered</exception>
@@ -936,12 +952,13 @@ namespace ClearScript.Manager.Caching
         {
             if (_ordering == LurchTableOrder.None)
                 throw new InvalidOperationException();
-            if (_entries == null)
-                throw new ObjectDisposedException(GetType().Name);
 
             KeyValuePair<TKey, TValue> value;
             while (!TryDequeue(out value))
             {
+                if (_entries == null)
+                    throw new ObjectDisposedException(GetType().Name);
+
                 while (0 == Interlocked.CompareExchange(ref _entries[0][0].Prev, 0, 0))
                     Thread.Sleep(0);
             }
@@ -972,17 +989,17 @@ namespace ClearScript.Manager.Caching
 
             while (true)
             {
-                int index = Interlocked.CompareExchange(ref _entries[0][0].Prev, 0, 0);
+                var index = Interlocked.CompareExchange(ref _entries[0][0].Prev, 0, 0);
                 if (index == 0)
                 {
                     value = default(KeyValuePair<TKey, TValue>);
                     return false;
                 }
 
-                int hash = _entries[index >> _shift][index & _shiftMask].Hash;
+                var hash = _entries[index >> _shift][index & _shiftMask].Hash;
                 if (hash >= 0)
                 {
-                    int bucket = hash % _hsize;
+                    var bucket = hash % _hsize;
                     lock (_locks[bucket % _lsize])
                     {
                         if (index == _entries[0][0].Prev &&
@@ -1001,8 +1018,11 @@ namespace ClearScript.Manager.Caching
                                 }
                             }
 
-                            int next = _entries[index >> _shift][index & _shiftMask].Link;
-                            bool removed = false;
+                            if (_entries == null)
+                                throw new ObjectDisposedException(GetType().Name);
+
+                            var next = _entries[index >> _shift][index & _shiftMask].Link;
+                            var removed = false;
 
                             if (_buckets[bucket] == index)
                             {
@@ -1011,10 +1031,10 @@ namespace ClearScript.Manager.Caching
                             }
                             else
                             {
-                                int test = _buckets[bucket];
+                                var test = _buckets[bucket];
                                 while (test != 0)
                                 {
-                                    int cmp = _entries[test >> _shift][test & _shiftMask].Link;
+                                    var cmp = _entries[test >> _shift][test & _shiftMask].Link;
                                     if (cmp == index)
                                     {
                                         _entries[test >> _shift][test & _shiftMask].Link = next;
@@ -1036,9 +1056,7 @@ namespace ClearScript.Manager.Caching
                                 InternalUnlink(index);
                             FreeSlot(ref index, Interlocked.Increment(ref _freeVersion));
 
-                            var handler = ItemRemoved;
-                            if (handler != null)
-                                handler(value);
+                            ItemRemoved?.Invoke(value);
 
                             return true;
                         }
@@ -1051,17 +1069,23 @@ namespace ClearScript.Manager.Caching
 
         #region Internal Implementation
 
-        enum InsertResult { Inserted = 1, Updated = 2, Exists = 3, NotFound = 4 }
+        private enum InsertResult { Inserted = 1, Updated = 2, Exists = 3, NotFound = 4 }
 
-        bool InternalGetValue(int hash, TKey key, out TValue value)
+        private bool InternalGetValue(int hash, [CanBeNull] TKey key, out TValue value)
         {
+            if (key == null)
+            {
+                value = default(TValue);
+                return false;
+            }
+
             if (_entries == null)
                 throw new ObjectDisposedException(GetType().Name);
 
-            int bucket = hash % _hsize;
+            var bucket = hash % _hsize;
             lock (_locks[bucket % _lsize])
             {
-                int index = _buckets[bucket];
+                var index = _buckets[bucket];
                 while (index != 0)
                 {
                     if (hash == _entries[index >> _shift][index & _shiftMask].Hash &&
@@ -1086,31 +1110,34 @@ namespace ClearScript.Manager.Caching
             }
         }
 
-        InsertResult Insert<T>(TKey key, ref T value) where T : ICreateOrUpdateValue<TKey, TValue>
+        private InsertResult Insert<T>(TKey key, [NotNull] ref T value) where T : ICreateOrUpdateValue<TKey, TValue>
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
             if (_entries == null)
                 throw new ObjectDisposedException(GetType().Name);
 
-            int hash = _comparer.GetHashCode(key) & int.MaxValue;
-            int added;
+            var hash = _comparer.GetHashCode(key) & int.MaxValue;
 
-            InsertResult result = InternalInsert(hash, key, out added, ref value);
+            var result = InternalInsert(hash, key, out var added, ref value);
 
             if (added > _limit && _ordering != LurchTableOrder.None)
             {
-                KeyValuePair<TKey, TValue> ignore;
-                TryDequeue(out ignore);
+                TryDequeue(out _);
             }
             return result;
         }
 
-        InsertResult InternalInsert<T>(int hash, TKey key, out int added, ref T value) where T : ICreateOrUpdateValue<TKey, TValue>
+        private InsertResult InternalInsert<T>(int hash, TKey key, out int added, [NotNull] ref T value) where T : ICreateOrUpdateValue<TKey, TValue>
         {
-            int bucket = hash % _hsize;
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            if (_entries == null)
+                throw new ObjectDisposedException(GetType().Name);
+            var bucket = hash % _hsize;
             lock (_locks[bucket % _lsize])
             {
                 TValue temp;
-                int index = _buckets[bucket];
+                var index = _buckets[bucket];
                 while (index != 0)
                 {
                     if (hash == _entries[index >> _shift][index & _shiftMask].Hash &&
@@ -1129,8 +1156,7 @@ namespace ClearScript.Manager.Caching
                             }
 
                             var handler = ItemUpdated;
-                            if (handler != null)
-                                handler(new KeyValuePair<TKey, TValue>(key, original), new KeyValuePair<TKey, TValue>(key, temp));
+                            handler?.Invoke(new KeyValuePair<TKey, TValue>(key, original), new KeyValuePair<TKey, TValue>(key, temp));
 
                             added = -1;
                             return InsertResult.Updated;
@@ -1143,9 +1169,11 @@ namespace ClearScript.Manager.Caching
                 }
                 if (value.CreateValue(key, out temp))
                 {
-#pragma warning disable 612,618
+#pragma warning disable 618
                     index = AllocSlot();
-#pragma warning restore 612,618
+#pragma warning restore 618
+                    if (_entries == null)
+                        throw new ObjectDisposedException(GetType().Name);
                     _entries[index >> _shift][index & _shiftMask].Hash = hash;
                     _entries[index >> _shift][index & _shiftMask].Key = key;
                     _entries[index >> _shift][index & _shiftMask].Value = temp;
@@ -1157,8 +1185,7 @@ namespace ClearScript.Manager.Caching
                         InternalLink(index);
 
                     var handler = ItemAdded;
-                    if (handler != null)
-                        handler(new KeyValuePair<TKey, TValue>(key, temp));
+                    handler?.Invoke(new KeyValuePair<TKey, TValue>(key, temp));
 
                     return InsertResult.Inserted;
                 }
@@ -1168,27 +1195,27 @@ namespace ClearScript.Manager.Caching
             return InsertResult.NotFound;
         }
 
-        bool Delete<T>(TKey key, ref T value) where T : IRemoveValue<TKey, TValue>
+        private bool Delete<T>(TKey key, ref T value) where T : IRemoveValue<TKey, TValue>
         {
             if (_entries == null)
                 throw new ObjectDisposedException(GetType().Name);
 
-            int hash = _comparer.GetHashCode(key) & int.MaxValue;
-            int bucket = hash % _hsize;
+            var hash = _comparer.GetHashCode(key) & int.MaxValue;
+            var bucket = hash % _hsize;
             lock (_locks[bucket % _lsize])
             {
-                int prev = 0;
-                int index = _buckets[bucket];
+                var prev = 0;
+                var index = _buckets[bucket];
                 while (index != 0)
                 {
                     if (hash == _entries[index >> _shift][index & _shiftMask].Hash &&
                         _comparer.Equals(key, _entries[index >> _shift][index & _shiftMask].Key))
                     {
-                        TValue temp = _entries[index >> _shift][index & _shiftMask].Value;
+                        var temp = _entries[index >> _shift][index & _shiftMask].Value;
 
                         if (value.RemoveValue(key, temp))
                         {
-                            int next = _entries[index >> _shift][index & _shiftMask].Link;
+                            var next = _entries[index >> _shift][index & _shiftMask].Link;
                             if (prev == 0)
                                 _buckets[bucket] = next;
                             else
@@ -1200,8 +1227,7 @@ namespace ClearScript.Manager.Caching
                             FreeSlot(ref index, Interlocked.Increment(ref _freeVersion));
 
                             var handler = ItemRemoved;
-                            if (handler != null)
-                                handler(new KeyValuePair<TKey, TValue>(key, temp));
+                            handler?.Invoke(new KeyValuePair<TKey, TValue>(key, temp));
 
                             return true;
                         }
@@ -1215,11 +1241,14 @@ namespace ClearScript.Manager.Caching
             return false;
         }
 
-        void InternalLink(int index)
+        private void InternalLink(int index)
         {
+            if (_entries == null)
+                throw new ObjectDisposedException(GetType().Name);
+
             Interlocked.Exchange(ref _entries[index >> _shift][index & _shiftMask].Prev, 0);
             Interlocked.Exchange(ref _entries[index >> _shift][index & _shiftMask].Next, ~0);
-            int next = Interlocked.Exchange(ref _entries[0][0].Next, index);
+            var next = Interlocked.Exchange(ref _entries[0][0].Next, index);
             if (next < 0)
                 throw new LruCacheCorruptionException();
 
@@ -1229,19 +1258,22 @@ namespace ClearScript.Manager.Caching
             Interlocked.Exchange(ref _entries[index >> _shift][index & _shiftMask].Next, next);
         }
 
-        void InternalUnlink(int index)
+        private void InternalUnlink(int index)
         {
+            if (_entries == null)
+                throw new ObjectDisposedException(GetType().Name);
+
             while (true)
             {
                 int cmp;
-                int prev = _entries[index >> _shift][index & _shiftMask].Prev;
+                var prev = _entries[index >> _shift][index & _shiftMask].Prev;
                 while (prev >= 0 && prev != (cmp = Interlocked.CompareExchange(
                             ref _entries[index >> _shift][index & _shiftMask].Prev, ~prev, prev)))
                     prev = cmp;
                 if (prev < 0)
                     throw new LruCacheCorruptionException();
 
-                int next = _entries[index >> _shift][index & _shiftMask].Next;
+                var next = _entries[index >> _shift][index & _shiftMask].Next;
                 while (next >= 0 && next != (cmp = Interlocked.CompareExchange(
                             ref _entries[index >> _shift][index & _shiftMask].Next, ~next, next)))
                     next = cmp;
@@ -1268,11 +1300,14 @@ namespace ClearScript.Manager.Caching
         }
 
         [Obsolete("Release build inlining, so we need to ignore for testing.")]
-        int AllocSlot()
+        private int AllocSlot()
         {
+            if (_entries == null)
+                throw new ObjectDisposedException(GetType().Name);
+
             while (true)
             {
-                int allocated = _entries.Length * _allocSize;
+                var allocated = _entries.Length * _allocSize;
                 var previous = _entries;
 
                 while (_count + OverAlloc < allocated || _used < allocated)
@@ -1280,12 +1315,12 @@ namespace ClearScript.Manager.Caching
                     int next;
                     if (_count + FreeSlots < _used)
                     {
-                        int freeSlotIndex = Interlocked.Increment(ref _allocNext);
-                        int slot = (freeSlotIndex & int.MaxValue) % FreeSlots;
+                        var freeSlotIndex = Interlocked.Increment(ref _allocNext);
+                        var slot = (freeSlotIndex & int.MaxValue) % FreeSlots;
                         next = Interlocked.Exchange(ref _free[slot].Head, 0);
                         if (next != 0)
                         {
-                            int nextFree = _entries[next >> _shift][next & _shiftMask].Link;
+                            var nextFree = _entries[next >> _shift][next & _shiftMask].Link;
                             if (nextFree == 0)
                             {
                                 Interlocked.Exchange(ref _free[slot].Head, next);
@@ -1301,7 +1336,7 @@ namespace ClearScript.Manager.Caching
                     next = _used;
                     if (next < allocated)
                     {
-                        int alloc = Interlocked.CompareExchange(ref _used, next + 1, next);
+                        var alloc = Interlocked.CompareExchange(ref _used, next + 1, next);
                         if (alloc == next)
                         {
                             return next;
@@ -1314,7 +1349,7 @@ namespace ClearScript.Manager.Caching
                     //time to grow...
                     if (ReferenceEquals(_entries, previous))
                     {
-                        Entry[][] arentries = new Entry[_entries.Length + 1][];
+                        var arentries = new Entry[_entries.Length + 1][];
                         _entries.CopyTo(arentries, 0);
                         arentries[arentries.Length - 1] = new Entry[_allocSize];
 
@@ -1324,14 +1359,17 @@ namespace ClearScript.Manager.Caching
             }
         }
 
-        void FreeSlot(ref int index, int ver)
+        private void FreeSlot(ref int index, int ver)
         {
+            if (_entries == null)
+                throw new ObjectDisposedException(GetType().Name);
+
             _entries[index >> _shift][index & _shiftMask].Key = default(TKey);
             _entries[index >> _shift][index & _shiftMask].Value = default(TValue);
             Interlocked.Exchange(ref _entries[index >> _shift][index & _shiftMask].Link, 0);
 
-            int slot = (ver & int.MaxValue) % FreeSlots;
-            int prev = Interlocked.Exchange(ref _free[slot].Tail, index);
+            var slot = (ver & int.MaxValue) % FreeSlots;
+            var prev = Interlocked.Exchange(ref _free[slot].Tail, index);
 
             if (prev <= 0 || 0 != Interlocked.CompareExchange(ref _entries[prev >> _shift][prev & _shiftMask].Link, index, 0))
             {
@@ -1343,13 +1381,13 @@ namespace ClearScript.Manager.Caching
 
         #region Internal Structures
 
-        struct FreeList
+        private struct FreeList
         {
             public int Head;
             public int Tail;
         }
 
-        struct Entry
+        private struct Entry
         {
             public int Prev, Next; // insertion/access sequence ordering
             public int Link;
@@ -1358,7 +1396,7 @@ namespace ClearScript.Manager.Caching
             public TValue Value; // value of entry
         }
 
-        struct EnumState
+        private struct EnumState
         {
             private object _locked;
             public int Bucket, Current, Next;
@@ -1387,11 +1425,11 @@ namespace ClearScript.Manager.Caching
             }
         }
 
-        struct DelInfo : IRemoveValue<TKey, TValue>
+        private struct DelInfo : IRemoveValue<TKey, TValue>
         {
             public TValue Value;
-            readonly bool _hasTestValue;
-            readonly TValue _testValue;
+            private readonly bool _hasTestValue;
+            private readonly TValue _testValue;
             public KeyValuePredicate<TKey, TValue> Condition;
 
             public DelInfo(TValue expected)
@@ -1415,7 +1453,7 @@ namespace ClearScript.Manager.Caching
             }
         }
 
-        struct AddInfo : ICreateOrUpdateValue<TKey, TValue>
+        private struct AddInfo : ICreateOrUpdateValue<TKey, TValue>
         {
             public bool CanUpdate;
             public TValue Value;
@@ -1438,10 +1476,10 @@ namespace ClearScript.Manager.Caching
             }
         }
 
-        struct Add2Info : ICreateOrUpdateValue<TKey, TValue>
+        private struct Add2Info : ICreateOrUpdateValue<TKey, TValue>
         {
-            readonly bool _hasAddValue;
-            readonly TValue _addValue;
+            private readonly bool _hasAddValue;
+            private readonly TValue _addValue;
             public TValue Value;
             public Converter<TKey, TValue> Create;
             public KeyValueUpdate<TKey, TValue> Update;
@@ -1482,11 +1520,11 @@ namespace ClearScript.Manager.Caching
             }
         }
 
-        struct UpdateInfo : ICreateOrUpdateValue<TKey, TValue>
+        private struct UpdateInfo : ICreateOrUpdateValue<TKey, TValue>
         {
             public TValue Value;
-            readonly bool _hasTestValue;
-            readonly TValue _testValue;
+            private readonly bool _hasTestValue;
+            private readonly TValue _testValue;
 
             public UpdateInfo(TValue expected)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace ClearScript.Manager
 {
@@ -14,13 +15,17 @@ namespace ClearScript.Manager
         /// </summary>
         public ManagerScope()
         {
+            if (ManagerPool.CurrentPool == null)
+                throw new InvalidOperationException("ManagerPool is not initialized.");
+
             RuntimeManager = ManagerPool.CurrentPool.GetRuntime();
         }
 
         /// <summary>
         /// Allows access to the allocated Runtime Manager from within this scope.
         /// </summary>
-        public IRuntimeManager RuntimeManager { get; private set; }
+        [NotNull]
+        public IRuntimeManager RuntimeManager { get; }
 
         /// <summary>
         /// Disposed the object and returns the Runtime Manager to the pool.
@@ -30,6 +35,10 @@ namespace ClearScript.Manager
             if (!_disposed)
             {
                 RuntimeManager.Cleanup();
+
+                if (ManagerPool.CurrentPool == null)
+                    throw new InvalidOperationException("ManagerPool is not initialized.");
+
                 ManagerPool.CurrentPool.ReturnToPool(RuntimeManager);
                 _disposed = true;
             }

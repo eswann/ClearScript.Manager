@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using JetBrains.Annotations;
 
 namespace ClearScript.Manager
 {
@@ -11,16 +12,18 @@ namespace ClearScript.Manager
         /// <summary>
         /// Gets a runtime from the pool.  Blocks until a manager becomes available.
         /// </summary>
-        /// <returns>The next available IRuntimeManager.</returns>
+        /// <returns>The next available <see cref="IRuntimeManager"/>.</returns>
+        [NotNull]
         IRuntimeManager GetRuntime();
 
         /// <summary>
         /// Returns a Runtime Manager to the pool.
         /// </summary>
         /// <param name="runtimeManager">The Runtime Manager to return to the pool.</param>
-        void ReturnToPool(IRuntimeManager runtimeManager);
+        void ReturnToPool([NotNull] IRuntimeManager runtimeManager);
     }
 
+    /// <inheritdoc />
     /// <summary>
     /// Defines a pool from which Runtime Managers are requested.
     /// </summary>
@@ -29,6 +32,7 @@ namespace ClearScript.Manager
         /// <summary>
         /// Static reference to the current pool of Runtime Managers.
         /// </summary>
+        [CanBeNull]
         public static IManagerPool CurrentPool;
 
         private readonly object _addLock = new object();
@@ -36,7 +40,7 @@ namespace ClearScript.Manager
         /// <summary>
         /// Current count of Runtimes within the pool.
         /// </summary>
-        public int RuntimeCurrentCount = 0;
+        public int RuntimeCurrentCount { get; private set; }
 
         private readonly BlockingCollection<IRuntimeManager> _availableRuntimes = new BlockingCollection<IRuntimeManager>();
         private readonly IManagerSettings _settings;
@@ -45,10 +49,10 @@ namespace ClearScript.Manager
         /// Creates a new Runtime Manager Pool.
         /// </summary>
         /// <param name="settings">Settings to apply to the Runtime Manager.</param>
-        public ManagerPool(IManagerSettings settings)
+        public ManagerPool([NotNull] IManagerSettings settings)
         {
             if(settings == null)
-                throw new ArgumentNullException("settings", "Settings must be supplied to the RuntimePool.");
+                throw new ArgumentNullException(nameof(settings), "Settings must be supplied to the RuntimePool.");
 
             _settings = settings;
         }
@@ -62,13 +66,13 @@ namespace ClearScript.Manager
             CurrentPool = new ManagerPool(settings);
         }
 
+        /// <inheritdoc />
         public IRuntimeManager GetRuntime()
         {
-            IRuntimeManager manager;
-            if (_availableRuntimes.TryTake(out manager))
+            if (_availableRuntimes.TryTake(out var manager))
                 return manager;
             
-            int runtimeMaxCount = _settings.RuntimeMaxCount;
+            var runtimeMaxCount = _settings.RuntimeMaxCount;
             if (RuntimeCurrentCount < runtimeMaxCount)
             {
                 lock (_addLock)
@@ -84,8 +88,10 @@ namespace ClearScript.Manager
             return _availableRuntimes.Take();
         }
 
+        /// <inheritdoc />
         public void ReturnToPool(IRuntimeManager runtimeManager)
         {
+            if (runtimeManager == null) throw new ArgumentNullException(nameof(runtimeManager));
             _availableRuntimes.Add(runtimeManager);
         }
 

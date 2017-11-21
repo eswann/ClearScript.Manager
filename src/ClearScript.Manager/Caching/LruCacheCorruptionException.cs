@@ -2,11 +2,10 @@
 
 namespace ClearScript.Manager.Caching
 {
+    [Serializable]
     public class LruCacheCorruptionException : Exception
     {
-        public override string Message
-        {
-            get { return "LRU Cache is corrupted."; }
-        }
+        /// <inheritdoc />
+        public override string Message => "LRU Cache is corrupted.";
     }
 }

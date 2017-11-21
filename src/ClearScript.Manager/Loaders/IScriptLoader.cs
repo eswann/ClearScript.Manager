@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace ClearScript.Manager.Loaders
 {
@@ -16,14 +17,14 @@ namespace ClearScript.Manager.Loaders
         /// Determines if this script loader should be used at all.
         /// </summary>
         /// <param name="script">Script to evaluate.</param>
-        /// <returns>Bool indicating if this loader should be used.</returns>
-        bool ShouldUse(IncludeScript script);
+        /// <returns><see cref="bool"/> indicating if this loader should be used.</returns>
+        bool ShouldUse([NotNull] IncludeScript script);
 
         /// <summary>
-        /// Loads the scripts Code property from the other available properties of the IncludeScript, typically using hte Uri.
+        /// Loads the scripts Code property from the other available properties of the IncludeScript, typically using the Uri.
         /// </summary>
         /// <param name="script">Script to load</param>
-        void LoadCode(IncludeScript script);
+        void LoadCode([NotNull] IncludeScript script);
     }
 
 }

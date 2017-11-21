@@ -3,7 +3,7 @@
 namespace ClearScript.Manager
 {
     /// <summary>
-    /// Script to include in the execution of another script.  This script is executed first.  Can contain functions, libraries etc...
+    /// Script to include in the execution of another script. This script is executed first. Can contain functions, libraries etc...
     /// </summary>
     public class IncludeScript
     {

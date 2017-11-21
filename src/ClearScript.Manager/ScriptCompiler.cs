@@ -2,32 +2,38 @@
 using System.Text;
 using ClearScript.Manager.Caching;
 using ClearScript.Manager.Loaders;
+using JetBrains.Annotations;
 using Microsoft.ClearScript.V8;
 
 namespace ClearScript.Manager
 {
     internal class ScriptCompiler
     {
+        [NotNull]
         private readonly LruCache<string, CachedV8Script> _scriptCache;
+
+        [NotNull]
         private readonly IManagerSettings _settings;
+
+        [NotNull]
         private readonly V8Runtime _v8Runtime;
 
-        public ScriptCompiler(V8Runtime v8Runtime, IManagerSettings settings)
+        public ScriptCompiler([NotNull] V8Runtime v8Runtime, [NotNull] IManagerSettings settings)
         {
-            _settings = settings;
-            _v8Runtime = v8Runtime;
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _v8Runtime = v8Runtime ?? throw new ArgumentNullException(nameof(v8Runtime));
             _scriptCache = new LruCache<string, CachedV8Script>(LurchTableOrder.Access, settings.ScriptCacheMaxCount);
         }
 
+        [CanBeNull]
         public V8Script Compile(string scriptId, string code, bool addToCache = true, int? cacheExpirationSeconds = null)
         {
-            CachedV8Script cachedScript;
-            if (TryGetCached(scriptId, out cachedScript))
+            if (TryGetCached(scriptId, out var cachedScript))
             {
                 return cachedScript.Script;
             }
 
-            V8Script compiledScript = _v8Runtime.Compile(scriptId, code);
+            var compiledScript = _v8Runtime.Compile(scriptId, code);
 
             if (addToCache)
             {
@@ -45,13 +51,14 @@ namespace ClearScript.Manager
             return compiledScript;
         }
 
-        public V8Script Compile(IncludeScript script, bool addToCache = true, int? cacheExpirationSeconds = null)
+        [CanBeNull]
+        public V8Script Compile([NotNull] IncludeScript script, bool addToCache = true, int? cacheExpirationSeconds = null)
         {
-            CachedV8Script cachedScript;
+            if (script == null) throw new ArgumentNullException(nameof(script));
 
             script.EnsureScriptId();
 
-            if (TryGetCached(script.ScriptId, out cachedScript))
+            if (TryGetCached(script.ScriptId, out var cachedScript))
             {
                 return cachedScript.Script;
             }
@@ -72,8 +79,9 @@ namespace ClearScript.Manager
             }
             return null;
         }
-
-        public bool TryGetCached(string scriptId, out CachedV8Script cachedScript)
+ 
+        [ContractAnnotation("=> true, cachedScript:notnull;=> false, cachedScript:null")]
+        public bool TryGetCached([CanBeNull] string scriptId, [CanBeNull] out CachedV8Script cachedScript)
         {
             if (_scriptCache.TryGetValue(scriptId, out cachedScript))
             {

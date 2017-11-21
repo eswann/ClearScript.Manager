@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace ClearScript.Manager
 {
     /// <summary>
-    /// Options for execution of of scripts by the Runtime Manager
+    /// Options for execution of scripts by the Runtime Manager
     /// </summary>
     public class ExecutionOptions
     {
-        private bool _addToCache = true;
         private IList<HostObject> _hostObjects;
         private IList<HostType> _hostTypes;
         private IList<IncludeScript> _scripts;
@@ -17,8 +17,8 @@ namespace ClearScript.Manager
         /// </summary>
         public IList<HostObject> HostObjects
         {
-            get { return _hostObjects ?? (_hostObjects = new List<HostObject>()); }
-            set { _hostObjects = value; }
+            get => _hostObjects ?? (_hostObjects = new List<HostObject>());
+            set => _hostObjects = value;
         }
 
         /// <summary>
@@ -26,18 +26,14 @@ namespace ClearScript.Manager
         /// </summary>
         public IList<HostType> HostTypes
         {
-            get { return _hostTypes ?? (_hostTypes = new List<HostType>()); }
-            set { _hostTypes = value; }
+            get => _hostTypes ?? (_hostTypes = new List<HostType>());
+            set => _hostTypes = value;
         }
 
         /// <summary>
         /// Indicates that this script should be added to the script cache once compiled.  Default is True.
         /// </summary>
-        public bool AddToCache
-        {
-            get { return _addToCache; }
-            set { _addToCache = value; }
-        }
+        public bool AddToCache { get; set; } = true;
 
         /// <summary>
         /// Indicates the duration that a script should be cached.
@@ -49,8 +45,8 @@ namespace ClearScript.Manager
         /// </summary>
         public IList<IncludeScript> Scripts
         {
-            get { return _scripts ?? (_scripts = new List<IncludeScript>()); }
-            set { _scripts = value; }
+            get => _scripts ?? (_scripts = new List<IncludeScript>());
+            set => _scripts = value;
         }
     }
 }

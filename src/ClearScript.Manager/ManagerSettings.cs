@@ -98,63 +98,43 @@ namespace ClearScript.Manager
         /// </summary>
         public const int DefaultDebugPort = 9222;
 
-        public int MaxExecutableBytes
-        {
-            get { return SettingToInt("MaxExecutableBytes", DefaultMaxExecutableBytes); }
-        }
+        /// <inheritdoc />
+        public int MaxExecutableBytes => SettingToInt("MaxExecutableBytes", DefaultMaxExecutableBytes);
 
-        public int MaxNewSpaceBytes
-        {
-            get
-            {
-                return SettingToInt("MaxNewSpaceBytes", SettingToInt("MaxYoungSpaceBytes", DefaultMaxNewSpaceBytes));
-            }
-        }
+        /// <inheritdoc />
+        public int MaxNewSpaceBytes =>
+            SettingToInt("MaxNewSpaceBytes", SettingToInt("MaxYoungSpaceBytes", DefaultMaxNewSpaceBytes));
 
+        /// <inheritdoc />
         [Obsolete("Use MaxNewSpaceBytes instead.")]
-        public int MaxYoungSpaceBytes
-        {
-            get { return MaxNewSpaceBytes; }
-        }
+        public int MaxYoungSpaceBytes => MaxNewSpaceBytes;
 
-        public int MaxOldSpaceBytes
-        {
-            get { return SettingToInt("MaxOldSpaceBytes", DefaultMaxOldSpaceBytes); }
-        }
+        /// <inheritdoc />
+        public int MaxOldSpaceBytes => SettingToInt("MaxOldSpaceBytes", DefaultMaxOldSpaceBytes);
 
-        public int ScriptTimeoutMilliSeconds
-        {
-            get { return SettingToInt("ScriptTimeoutMilliSeconds", DefaultScriptTimeoutMilliSeconds); }
-        }
+        /// <inheritdoc />
+        public int ScriptTimeoutMilliSeconds =>
+            SettingToInt("ScriptTimeoutMilliSeconds", DefaultScriptTimeoutMilliSeconds);
 
-        public int RuntimeMaxCount
-        {
-            get { return SettingToInt("RuntimeMaxCount", DefaultRuntimeMaxCount); }
-        }
+        /// <inheritdoc />
+        public int RuntimeMaxCount => SettingToInt("RuntimeMaxCount", DefaultRuntimeMaxCount);
 
-        public int ScriptCacheMaxCount
-        {
-            get { return SettingToInt("ScriptCacheMaxCount", DefaultScriptCacheMaxCount); }
-        }
+        /// <inheritdoc />
+        public int ScriptCacheMaxCount => SettingToInt("ScriptCacheMaxCount", DefaultScriptCacheMaxCount);
 
-        public int ScriptCacheExpirationSeconds
-        {
-            get { return SettingToInt("ScriptCacheExpirationSeconds", DefaultScriptCacheExpirationSeconds); }
-        }
+        /// <inheritdoc />
+        public int ScriptCacheExpirationSeconds =>
+            SettingToInt("ScriptCacheExpirationSeconds", DefaultScriptCacheExpirationSeconds);
 
-        public bool V8DebugEnabled
-        {
-            get { return SettingToBool("DebugEnabled"); }
-        }
+        /// <inheritdoc />
+        public bool V8DebugEnabled => SettingToBool("DebugEnabled");
 
-        public int V8DebugPort
-        {
-            get { return SettingToInt("DebugPort", DefaultDebugPort); }
-        }
+        /// <inheritdoc />
+        public int V8DebugPort => SettingToInt("DebugPort", DefaultDebugPort);
 
 
         /// <summary>
-        /// Parses the setting and converts it to an int or sets the default value if the setting is not present.
+        /// Parses the setting and converts it to an <see cref="int"/> or sets the default value if the setting is not present.
         /// </summary>
         /// <param name="settingName">Name of the setting to check.</param>
         /// <param name="defaultValue">Default value if setting is not present.</param>
@@ -163,10 +143,9 @@ namespace ClearScript.Manager
         {
             int? setting = null;
 
-            string stringSetting = ConfigurationManager.AppSettings[settingName];
+            var stringSetting = ConfigurationManager.AppSettings[settingName];
 
-            int result;
-            if (int.TryParse(stringSetting, out result))
+            if (int.TryParse(stringSetting, out var result))
             {
                 setting = result;
             }
@@ -175,7 +154,7 @@ namespace ClearScript.Manager
         }
 
         /// <summary>
-        /// Parses the setting and converts it to a bool or sets the default value if the setting is not present.
+        /// Parses the setting and converts it to a <see cref="bool"/> or sets the default value if the setting is not present.
         /// </summary>
         /// <param name="settingName">Name of the setting to check.</param>
         /// <param name="defaultValue">Default value if setting is not present.</param>
@@ -184,10 +163,9 @@ namespace ClearScript.Manager
         {
             bool? setting = null;
 
-            string stringSetting = ConfigurationManager.AppSettings[settingName];
+            var stringSetting = ConfigurationManager.AppSettings[settingName];
 
-            bool result;
-            if (bool.TryParse(stringSetting, out result))
+            if (bool.TryParse(stringSetting, out var result))
             {
                 setting = result;
             }
@@ -215,29 +193,39 @@ namespace ClearScript.Manager
             ScriptCacheExpirationSeconds = ManagerSettings.DefaultScriptCacheExpirationSeconds;
         }
 
+        /// <inheritdoc />
         public int MaxExecutableBytes { get; set; }
 
+        /// <inheritdoc />
         public int MaxNewSpaceBytes { get; set; }
 
+        /// <inheritdoc />
         [Obsolete("Use MaxNewSpaceBytes instead.")]
         public int MaxYoungSpaceBytes
         {
-            get { return MaxNewSpaceBytes; }
-            set { MaxNewSpaceBytes = value; }
+            get => MaxNewSpaceBytes;
+            set => MaxNewSpaceBytes = value;
         }
 
+        /// <inheritdoc />
         public int MaxOldSpaceBytes { get; set; }
 
+        /// <inheritdoc />
         public int ScriptTimeoutMilliSeconds { get; set; }
 
+        /// <inheritdoc />
         public int RuntimeMaxCount { get; set; }
 
+        /// <inheritdoc />
         public int ScriptCacheMaxCount { get; set; }
 
+        /// <inheritdoc />
         public int ScriptCacheExpirationSeconds { get; set; }
 
+        /// <inheritdoc />
         public bool V8DebugEnabled { get; set; }
 
+        /// <inheritdoc />
         public int V8DebugPort { get; set; }
 
     }

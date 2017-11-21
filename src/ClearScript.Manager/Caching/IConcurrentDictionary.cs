@@ -14,6 +14,7 @@
 #endregion
 
 using System;
+using JetBrains.Annotations;
 
 namespace ClearScript.Manager.Caching
 {
@@ -83,13 +84,13 @@ namespace ClearScript.Manager.Caching
         /// <param name="key">The key of the element to add.</param>
         /// <param name="fnCreate">Constructs a new value for the key.</param>
         /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.IDictionary`2"/> is read-only.</exception>
-        TValue GetOrAdd(TKey key, Converter<TKey, TValue> fnCreate);
+        TValue GetOrAdd([NotNull] TKey key, Converter<TKey, TValue> fnCreate);
 
         /// <summary>
         /// Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist, 
         /// or updates a key/value pair if the key already exists.
         /// </summary>
-        TValue AddOrUpdate(TKey key, TValue addValue, KeyValueUpdate<TKey, TValue> fnUpdate);
+        TValue AddOrUpdate([NotNull] TKey key, TValue addValue, KeyValueUpdate<TKey, TValue> fnUpdate);
 
         /// <summary>
         /// Adds a key/value pair to the <see cref="T:System.Collections.Generic.IDictionary`2"/> if the key does not already exist, 
@@ -100,19 +101,19 @@ namespace ClearScript.Manager.Caching
         /// the factory method fnCreate will be called to produce the new value, if the key exists, the converter method
         /// fnUpdate will be called to create an updated value.
         /// </remarks>
-        TValue AddOrUpdate(TKey key, Converter<TKey, TValue> fnCreate, KeyValueUpdate<TKey, TValue> fnUpdate);
+        TValue AddOrUpdate([NotNull] TKey key, Converter<TKey, TValue> fnCreate, KeyValueUpdate<TKey, TValue> fnUpdate);
 
         /// <summary>
-        /// Add, update, or fetche a key/value pair from the dictionary via an implementation of the
+        /// Add, update, or fetch a key/value pair from the dictionary via an implementation of the
         /// <see cref="T:ClearScript.Manager.Caching.ICreateOrUpdateValue`2"/> interface.
         /// </summary>
-        bool AddOrUpdate<T>(TKey key, ref T createOrUpdateValue) where T : ICreateOrUpdateValue<TKey, TValue>;
+        bool AddOrUpdate<T>([NotNull] TKey key, ref T createOrUpdateValue) where T : ICreateOrUpdateValue<TKey, TValue>;
 
         /// <summary>
         /// Adds an element with the provided key and value to the <see cref="T:System.Collections.Generic.IDictionary`2"/>
         /// by calling the provided factory method to construct the value if the key is not already present in the collection.
         /// </summary>
-        bool TryAdd(TKey key, Converter<TKey, TValue> fnCreate);
+        bool TryAdd([CanBeNull] TKey key, Converter<TKey, TValue> fnCreate);
 
         /// <summary>
         /// Modify the value associated with the result of the provided update method
@@ -121,18 +122,18 @@ namespace ClearScript.Manager.Caching
         /// provided as it can cause a dead-lock to occur.  If the method returns an
         /// instance who .Equals the original, no update is applied.
         /// </summary>
-        bool TryUpdate(TKey key, KeyValueUpdate<TKey, TValue> fnUpdate);
+        bool TryUpdate([CanBeNull] TKey key, KeyValueUpdate<TKey, TValue> fnUpdate);
 
         /// <summary>
         /// Removes the element with the specified key from the <see cref="T:System.Collections.Generic.IDictionary`2"/>
         /// if the fnCondition predicate is null or returns true.
         /// </summary>
-        bool TryRemove(TKey key, KeyValuePredicate<TKey, TValue> fnCondition);
+        bool TryRemove([CanBeNull] TKey key, KeyValuePredicate<TKey, TValue> fnCondition);
 
         /// <summary>
         /// Conditionally removes a key/value pair from the dictionary via an implementation of the
         /// <see cref="T:ClearScript.Manager.Caching.IRemoveValue`2"/> interface.
         /// </summary>
-        bool TryRemove<T>(TKey key, ref T removeValue) where T : IRemoveValue<TKey, TValue>;
+        bool TryRemove<T>([CanBeNull] TKey key, ref T removeValue) where T : IRemoveValue<TKey, TValue>;
     }
 }

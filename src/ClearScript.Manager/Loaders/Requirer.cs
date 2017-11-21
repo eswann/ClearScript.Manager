@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ClearScript.Manager.Extensions;
+using JetBrains.Annotations;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
 
@@ -11,31 +12,44 @@ namespace ClearScript.Manager.Loaders
     /// </summary>
     public class Requirer
     {
+        [NotNull]
         internal ScriptCompiler Compiler { get; set; }
+
+        [NotNull]
         internal V8ScriptEngine Engine { get; set; }
+
+        internal Requirer([NotNull] ScriptCompiler compiler, [NotNull] V8ScriptEngine engine)
+        {
+            Compiler = compiler ?? throw new ArgumentNullException(nameof(compiler));
+            Engine = engine ?? throw new ArgumentNullException(nameof(engine));
+        }
 
         /// <summary>
         /// Called via a javascript to require and return the requested package.
         /// </summary>
         /// <param name="packageId">ID of the RequirePackage to require.</param>
         /// <returns>The return object to use for the require. Either the export from the require script or the returned HostObject if not script is present.</returns>
-        public object Require(string packageId)
+        [CanBeNull]
+        public object Require([NotNull] string packageId)
         {
+            if (packageId == null) throw new ArgumentNullException(nameof(packageId));
+
             return Require(packageId, null);
         }
 
-
         /// <summary>
         /// Called via a javascript to require and return the requested package.
         /// </summary>
         /// <param name="packageId">ID of the RequirePackage to require.</param>
-        /// <param name="scriptUri">A script uri.  This is only needed if the packageId doesn't meet the script convention name and the package is not a registered package.</param>
+        /// <param name="scriptUri">A script Uri.  This is only needed if the packageId doesn't meet the script convention name and the package is not a registered package.</param>
         /// <returns>The return object to use for the require. Either the export from the require script or the returned HostObject if not script is present.</returns>
-        public object Require(string packageId, string scriptUri)
+        [CanBeNull]
+        public object Require([NotNull] string packageId, [CanBeNull] string scriptUri)
         {
-            RequiredPackage package;
-            bool hasUri = !String.IsNullOrEmpty(scriptUri);
-            bool packageCreated = false;
+            if (packageId == null) throw new ArgumentNullException(nameof(packageId));
+
+            var hasUri = !string.IsNullOrEmpty(scriptUri);
+            var packageCreated = false;
 
             if (packageId.Contains("/") || packageId.Contains("\\"))
             {
@@ -49,14 +63,15 @@ namespace ClearScript.Manager.Loaders
                 
                 if (packageId.Length == 0)
                     throw new ArgumentException(
-                        "The provided packageId is not a valid package name. The packageId must be a valid file path or uri if path characters are contained in the name.");
+                        "The provided packageId is not a valid package name. The packageId must be a valid file path or Uri if path characters are contained in the name.");
             }
 
-            if (!RequireManager.TryGetPackage(packageId, out package))
+            if (!RequireManager.TryGetPackage(packageId, out var package))
             {
                 if (!hasUri)
                 {
-                    throw new KeyNotFoundException(String.Format("The package with ID {0} was not found, did you register this package?", packageId));
+                    throw new KeyNotFoundException(
+                        $"The package with ID {packageId} was not found, did you register this package?");
                 }
                 
                 package = new RequiredPackage {PackageId = packageId, ScriptUri = scriptUri};
@@ -71,9 +86,12 @@ namespace ClearScript.Manager.Loaders
 
             Engine.ApplyOptions(options);
 
-            if (!String.IsNullOrEmpty(package.ScriptUri))
+            if (!string.IsNullOrEmpty(package.ScriptUri))
             {
-                var compiledScript = Compiler.Compile(new IncludeScript {Uri = package.ScriptUri, PrependCode = "var " + packageId + " = {};"});
+                var compiledScript = Compiler.Compile(new IncludeScript {
+                    Uri = package.ScriptUri,
+                    PrependCode = $"var {packageId} = {{}};"
+                });
 
                 Engine.Execute(compiledScript);
 
@@ -99,9 +117,12 @@ namespace ClearScript.Manager.Loaders
             return null;
         }
 
-        private string DerivePackageIdFromUri(string path)
+        [NotNull]
+        private string DerivePackageIdFromUri([NotNull] string path)
         {
-            string[] segments = path.Split(new []{'/','\\'}, StringSplitOptions.RemoveEmptyEntries);
+            if (path == null) throw new ArgumentNullException(nameof(path));
+
+            var segments = path.Split(new []{'/','\\'}, StringSplitOptions.RemoveEmptyEntries);
 
             var resource = segments[segments.Length - 1];
 
@@ -113,7 +134,6 @@ namespace ClearScript.Manager.Loaders
             }
 
             return resource.ToCamelCase();
-
         }
     }
 }

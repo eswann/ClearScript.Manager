@@ -7,9 +7,6 @@ namespace ClearScript.Manager.Loaders
     /// </summary>
     public class RequiredPackage
     {
-        private readonly IList<HostObject> _hostObjects = new List<HostObject>();
-        private readonly IList<HostType> _hostTypes = new List<HostType>();
-
         /// <summary>
         /// The ID of the package.
         /// </summary>
@@ -23,17 +20,11 @@ namespace ClearScript.Manager.Loaders
         /// <summary>
         /// Host objects needed for the package.  If a script is not included, the first host object is returned when the package is required.
         /// </summary>
-        public IList<HostObject> HostObjects
-        {
-            get { return _hostObjects; }
-        }
+        public IList<HostObject> HostObjects { get; } = new List<HostObject>();
 
         /// <summary>
         /// Host types needed for the package.
         /// </summary>
-        public IList<HostType> HostTypes
-        {
-            get { return _hostTypes; }
-        }
+        public IList<HostType> HostTypes { get; } = new List<HostType>();
     }
 }
