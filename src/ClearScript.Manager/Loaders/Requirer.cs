@@ -73,7 +73,12 @@ namespace ClearScript.Manager.Loaders
 
             if (!String.IsNullOrEmpty(package.ScriptUri))
             {
-                var compiledScript = Compiler.Compile(new IncludeScript {Uri = package.ScriptUri, PrependCode = "var " + packageId + " = {};"});
+                var compiledScript = Compiler.Compile(new IncludeScript
+                {
+                    Uri = package.ScriptUri,
+                    PrependCode = "var " + packageId + " = {};",
+                    RequiredPackage = package
+                });
 
                 Engine.Execute(compiledScript);
 

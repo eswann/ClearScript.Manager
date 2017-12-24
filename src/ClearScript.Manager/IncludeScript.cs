@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using ClearScript.Manager.Loaders;
 
 namespace ClearScript.Manager
 {
@@ -7,6 +8,10 @@ namespace ClearScript.Manager
     /// </summary>
     public class IncludeScript
     {
+        /// <summary>
+        /// current RequiredPackage
+        /// </summary>
+        public RequiredPackage RequiredPackage { get; set; }    
         /// <summary>
         /// Unique name of the script to execute.
         /// </summary>

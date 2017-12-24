@@ -1,4 +1,5 @@
-﻿using ClearScript.Manager.Loaders;
+﻿using System.IO;
+using ClearScript.Manager.Loaders;
 
 namespace ClearScript.Manager.Http.Packages
 {
@@ -7,7 +8,9 @@ namespace ClearScript.Manager.Http.Packages
         public RequestPackage()
         {
             PackageId = "request";
-            ScriptUri = @".\Scripts\request.js";
+            ScriptUri = "ClearScript.Manager.Http.Scripts.request.js";
         }
+
+       
     }
 }

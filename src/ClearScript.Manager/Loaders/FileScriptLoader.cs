@@ -12,18 +12,26 @@ namespace ClearScript.Manager.Loaders
 
         public bool ShouldUse(IncludeScript script)
         {
-            if (!string.IsNullOrEmpty(script.Code))
-                return false;
-
-            if (Uri.IsWellFormedUriString(script.Uri, UriKind.RelativeOrAbsolute))
+            try
             {
-                var uri = new Uri(script.Uri);
-
-                if (!uri.IsFile)
+                if (!string.IsNullOrEmpty(script.Code))
                     return false;
-            }
 
-            return true;
+                if (Uri.IsWellFormedUriString(script.Uri, UriKind.RelativeOrAbsolute))
+                {
+                    var uri = new Uri(script.Uri);
+
+                    if (!uri.IsFile)
+                        return false;
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
         }
 
         public void LoadCode(IncludeScript script)

@@ -8,7 +8,7 @@ namespace ClearScript.Manager.Loaders
     /// </summary>
     public static class ScriptLoadManager
     {
-        private static readonly List<IScriptLoader> _loaders = new List<IScriptLoader> {new FileScriptLoader()};
+        private static readonly List<IScriptLoader> _loaders = new List<IScriptLoader> {new FileScriptLoader(),new EmbeddedScriptLoader()};
 
         /// <summary>
         /// Register a script loader with the manager.

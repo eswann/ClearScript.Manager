@@ -62,6 +62,7 @@
     <Compile Include="Extensions\StringExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Loaders\EmbeddedScriptLoader.cs" />
     <Compile Include="Loaders\FileScriptLoader.cs">
       <SubType>Code</SubType>
     </Compile>
