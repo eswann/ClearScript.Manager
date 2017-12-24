@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AntData.ORM, Version=1.2.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\yuzd\AntData\AntData\AntData.ORM\bin\Debug\AntData.ORM.dll</HintPath>
+    </Reference>
     <Reference Include="ClearScript">
       <HintPath>..\packages\ClearScript.Installer.1.0.1.31662\lib\net45\ClearScript.dll</HintPath>
     </Reference>
@@ -55,6 +59,10 @@
     <Compile Include="WhenMakingHttpCall.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Config\Dal.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +101,10 @@
     <ProjectReference Include="..\ClearScript.Manager.Http\ClearScript.Manager.Http.csproj">
       <Project>{190ef179-83f2-4091-ab95-a609d278accc}</Project>
       <Name>ClearScript.Manager.Http</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClearScript.Manager.Sql\ClearScript.Manager.Sql.csproj">
+      <Project>{0433aa74-0153-4956-8597-d7153e040123}</Project>
+      <Name>ClearScript.Manager.Sql</Name>
     </ProjectReference>
     <ProjectReference Include="..\ClearScript.Manager\ClearScript.Manager.csproj">
       <Project>{cfab8382-b76f-4aa1-ab38-52674f932e52}</Project>

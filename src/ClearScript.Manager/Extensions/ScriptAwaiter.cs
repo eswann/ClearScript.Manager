@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ClearScript.Manager.Http.Helpers
+namespace ClearScript.Manager.Extensions
 {
     public class ScriptAwaiter
     {

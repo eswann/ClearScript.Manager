@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ClearScript.Manager.Extensions;
 using Microsoft.ClearScript;
 
 namespace ClearScript.Manager.Http.Helpers.Node

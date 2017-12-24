@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using ClearScript.Manager.Extensions;
 using ClearScript.Manager.Http.Helpers;
 using ClearScript.Manager.Http.Packages;
 using ClearScript.Manager.Loaders;
@@ -23,7 +25,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings{ScriptTimeoutMilliSeconds = 0});
 
-            PackageHelpers.RegisterRequestPackages();
+            HttpPackageHelpers.RegisterRequestPackages();
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
@@ -48,7 +50,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            PackageHelpers.RegisterRequestPackages();
+            HttpPackageHelpers.RegisterRequestPackages();
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
@@ -73,7 +75,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            PackageHelpers.RegisterRequestPackages();
+            HttpPackageHelpers.RegisterRequestPackages();
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
@@ -90,6 +92,27 @@ namespace ClearScript.Manager.Http.Test
             await scriptAwaiter.T;
 
             subject.Headers.Count().ShouldBeGreaterThan(0);
+        }
+
+        [Test]
+        public async void TestSql1()
+        {
+            var subject = new TestObject();
+            var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
+
+            SqlPackageHelpers.RegisterSqlPackages();
+
+            manager.AddConsoleReference = true;
+            var options = new ExecutionOptions();
+            options.HostObjects.Add(new HostObject { Name = "subject", Target = subject });
+            var code = "var sql = require('sql');" +
+                       "var content = new sql('testorm_sqlserver','sqlserver');"+
+                       //"subject.StatusCode = content.ExecuteNonQuery(\"update school set address ='1' where id = 1\");";
+                       "var arr = content.Query(\"select * from school\");subject.Server = arr[1].Address";
+
+            await manager.ExecuteAsync("testScript", code, options);
+
+            subject.StatusCode.ShouldEqual(0);
         }
 
         public class TestObject

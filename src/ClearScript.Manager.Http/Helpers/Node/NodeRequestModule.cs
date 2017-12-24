@@ -1,6 +1,7 @@
 using System;
 using System.Dynamic;
 using System.Net.Http;
+using ClearScript.Manager.Extensions;
 
 namespace ClearScript.Manager.Http.Helpers.Node
 {

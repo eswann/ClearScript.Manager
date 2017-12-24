@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager", "ClearScript.Manager\ClearScript.Manager.csproj", "{CFAB8382-B76F-4AA1-AB38-52674F932E52}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Http.Test", "ClearScript.Manager.Http.Test\ClearScript.Manager.Http.Test.csproj", "{76F7C7E8-EB54-4840-989C-124DCC30128D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.WebDemo", "ClearScript.Manager.WebDemo\ClearScript.Manager.WebDemo.csproj", "{15DC9470-1862-4F28-B3D9-55EC94BBA695}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Sql", "ClearScript.Manager.Sql\ClearScript.Manager.Sql.csproj", "{0433AA74-0153-4956-8597-D7153E040123}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{15DC9470-1862-4F28-B3D9-55EC94BBA695}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15DC9470-1862-4F28-B3D9-55EC94BBA695}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15DC9470-1862-4F28-B3D9-55EC94BBA695}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0433AA74-0153-4956-8597-D7153E040123}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0433AA74-0153-4956-8597-D7153E040123}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0433AA74-0153-4956-8597-D7153E040123}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0433AA74-0153-4956-8597-D7153E040123}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

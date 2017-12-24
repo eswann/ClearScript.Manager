@@ -59,6 +59,7 @@
     <Compile Include="Extensions\DynamicExtensions.cs" />
     <Compile Include="Extensions\EngineExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\ScriptAwaiter.cs" />
     <Compile Include="Extensions\StringExtensions.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -62,6 +62,10 @@ namespace ClearScript.Manager
             }
             if (!string.IsNullOrEmpty(script.Code))
             {
+                if (script.RequiredPackage != null && !string.IsNullOrEmpty(script.RequiredPackage.PackageId))
+                {
+                    script.Code = script.Code.Replace("this.exports", script.RequiredPackage.PackageId + ".exports");
+                }
                 if (!string.IsNullOrEmpty(script.PrependCode) || !string.IsNullOrEmpty(script.AppendCode))
                 {
                     var builder = new StringBuilder();

@@ -54,8 +54,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\ScriptAwaiter.cs" />
-    <Compile Include="Helpers\DynamicExtensions.cs" />
     <Compile Include="Helpers\Node\NodeBuffer.cs" />
     <Compile Include="Helpers\Node\NodeHttp.cs" />
     <Compile Include="Helpers\Node\NodeHttpRequest.cs" />
@@ -64,7 +62,7 @@
     <Compile Include="Helpers\Node\NodeRequestModule.cs" />
     <Compile Include="Loaders\HttpScriptLoader.cs" />
     <Compile Include="Packages\HttpPackage.cs" />
-    <Compile Include="Packages\PackageHelpers.cs" />
+    <Compile Include="Packages\HttpPackageHelpers.cs" />
     <Compile Include="Packages\RequestPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
