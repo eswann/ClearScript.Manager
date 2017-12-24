@@ -108,7 +108,7 @@ namespace ClearScript.Manager.Http.Test
             var code = "var sql = require('sql');" +
                        "var content = new sql('testorm_sqlserver','sqlserver');"+
                        //"subject.StatusCode = content.ExecuteNonQuery(\"update school set address ='1' where id = 1\");";
-                       "var arr = content.Query(\"select * from school\");subject.Server = arr[1].Address";
+                       "var arr = content.Query(\"select count(*) from school\");subject.Server = ''+arr";
 
             await manager.ExecuteAsync("testScript", code, options);
 

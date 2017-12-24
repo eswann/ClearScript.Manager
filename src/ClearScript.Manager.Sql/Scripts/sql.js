@@ -53,8 +53,10 @@ DbContext.prototype.Query = function (sql, timeout) {
     var obj = xHost.type('System.Object');
     var week = xHost.newObj(List(objList(obj)));
     week = sqlExecutor.DbExecutorQuery(this.newOption(sql, timeout));
-    var first = week[0][0].key;
+    //var first = week[0][0].key;
+    Console.WriteLine(first);
     if (first == 'null_key_') {
+        //Console.WriteLine(week[0][0].value);
         return week[0][0].value;
     }
     var ary = [];
