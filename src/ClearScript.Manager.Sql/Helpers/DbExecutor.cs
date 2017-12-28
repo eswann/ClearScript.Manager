@@ -8,6 +8,7 @@
 
 using System.Data;
 using System.Dynamic;
+using System.Transactions;
 using AntData.ORM.Data;
 using ClearScript.Manager.Extensions;
 using ClearScript.Manager.Sql.Package;
@@ -26,6 +27,7 @@ namespace ClearScript.Manager.Sql.Helpers
     /// </summary>
     public class DbExecutor
     {
+       
         public DbContext CreateDbContext(object options)
         {
             var op = options as SqlRequestOptions ?? new SqlRequestOptions((dynamic)options);
@@ -50,6 +52,82 @@ namespace ClearScript.Manager.Sql.Helpers
 
             throw new NotSupportedException(string.Format("dbType:{0} is not supported", op.DbType));
         }
+
+        public void UseTransaction(dynamic callback, dynamic options)
+        {
+            if (callback == null)
+            {
+                throw new ArgumentNullException("callback");
+            }
+            var useTsOption = false;
+            TransactionOptions transactionOption = new TransactionOptions(); ;
+            if (options != null)
+            {
+                var _options = options as DynamicObject;
+                string level = _options.GetMember<string>("level");
+                if (!string.IsNullOrEmpty(level))
+                {
+                    switch (level.ToLower())
+                    {
+                        case "chaos":
+                            useTsOption = true;
+                            transactionOption.IsolationLevel = System.Transactions.IsolationLevel.Chaos;
+                            break;
+                        case "readcommitted":
+                            useTsOption = true;
+                            transactionOption.IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted;
+                            break;
+                        case "readuncommitted":
+                            useTsOption = true;
+                            transactionOption.IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted;
+                            break;
+                        case "repeatableread":
+                            useTsOption = true;
+                            transactionOption.IsolationLevel = System.Transactions.IsolationLevel.RepeatableRead;
+                            break;
+                        case "serializable":
+                            useTsOption = true;
+                            transactionOption.IsolationLevel = System.Transactions.IsolationLevel.Serializable;
+                            break;
+                        case "snapshot":
+                            useTsOption = true;
+                            transactionOption.IsolationLevel = System.Transactions.IsolationLevel.Snapshot;
+                            break;
+                        case "unspecified":
+                            useTsOption = true;
+                            transactionOption.IsolationLevel = System.Transactions.IsolationLevel.Unspecified;
+                            break;
+                    }
+                }
+
+                var timeout = _options.GetMember<int>("timeout");
+                if (timeout > 0)
+                {
+                    useTsOption = true;
+                    transactionOption.Timeout = TimeSpan.FromSeconds(timeout);
+                }
+            }
+
+            if (useTsOption)
+            {
+                using (TransactionScope scope = new System.Transactions.TransactionScope(TransactionScopeOption.RequiresNew, transactionOption))
+                {
+                    callback.call(null);
+                    scope.Complete();
+                }
+            }
+            else
+            {
+                using (TransactionScope scope = new System.Transactions.TransactionScope())
+                {
+                    callback.call(null);
+                    scope.Complete();
+                }
+
+            }
+            
+        }
+
         public List<List<Object>> DbExecutorQuery(dynamic options)
         {
             var _options = options as DynamicObject;
@@ -62,7 +140,6 @@ namespace ClearScript.Manager.Sql.Helpers
             }
 
             var dbContext = CreateDbContext(options);
-
             if (timeout > 0)
             {
                 dbContext.CommandTimeout = timeout;
