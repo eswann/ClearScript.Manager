@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using ClearScript.Manager.Extensions;
 using ClearScript.Manager.Http.Helpers;
 using ClearScript.Manager.Http.Packages;
@@ -70,7 +71,7 @@ namespace ClearScript.Manager.Http.Test
         }
 
         [Test]
-        public async void Basic_Http_Get_Headers_Are_Retrieved()
+        public async Task Basic_Http_Get_Headers_Are_Retrieved()
         {
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
@@ -85,11 +86,11 @@ namespace ClearScript.Manager.Http.Test
             options.HostObjects.Add(new HostObject { Name = "scriptAwaiter", Target = scriptAwaiter });
 
             var code = "var request = require('request');" +
-                       "request({url: 'http://api.icndb.com/jokes/random/1', json: true}," +
-                       " function (error, response, body) {subject.Response = response; subject.Headers = response.headers; scriptAwaiter.Callback();});";
+                        "var data = encodeURIComponent('errorMsg=&to=http%253A%252F%252Fwww.zhonghuasuan.com%252F&token=5b9c1a3c6f2db8c737b7788ac560a397&account=111111&password=111111');" +
+                       "request({url: 'http://www.sf-express.com/sf-service-owf-web/service/rate?origin=A310105000&dest=A440306000&parentOrigin=A310105000&parentDest=A440306000&weight=1&time=2017-12-29T01%3A30%3A00%2B08%3A00&volume=0&queryType=2&lang=sc&region=cn&translate=',method:'GET', json: true}," +
+                       " function (error, response, body) {  if(error){subject.Body=error;return;}; subject.Response = response;subject.Body=body; subject.Headers = response.headers; });";
 
             await manager.ExecuteAsync("testScript", code, options);
-            await scriptAwaiter.T;
 
             subject.Headers.Count().ShouldBeGreaterThan(0);
         }

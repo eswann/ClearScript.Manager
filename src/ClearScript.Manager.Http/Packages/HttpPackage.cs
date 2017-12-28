@@ -9,7 +9,7 @@ namespace ClearScript.Manager.Http.Packages
         {
             PackageId = "http";
             HostObjects.Add(new HostObject { Name = "http", Target = new NodeHttp() });
-            HostTypes.Add(new HostType{ Name="Buffer", Type = typeof(NodeBuffer)});
+            //HostTypes.Add(new HostType{ Name="Buffer", Type = typeof(NodeBuffer)});
         }
 
     }
