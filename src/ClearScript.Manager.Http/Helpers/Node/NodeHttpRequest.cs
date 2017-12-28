@@ -17,22 +17,20 @@ namespace ClearScript.Manager.Http.Helpers.Node
 {
     public class NodeHttpRequest
     {
-        HttpWebRequest request = null;
-        HttpWebResponse response = null;
         IWebProxy Proxy = null;
         private readonly NodeHttpRequestOptions _options;
         private readonly Dictionary<string, List<dynamic>> _listeners = new Dictionary<string, List<dynamic>>();
-        
+
         public NodeHttpRequest(object options, DynamicObject callback = null)
         {
-         
+
             _options = options as NodeHttpRequestOptions ?? new NodeHttpRequestOptions((dynamic)options);
             if (!string.IsNullOrEmpty(_options.proxy))
             {
-              
+
                 try
                 {
-                    Proxy = new WebProxy(_options.proxy.ToLower().Contains("http://")? _options.proxy: "http://" + _options.proxy, true);
+                    Proxy = new WebProxy(_options.proxy.ToLower().Contains("http://") ? _options.proxy : "http://" + _options.proxy, true);
                 }
                 catch (Exception)
                 {
@@ -49,8 +47,8 @@ namespace ClearScript.Manager.Http.Helpers.Node
                 }
 
             }
-           
-           
+
+
             if (callback != null)
             {
                 @on("response", callback);
@@ -93,53 +91,55 @@ namespace ClearScript.Manager.Http.Helpers.Node
 
         public void end()
         {
-            request = (HttpWebRequest)WebRequest.Create(_options.url);
-            request.Method = string.IsNullOrEmpty(_options.method)?"GET": _options.method;
-           
-            request.Timeout = _options.timeout*1000;
-            if (Proxy != null)
-            {
-                request.Proxy = Proxy;
-            }
-            if (!string.IsNullOrEmpty(_options.Accept))
-            {
-                request.ContentType = _options.Accept;
-            }
-            if (_options.url.StartsWith("https"))
-            {
-                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(CheckValidationResult);
-            }
-
-            if (_options.headers != null)
-            {
-                foreach (var kvp in _options.headers.GetProperties())
-                {
-                    request.Headers[kvp.Key] = kvp.Value.ToString();
-                }
-            }
-
-            if (request.Method.ToLower().Equals("post"))
-            {
-                if (!string.IsNullOrEmpty(_options.data))
-                {
-                    byte[] data = Encoding.GetEncoding("UTF-8").GetBytes(_options.data);
-                    request.ContentLength = data.Length;
-                    Stream newStream = request.GetRequestStream();
-                    newStream.Write(data, 0, data.Length);
-                    newStream.Close();
-                }
-            }
-          
+            HttpWebRequest request = null;
+            HttpWebResponse response = null;
             List<dynamic> listeners;
             _listeners.TryGetValue("response", out listeners);
-
             try
             {
+                request = (HttpWebRequest)WebRequest.Create(_options.url);
+                request.Method = string.IsNullOrEmpty(_options.method) ? "GET" : _options.method;
+
+                request.Timeout = _options.timeout * 1000;
+                if (Proxy != null)
+                {
+                    request.Proxy = Proxy;
+                }
+                if (!string.IsNullOrEmpty(_options.Accept))
+                {
+                    request.ContentType = _options.Accept;
+                }
+                if (_options.url.StartsWith("https"))
+                {
+                    ServicePointManager.ServerCertificateValidationCallback =
+                        new RemoteCertificateValidationCallback(CheckValidationResult);
+                }
+
+                if (_options.headers != null)
+                {
+                    foreach (var kvp in _options.headers.GetProperties())
+                    {
+                        request.Headers[kvp.Key] = kvp.Value.ToString();
+                    }
+                }
+
+                if (request.Method.ToLower().Equals("post"))
+                {
+                    if (!string.IsNullOrEmpty(_options.data))
+                    {
+                        byte[] data = Encoding.GetEncoding("UTF-8").GetBytes(_options.data);
+                        request.ContentLength = data.Length;
+                        Stream newStream = request.GetRequestStream();
+                        newStream.Write(data, 0, data.Length);
+                        newStream.Close();
+                    }
+                }
+
                 response = (HttpWebResponse)request.GetResponse();
                 StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
                 string content = reader.ReadToEnd();
 
-                if (listeners!=null)
+                if (listeners != null)
                 {
                     var nodeResponse = new NodeHttpResponse(this, content);
                     listeners.ForEach(listener =>
@@ -176,6 +176,17 @@ namespace ClearScript.Manager.Http.Helpers.Node
                     nodeResponse.OnError(ex.Message);
                 }
             }
+            finally
+            {
+                if (response != null)
+                {
+                    response.Close();
+                }
+                if (request != null)
+                {
+                    request.Abort();
+                }
+            }
         }
 
         private bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
@@ -188,6 +199,6 @@ namespace ClearScript.Manager.Http.Helpers.Node
             //do cancelation
         }
 
-   
+
     }
 }

@@ -54,7 +54,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\Node\NodeBuffer.cs" />
     <Compile Include="Helpers\Node\NodeHttp.cs" />
     <Compile Include="Helpers\Node\NodeHttpRequest.cs" />
     <Compile Include="Helpers\Node\NodeHttpRequestOptions.cs" />
