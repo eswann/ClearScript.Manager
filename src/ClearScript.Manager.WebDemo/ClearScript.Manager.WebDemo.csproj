@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -234,13 +235,13 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClearScript.Manager.Http\ClearScript.Manager.Http.csproj">
+    <ProjectReference Include="..\ClearScript.Manager.Http\JavaScript.Manager.Http.csproj">
       <Project>{190ef179-83f2-4091-ab95-a609d278accc}</Project>
-      <Name>ClearScript.Manager.Http</Name>
+      <Name>JavaScript.Manager.Http</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ClearScript.Manager\ClearScript.Manager.csproj">
+    <ProjectReference Include="..\ClearScript.Manager\JavaScript.Manager.csproj">
       <Project>{cfab8382-b76f-4aa1-ab38-52674f932e52}</Project>
-      <Name>ClearScript.Manager</Name>
+      <Name>JavaScript.Manager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

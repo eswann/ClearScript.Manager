@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using Microsoft.ClearScript.V8;
 
-namespace ClearScript.Manager.Loaders
+namespace JavaScript.Manager.Loaders
 {
     /// <summary>
     /// Manages Require packages.

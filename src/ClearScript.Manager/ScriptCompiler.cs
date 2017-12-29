@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Text;
-using ClearScript.Manager.Caching;
-using ClearScript.Manager.Loaders;
+using JavaScript.Manager.Caching;
+using JavaScript.Manager.Loaders;
 using Microsoft.ClearScript.V8;
 
-namespace ClearScript.Manager
+namespace JavaScript.Manager
 {
     internal class ScriptCompiler
     {

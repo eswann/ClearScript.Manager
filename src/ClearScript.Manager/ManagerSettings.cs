@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration;
 
-namespace ClearScript.Manager
+namespace JavaScript.Manager
 {
     /// <summary>
     /// Settings to apply to the RuntimeManager and to created runtimes.

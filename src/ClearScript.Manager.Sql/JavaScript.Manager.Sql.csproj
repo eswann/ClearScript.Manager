@@ -7,8 +7,8 @@
     <ProjectGuid>{0433AA74-0153-4956-8597-D7153E040123}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClearScript.Manager.Sql</RootNamespace>
-    <AssemblyName>ClearScript.Manager.Sql</AssemblyName>
+    <RootNamespace>JavaScript.Manager.Sql</RootNamespace>
+    <AssemblyName>JavaScript.Manager.Sql</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -55,9 +55,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClearScript.Manager\ClearScript.Manager.csproj">
+    <ProjectReference Include="..\ClearScript.Manager\JavaScript.Manager.csproj">
       <Project>{cfab8382-b76f-4aa1-ab38-52674f932e52}</Project>
-      <Name>ClearScript.Manager</Name>
+      <Name>JavaScript.Manager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

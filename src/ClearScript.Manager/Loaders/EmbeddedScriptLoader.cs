@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace ClearScript.Manager.Loaders
+namespace JavaScript.Manager.Loaders
 {
     /// <summary>
     /// Loads scripts if they are file-system based scripts.

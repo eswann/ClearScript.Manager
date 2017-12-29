@@ -1,5 +1,5 @@
-﻿using ClearScript.Manager.Loaders;
-using ClearScript.Manager.Sql.Package;
+﻿using JavaScript.Manager.Loaders;
+using JavaScript.Manager.Sql.Package;
 
 namespace ClearScript.Manager.Http.Packages
 {

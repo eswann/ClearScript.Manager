@@ -4,13 +4,13 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ClearScript.Manager.Caching;
-using ClearScript.Manager.Extensions;
-using ClearScript.Manager.Loaders;
+using JavaScript.Manager.Caching;
+using JavaScript.Manager.Extensions;
+using JavaScript.Manager.Loaders;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
 
-namespace ClearScript.Manager
+namespace JavaScript.Manager
 {
     /// <summary>
     /// Runtime Manager used to execute scripts within a runtime.

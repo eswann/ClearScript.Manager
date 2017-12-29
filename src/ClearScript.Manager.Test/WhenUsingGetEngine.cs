@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using JavaScript.Manager;
+using NUnit.Framework;
 using Should;
 
 namespace ClearScript.Manager.Test

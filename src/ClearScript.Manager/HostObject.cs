@@ -1,6 +1,6 @@
 ﻿using Microsoft.ClearScript;
 
-namespace ClearScript.Manager
+namespace JavaScript.Manager
 {
     /// <summary>
     /// A specific object instance to inject into the javascript to execute.

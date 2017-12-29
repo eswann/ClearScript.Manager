@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ClearScript.Manager.Loaders
+namespace JavaScript.Manager.Loaders
 {
     /// <summary>
     /// Interface for all classes that load scripts from a path or URI

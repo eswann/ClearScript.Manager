@@ -1,5 +1,6 @@
 ﻿using System.Threading;
-using ClearScript.Manager.Caching;
+using JavaScript.Manager;
+using JavaScript.Manager.Caching;
 using NUnit.Framework;
 using Should;
 

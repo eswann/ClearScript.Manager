@@ -10,10 +10,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ClearScript.Manager.Extensions;
+using JavaScript.Manager.Extensions;
 using Microsoft.ClearScript;
 
-namespace ClearScript.Manager.Http.Helpers.Node
+namespace JavaScript.Manager.Http.Helpers.Node
 {
     public class NodeHttpRequest
     {

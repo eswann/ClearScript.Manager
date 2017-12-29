@@ -7,11 +7,11 @@ using AntData.ORM.Data;
 using AntData.ORM.DataProvider;
 using AntData.ORM.DataProvider.MySql;
 using AntData.ORM.DataProvider.SqlServer;
-using ClearScript.Manager.Loaders;
-using ClearScript.Manager.Sql.Helpers;
+using JavaScript.Manager.Loaders;
+using JavaScript.Manager.Sql.Helpers;
 using Microsoft.ClearScript;
 
-namespace ClearScript.Manager.Sql.Package
+namespace JavaScript.Manager.Sql.Package
 {
     public class SqlExecutor : RequiredPackage
     {

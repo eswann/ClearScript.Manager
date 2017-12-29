@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using ClearScript.Manager.WebDemo.Models;
+using JavaScript.Manager;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
 

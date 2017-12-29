@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.ClearScript.V8;
 
-namespace ClearScript.Manager.Caching
+namespace JavaScript.Manager.Caching
 {
     public class CachedV8Script
     {

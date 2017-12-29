@@ -18,7 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace ClearScript.Manager.Caching
+namespace JavaScript.Manager.Caching
 {
     /// <summary>
     /// Defines if and how items added to a LurchTable are linked together, this defines

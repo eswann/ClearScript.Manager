@@ -1,6 +1,5 @@
-﻿using System.Net.Http;
-
-namespace ClearScript.Manager.Http.Helpers.Node
+﻿
+namespace JavaScript.Manager.Http.Helpers.Node
 {
     
     public class NodeHttp

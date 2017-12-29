@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.ClearScript;
 
-namespace ClearScript.Manager.Http.Helpers.Node
+namespace JavaScript.Manager.Http.Helpers.Node
 {
     public class NodeHttpResponse 
     {
-        private NodeHttpRequest _nodeHttpRequest;
         private readonly string _resp;
         private bool _dataFired;
         private readonly Dictionary<string, List<dynamic>> _listeners = new Dictionary<string, List<dynamic>>();
@@ -20,7 +12,6 @@ namespace ClearScript.Manager.Http.Helpers.Node
         public NodeHttpResponse(NodeHttpRequest nodeHttpRequest, string resp = null)
            
         {
-            _nodeHttpRequest = nodeHttpRequest;
             _resp = resp;
             body = resp;
         }

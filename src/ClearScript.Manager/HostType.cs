@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.ClearScript;
 
-namespace ClearScript.Manager
+namespace JavaScript.Manager
 {
     /// <summary>
     /// A type to make available in JavaScript.

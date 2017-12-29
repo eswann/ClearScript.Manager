@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net.Http;
-using ClearScript.Manager.Loaders;
+using JavaScript.Manager.Loaders;
 
-namespace ClearScript.Manager.Http.Loaders
+namespace JavaScript.Manager.Http.Loaders
 {
     /// <summary>
     /// Loads scripts if they are file-system based scripts.

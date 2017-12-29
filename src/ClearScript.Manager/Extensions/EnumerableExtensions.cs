@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ClearScript.Manager.Extensions
+namespace JavaScript.Manager.Extensions
 {
     internal static class EnumerableExtensions
     {

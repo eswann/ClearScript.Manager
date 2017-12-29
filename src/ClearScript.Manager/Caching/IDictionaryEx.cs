@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ClearScript.Manager.Caching
+namespace JavaScript.Manager.Caching
 {
     /// <summary>
     /// Extends the IDictionary interface to encompass the TryXxxx operations

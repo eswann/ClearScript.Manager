@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
+using JavaScript.Manager;
 using NUnit.Framework;
 using Should;
 

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager", "ClearScript.Manager\ClearScript.Manager.csproj", "{CFAB8382-B76F-4AA1-AB38-52674F932E52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager", "ClearScript.Manager\JavaScript.Manager.csproj", "{CFAB8382-B76F-4AA1-AB38-52674F932E52}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Test", "ClearScript.Manager.Test\ClearScript.Manager.Test.csproj", "{E7A8A86A-83AF-48CE-9266-E3094218F401}"
 EndProject
@@ -15,13 +15,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Artifacts", "Artifacts", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Demo", "ClearScript.Manager.Demo\ClearScript.Manager.Demo.csproj", "{60385905-F78E-4933-9FB7-DD75D51CA2CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Http", "ClearScript.Manager.Http\ClearScript.Manager.Http.csproj", "{190EF179-83F2-4091-AB95-A609D278ACCC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Http", "ClearScript.Manager.Http\JavaScript.Manager.Http.csproj", "{190EF179-83F2-4091-AB95-A609D278ACCC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Http.Test", "ClearScript.Manager.Http.Test\ClearScript.Manager.Http.Test.csproj", "{76F7C7E8-EB54-4840-989C-124DCC30128D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.WebDemo", "ClearScript.Manager.WebDemo\ClearScript.Manager.WebDemo.csproj", "{15DC9470-1862-4F28-B3D9-55EC94BBA695}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Sql", "ClearScript.Manager.Sql\ClearScript.Manager.Sql.csproj", "{0433AA74-0153-4956-8597-D7153E040123}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Sql", "ClearScript.Manager.Sql\JavaScript.Manager.Sql.csproj", "{0433AA74-0153-4956-8597-D7153E040123}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

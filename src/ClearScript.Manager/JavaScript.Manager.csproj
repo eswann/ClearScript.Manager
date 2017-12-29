@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{190EF179-83F2-4091-AB95-A609D278ACCC}</ProjectGuid>
+    <ProjectGuid>{CFAB8382-B76F-4AA1-AB38-52674F932E52}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClearScript.Manager.Http</RootNamespace>
-    <AssemblyName>ClearScript.Manager.Http</AssemblyName>
+    <RootNamespace>JavaScript.Manager</RootNamespace>
+    <AssemblyName>JavaScript.Manager</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,8 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>bin\Debug\JavaScript.Manager.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\ClearScript.Manager.Http.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\JavaScript.Manager.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClearScript, Version=5.4.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -38,14 +38,9 @@
       <HintPath>..\packages\ClearScript.Installer.1.0.1.31662\lib\net45\ClearScript.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Extensions">
-      <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\net45\System.Net.Http.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Primitives">
-      <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\net45\System.Net.Http.Primitives.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -54,36 +49,50 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\Node\NodeHttp.cs" />
-    <Compile Include="Helpers\Node\NodeHttpRequest.cs" />
-    <Compile Include="Helpers\Node\NodeHttpRequestOptions.cs" />
-    <Compile Include="Helpers\Node\NodeHttpResponse.cs" />
-    <Compile Include="Helpers\Node\NodeRequestModule.cs" />
-    <Compile Include="Loaders\HttpScriptLoader.cs" />
-    <Compile Include="Packages\HttpPackage.cs" />
-    <Compile Include="Packages\HttpPackageHelpers.cs" />
-    <Compile Include="Packages\RequestPackage.cs" />
+    <Compile Include="Caching\CachedV8Runtime.cs" />
+    <Compile Include="Caching\HashUtilities.cs" />
+    <Compile Include="Caching\IConcurrentDictionary.cs" />
+    <Compile Include="Caching\IDictionaryEx.cs" />
+    <Compile Include="Caching\LruCache.cs" />
+    <Compile Include="Caching\LruCacheCorruptionException.cs" />
+    <Compile Include="ExecutionOptions.cs" />
+    <Compile Include="Extensions\DynamicExtensions.cs" />
+    <Compile Include="Extensions\EngineExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\ScriptAwaiter.cs" />
+    <Compile Include="Extensions\StringExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Loaders\EmbeddedScriptLoader.cs" />
+    <Compile Include="Loaders\FileScriptLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Loaders\RequiredPackage.cs" />
+    <Compile Include="Loaders\IScriptLoader.cs" />
+    <Compile Include="Loaders\RequireManager.cs" />
+    <Compile Include="Loaders\Requirer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Loaders\ScriptLoadManager.cs" />
+    <Compile Include="IncludeScript.cs" />
+    <Compile Include="HostObject.cs" />
+    <Compile Include="HostType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuntimeManager.cs" />
+    <Compile Include="ManagerPool.cs" />
+    <Compile Include="ManagerScope.cs" />
+    <Compile Include="ManagerSettings.cs" />
+    <Compile Include="ScriptCompiler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClearScript.Manager\ClearScript.Manager.csproj">
-      <Project>{cfab8382-b76f-4aa1-ab38-52674f932e52}</Project>
-      <Name>ClearScript.Manager</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClearScript.Manager.Http.nuspec" />
+    <None Include="ClearScript.Manager.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Scripts\request.js" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
-    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
-    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
-  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

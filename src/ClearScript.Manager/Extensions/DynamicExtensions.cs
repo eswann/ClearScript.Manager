@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.CSharp.RuntimeBinder;
 using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 
-namespace ClearScript.Manager.Extensions
+namespace JavaScript.Manager.Extensions
 {
     /// <summary>
     /// Extension methods to get properties of dynamic objects.

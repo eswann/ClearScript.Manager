@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
-using ClearScript.Manager.Loaders;
+using JavaScript.Manager.Loaders;
 
-namespace ClearScript.Manager
+namespace JavaScript.Manager
 {
     /// <summary>
     /// Script to include in the execution of another script.  This script is executed first.  Can contain functions, libraries etc...

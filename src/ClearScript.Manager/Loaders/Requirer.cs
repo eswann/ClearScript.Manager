@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using ClearScript.Manager.Extensions;
+using JavaScript.Manager.Extensions;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
 
-namespace ClearScript.Manager.Loaders
+namespace JavaScript.Manager.Loaders
 {
     /// <summary>
     /// Used to register require packages and also provided to scripts to return required resources via the "require" call.

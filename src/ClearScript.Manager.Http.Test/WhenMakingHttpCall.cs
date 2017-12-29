@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ClearScript.Manager.Extensions;
-using ClearScript.Manager.Http.Helpers;
 using ClearScript.Manager.Http.Packages;
-using ClearScript.Manager.Loaders;
+using JavaScript.Manager;
+using JavaScript.Manager.Extensions;
+using JavaScript.Manager.Http.Packages;
+using JavaScript.Manager.Loaders;
 using Microsoft.ClearScript;
 using NUnit.Framework;
 using Should;

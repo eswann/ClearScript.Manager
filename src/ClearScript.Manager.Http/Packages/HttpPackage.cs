@@ -1,7 +1,7 @@
-﻿using ClearScript.Manager.Http.Helpers.Node;
-using ClearScript.Manager.Loaders;
+﻿using JavaScript.Manager.Http.Helpers.Node;
+using JavaScript.Manager.Loaders;
 
-namespace ClearScript.Manager.Http.Packages
+namespace JavaScript.Manager.Http.Packages
 {
     public class HttpPackage : RequiredPackage
     {

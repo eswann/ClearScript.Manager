@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using JavaScript.Manager;
 using NUnit.Framework;
 using Should;
 

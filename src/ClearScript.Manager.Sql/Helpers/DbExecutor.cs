@@ -10,10 +10,10 @@ using System.Data;
 using System.Dynamic;
 using System.Transactions;
 using AntData.ORM.Data;
-using ClearScript.Manager.Extensions;
-using ClearScript.Manager.Sql.Package;
+using JavaScript.Manager.Extensions;
+using JavaScript.Manager.Sql.Package;
 
-namespace ClearScript.Manager.Sql.Helpers
+namespace JavaScript.Manager.Sql.Helpers
 {
     using System;
     using System.Collections.Generic;

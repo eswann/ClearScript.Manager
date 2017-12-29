@@ -7,9 +7,9 @@
 //-----------------------------------------------------------------------
 
 using System.Dynamic;
-using ClearScript.Manager.Extensions;
+using JavaScript.Manager.Extensions;
 
-namespace ClearScript.Manager.Sql.Helpers
+namespace JavaScript.Manager.Sql.Helpers
 {
     using System;
     using System.Collections.Generic;

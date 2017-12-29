@@ -1,9 +1,9 @@
 using System;
 using System.Dynamic;
 using System.Net.Http;
-using ClearScript.Manager.Extensions;
+using JavaScript.Manager.Extensions;
 
-namespace ClearScript.Manager.Http.Helpers.Node
+namespace JavaScript.Manager.Http.Helpers.Node
 {
     public class NodeRequestModule
     {

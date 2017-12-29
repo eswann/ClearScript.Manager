@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClearScript.Manager
+namespace JavaScript.Manager
 {
     /// <summary>
     /// Scope in which a Runtime Manager is requested from the pool and returned upon completion.

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using ClearScript.Manager.Http.Loaders;
+using JavaScript.Manager;
+using JavaScript.Manager.Http.Loaders;
 using NUnit.Framework;
 using Should;
 
