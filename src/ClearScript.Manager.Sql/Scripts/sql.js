@@ -99,7 +99,6 @@ DbContext.prototype.Query = function (sql, options) {
     var first = week[0][0].key;
     //Console.WriteLine(first);
     if (first == 'null_key_') {
-        //Console.WriteLine(week[0][0].value);
         return week[0][0].value;
     }
     var ary = [];

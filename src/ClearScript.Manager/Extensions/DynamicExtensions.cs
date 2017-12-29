@@ -67,7 +67,12 @@ namespace ClearScript.Manager.Extensions
             return obj;
         }
 
-        public static IEnumerable<KeyValuePair<string, object>> GetProperties(this DynamicObject obj)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static IEnumerable<KeyValuePair<string, object>> GetDynamicProperties(this DynamicObject obj)
         {
             if (obj == null)
             {
@@ -75,11 +80,8 @@ namespace ClearScript.Manager.Extensions
             }
             foreach (var varName in obj.GetDynamicMemberNames())
             {
-                object prop;
-                if (obj.TryGetMember(varName, out prop))
-                {
-                    yield return new KeyValuePair<string, object>(varName, prop);
-                }
+                object prop = obj.GetMember<object>(varName);
+                yield return new KeyValuePair<string, object>(varName, prop);
             }
         }
 

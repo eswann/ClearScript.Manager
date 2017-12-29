@@ -117,13 +117,14 @@ namespace ClearScript.Manager.Http.Helpers.Node
 
                 if (_options.headers != null)
                 {
-                    foreach (var kvp in _options.headers.GetProperties())
+                    var header = (DynamicObject) _options.headers;
+                    foreach (var kvp in header.GetDynamicProperties())
                     {
                         request.Headers[kvp.Key] = kvp.Value.ToString();
                     }
                 }
 
-                if (request.Method.ToLower().Equals("post"))
+                if (!request.Method.ToLower().Equals("get"))
                 {
                     if (!string.IsNullOrEmpty(_options.data))
                     {
@@ -134,27 +135,30 @@ namespace ClearScript.Manager.Http.Helpers.Node
                         newStream.Close();
                     }
                 }
-
                 response = (HttpWebResponse)request.GetResponse();
-                StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-                string content = reader.ReadToEnd();
-
-                if (listeners != null)
+                using (var responseStream = response.GetResponseStream())
+                using (var reader = new StreamReader(responseStream, Encoding.UTF8))
                 {
-                    var nodeResponse = new NodeHttpResponse(this, content);
-                    listeners.ForEach(listener =>
+                    var content = reader.ReadToEnd();
+                    if (listeners != null)
                     {
-                        if (listener is Action<NodeHttpResponse>)
+                        var nodeResponse = new NodeHttpResponse(this, content);
+                        listeners.ForEach(listener =>
                         {
-                            ((Action<NodeHttpResponse>)listener)(nodeResponse);
-                        }
-                        else
-                        {
-                            listener.call(null, nodeResponse);
-                        }
-                    });
-                    nodeResponse.InitEvents();
+                            if (listener is Action<NodeHttpResponse>)
+                            {
+                                ((Action<NodeHttpResponse>)listener)(nodeResponse);
+                            }
+                            else
+                            {
+                                listener.call(null, nodeResponse);
+                            }
+                        });
+                        nodeResponse.InitEvents();
+                    }
                 }
+
+
             }
             catch (Exception ex)
             {
