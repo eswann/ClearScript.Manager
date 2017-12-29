@@ -86,9 +86,10 @@ namespace ClearScript.Manager.Http.Test
             var scriptAwaiter = new ScriptAwaiter();
             options.HostObjects.Add(new HostObject { Name = "scriptAwaiter", Target = scriptAwaiter });
 
-            var code = "var request = require('request');" +
+            var code = "var requestFactory = require('request');" +
+                         "var http = requestFactory.create();" +
                         "var data = encodeURIComponent('errorMsg=&to=http%253A%252F%252Fwww.zhonghuasuan.com%252F&token=5b9c1a3c6f2db8c737b7788ac560a397&account=111111&password=111111');" +
-                       "request({url: 'http://www.sf-express.com/sf-service-owf-web/service/rate?origin=A310105000&dest=A440306000&parentOrigin=A310105000&parentDest=A440306000&weight=1&time=2017-12-29T01%3A30%3A00%2B08%3A00&volume=0&queryType=2&lang=sc&region=cn&translate=',method:'GET', json: true,headers:{token:'aaaaaatoken'}}," +
+                       "http.get({url: ,method:'GET', json: true,headers:{token:'aaaaaatoken'}}," +
                        " function (error, response, body) {  if(error){subject.Body=error;return;}; subject.Response = response;subject.Body=body; subject.Headers = response.headers; });";
 
             await manager.ExecuteAsync("testScript", code, options);
@@ -107,10 +108,10 @@ namespace ClearScript.Manager.Http.Test
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
             options.HostObjects.Add(new HostObject { Name = "subject", Target = subject });
-            var code = "var sql = require('sql');" +
-                       "var content = new sql('testorm_sqlserver','sqlserver');"+
+            var code = "var dbFactory = require('sql');" +
+                       "var content = this.dbFactory.create('testorm','mysql');" +
                        //"subject.StatusCode = content.ExecuteNonQuery(\"update school set address ='1' where id = 1\");";
-                       "var arr = content.Query(\"select top 1 DataChange_LastTime from school\");Console.WriteLine(arr.ToString('yyyy-MM-dd'));subject.Server = ''+arr; content.UseTransaction(function(){content.Exec(\"update school set name='bbb' where id=4; \");content.Exec(\"insert into school (Name) VALUES ('test1')\")},{'level':'ReadCommitted',timeout:60})";
+                       "var arr = content.query(\"SELECT  DataChange_LastTime FROM school LIMIT 1\");Console.WriteLine(arr.ToString('yyyy-MM-dd'))";
 
             await manager.ExecuteAsync("testScript", code, options);
 

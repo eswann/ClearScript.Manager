@@ -89,7 +89,7 @@ namespace JavaScript.Manager.Http.Helpers.Node
         }
 
 
-        public void end()
+        public string end()
         {
             HttpWebRequest request = null;
             HttpWebResponse response = null;
@@ -156,6 +156,7 @@ namespace JavaScript.Manager.Http.Helpers.Node
                         });
                         nodeResponse.InitEvents();
                     }
+                    return content;
                 }
 
 
@@ -179,6 +180,7 @@ namespace JavaScript.Manager.Http.Helpers.Node
                     while (ex.InnerException != null) ex = ex.InnerException;
                     nodeResponse.OnError(ex.Message);
                 }
+                return ex.Message;
             }
             finally
             {

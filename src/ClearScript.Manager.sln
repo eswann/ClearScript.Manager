@@ -17,11 +17,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Demo", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Http", "ClearScript.Manager.Http\JavaScript.Manager.Http.csproj", "{190EF179-83F2-4091-AB95-A609D278ACCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Http.Test", "ClearScript.Manager.Http.Test\ClearScript.Manager.Http.Test.csproj", "{76F7C7E8-EB54-4840-989C-124DCC30128D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Http.SQL.Test", "ClearScript.Manager.Http.Test\ClearScript.Manager.Http.SQL.Test.csproj", "{76F7C7E8-EB54-4840-989C-124DCC30128D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.WebDemo", "ClearScript.Manager.WebDemo\ClearScript.Manager.WebDemo.csproj", "{15DC9470-1862-4F28-B3D9-55EC94BBA695}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Sql", "ClearScript.Manager.Sql\JavaScript.Manager.Sql.csproj", "{0433AA74-0153-4956-8597-D7153E040123}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Tabris", "JavaScript.Manager.Tabris\JavaScript.Manager.Tabris.csproj", "{E37165CD-D4EC-4125-BFF1-CA2D48EC8006}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{0433AA74-0153-4956-8597-D7153E040123}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0433AA74-0153-4956-8597-D7153E040123}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0433AA74-0153-4956-8597-D7153E040123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E37165CD-D4EC-4125-BFF1-CA2D48EC8006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E37165CD-D4EC-4125-BFF1-CA2D48EC8006}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E37165CD-D4EC-4125-BFF1-CA2D48EC8006}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E37165CD-D4EC-4125-BFF1-CA2D48EC8006}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

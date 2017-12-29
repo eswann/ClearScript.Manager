@@ -8,7 +8,7 @@ namespace JavaScript.Manager.Http.Packages
         public RequestPackage()
         {
             PackageId = "request";
-            ScriptUri = "ClearScript.Manager.Http.Scripts.request.js";
+            ScriptUri = "JavaScript.Manager.Http.Scripts.request.js";
         }
 
        

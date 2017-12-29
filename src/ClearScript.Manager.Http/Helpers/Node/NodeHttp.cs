@@ -9,5 +9,11 @@ namespace JavaScript.Manager.Http.Helpers.Node
             var req = new NodeHttpRequest(options, callback);
             return req;
         }
+
+        public string getResult(dynamic options)
+        {
+            var req = new NodeHttpRequest(options);
+            return req.end();
+        }
     }
 }

@@ -12,6 +12,13 @@ namespace ClearScript.Manager.WebDemo.Controllers
         {
             ViewBag.Title = "Home Page";
 
+            return View("JSql");
+        }
+
+        public ActionResult JSql()
+        {
+            ViewBag.Title = "Home Page";
+
             return View();
         }
     }

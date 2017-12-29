@@ -1,6 +1,13 @@
 ﻿var sqlExecutor = require('sqlExecutor');
 
+function dbFactory() {
 
+   
+}
+
+dbFactory.create = function (mapping, type) {
+    return new dbFactory.DbContext(mapping, type);
+}
 
 function DbContext(mapping,type) {
     this.options = {
@@ -49,16 +56,16 @@ DbContext.prototype.extend = (function () {
 })();
 
 
-DbContext.prototype.Exec = function (sql,options) {
+DbContext.prototype.exec = function (sql,options) {
     var sqlType = sql.trim().toLowerCase().slice(0, 6);
     if (sqlType === 'insert') {
-        return this.Insert(sql, options);
+        return this.insert(sql, options);
     } else if (sqlType === 'update') {
-        return this.Update(sql,options);
+        return this.update(sql,options);
     } else if (sqlType === 'delete') {
-        return this.Delete(sql, options);
+        return this.delete(sql, options);
     } else {
-        return this.Query(sql, options);
+        return this.query(sql, options);
     }
 }
 
@@ -74,23 +81,23 @@ DbContext.prototype.newOption = function (sql, options) {
     }
     return this.extend(pp, options);
 }
-DbContext.prototype.Insert = function (sql, options) {
+DbContext.prototype.insert = function (sql, options) {
     return sqlExecutor.DbExecutorNonQuery(this.newOption(sql,options));
 }
 
-DbContext.prototype.Update = function (sql, options) {
+DbContext.prototype.update = function (sql, options) {
     return sqlExecutor.DbExecutorNonQuery(this.newOption(sql, options));
 }
 
-DbContext.prototype.Delete = function (sql, options) {
+DbContext.prototype.delete = function (sql, options) {
     return sqlExecutor.DbExecutorNonQuery(this.newOption(sql,options));
 }
 
-DbContext.prototype.InsertWithIdentity = function (sql, options) {
+DbContext.prototype.insertWithIdentity = function (sql, options) {
     return sqlExecutor.DbExecutorScalar(this.newOption(sql, options));
 }
 
-DbContext.prototype.Query = function (sql, options) {
+DbContext.prototype.query = function (sql, options) {
     var List = xHost.type('System.Collections.Generic.List');
     var objList = xHost.type('System.Collections.Generic.List');
     var obj = xHost.type('System.Object');
@@ -114,9 +121,9 @@ DbContext.prototype.Query = function (sql, options) {
     return ary;
 }
 
-DbContext.prototype.UseTransaction = function (callback,options) {
+DbContext.prototype.useTransaction = function (callback,options) {
     if (!callback) return;
     sqlExecutor.UseTransaction(callback, options);
 }
-
-this.exports = DbContext;
+dbFactory.DbContext = DbContext;
+this.exports = dbFactory;
