@@ -10,8 +10,9 @@ using JavaScript.Manager.Http.Packages;
 using JavaScript.Manager.Loaders;
 using JavaScript.Manager.Log.Packages;
 using JavaScript.Manager.Sql.Packages;
+using JavaScript.Manager.Tabris.Packages;
 
-namespace JavaScript.Manager.Tabris.Packages
+namespace JavaScript.Manager.Tabris
 {
     using System;
     using System.Collections.Generic;
@@ -23,9 +24,14 @@ namespace JavaScript.Manager.Tabris.Packages
     /// <summary>
     /// 打包所有的
     /// </summary>
-    public class TabrisPackageHelpers
+    public class Tabris
     {
-        public static void RegisterTabrisPackages(TabrisOptions options = null)
+
+        /// <summary>
+        /// 注册所有需要使用的包
+        /// </summary>
+        /// <param name="options"></param>
+        public static void Register(TabrisOptions options = null)
         {
             //tabris
             RequireManager.RegisterPackage(new TabrisPackage());
@@ -37,14 +43,16 @@ namespace JavaScript.Manager.Tabris.Packages
             HttpPackageHelpers.RegisterPackage();
 
             //log
-            LogPackageHelpers.RegisterPackage(options?.LogExecutorType);
+            LogPackageHelpers.RegisterPackage(options?.LogExecutor);
 
         }
+
+
     }
 
     public class TabrisOptions
     {
         public Type DbExecutorType { get; set; }    
-        public Type LogExecutorType { get; set; }    
+        public object LogExecutor { get; set; }    
     }
 }

@@ -1,0 +1,71 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        .CodeMirror, #codeForm {
+            height: 100% !important;
+        }
+    </style>
+    <script src="resources/jquery-2.1.3.js"></script>
+    <link rel="stylesheet" href="resources/codemirror/lib/codemirror.css">
+    <script src="resources/codemirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="resources/codemirror/theme/eclipse.css">
+    <script src="resources/codemirror/addon/hint/show-hint.js"></script>
+    <script src="resources/codemirror/addon/edit/closetag.js"></script>
+    <script src="resources/codemirror/addon/edit/closebrackets.js"></script>
+    <script src="resources/codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="resources/codemirror/addon/selection/active-line.js"></script>
+    <script src="resources/codemirror/addon/runmode/runmode.js"></script>
+    <script src="resources/codemirror/mode/javascript/javascript.js"></script>
+    <script src="resources/ternjs/acorn/acorn.js"></script>
+    <script src="resources/ternjs/acorn/acorn_loose.js"></script>
+    <script src="resources/ternjs/acorn/util/walk.js"></script>
+    <script src="resources/ternjs/tern/lib/signal.js"></script>
+    <script src="resources/ternjs/tern/lib/tern.js"></script>
+    <script src="resources/ternjs/tern/lib/def.js"></script>
+    <script src="resources/ternjs/tern/lib/comment.js"></script>
+    <script src="resources/ternjs/tern/lib/infer.js"></script>
+    <script src="resources/tabris.js"></script>
+    <script src="resources/codemirror/addon/tern/tern.js"></script>
+    <link rel="stylesheet" href="resources/codemirror-javascript/addon/hint/tern/tern-extension.css">
+    <script src="resources/codemirror-javascript/addon/hint/tern/tern-extension.js"></script>
+    <script src="resources/codemirror-javascript/addon/hint/tern/defs/ecma5.json.js"></script>
+    <link rel="stylesheet" href="resources/codemirror-extension/addon/hint/show-hint-eclipse.css">
+    <script src="resources/codemirror-extension/addon/hint/show-context-info.js"></script>
+    <link rel="stylesheet" href="resources/codemirror-extension/addon/hint/show-context-info.css">
+    <link rel="stylesheet" href="resources/codemirror-extension/addon/hint/templates-hint.css">
+    <script src="resources/codemirror-extension/addon/hint/templates-hint.js"></script>
+    <script src="resources/codemirror-javascript/addon/hint/javascript/javascript-templates.js"></script>
+    <link rel="stylesheet" href="resources/codemirror/doc/docs.css">
+    <script src="resources/codemirror/addon/hint/javascript/tabris-templates.js"></script>
+    <script src="resources/codemirror/addon/hint/context-autocomplete-hint.js"></script>
+    <link rel="stylesheet" href="resources/codemirror-extension/addon/hover/text-hover.css">
+    <script src="resources/codemirror-extension/addon/hover/text-hover.js"></script>
+    <script src="resources/codemirror-javascript/addon/hint/tern/tern-hover.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            window.cmEditor = window.cmEditor || {}; cmEditor.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                mode: "application/javascript", theme: "eclipse", styleActiveLine: !0, lineNumbers: !0, lineWrapping: !0, autoCloseBrackets: !0, matchBrackets: !0, extraKeys: {
+                    "'.'": function (a) { setTimeout(function () { CodeMirror.showHint(a, CodeMirror.ternHint, { async: !0 }) }, 100); return CodeMirror.Pass }, "Ctrl-Space": "contextAutocomplete", "Ctrl-I": function (a) { CodeMirror.tern.showType(a) }, "Alt-.": function (a) { CodeMirror.tern.jumpToDef(a) },
+                    "Alt-,": function (a) { CodeMirror.tern.jumpBack(a) }, "Ctrl-Q": function (a) { CodeMirror.tern.rename(a) }
+                }, gutters: ["CodeMirror-linenumbers"], textHover: { delay: 300 }, ternWith: { plugins: { tabris: {} } }
+            })
+        });
+
+        function getCode()
+        {
+            return window.cmEditor.editor.getValue();
+        }
+
+        function getSelectedCode() {
+            return window.cmEditor.editor.getSelection();
+        }
+    </script>
+</head>
+<body>
+    <form id="codeForm">
+        <textarea id="code" name="code"></textarea>
+    </form>
+</body>
+</html>

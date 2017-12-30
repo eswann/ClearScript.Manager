@@ -47,34 +47,42 @@ namespace JavaScript.Manager
 
         public V8Script Compile(IncludeScript script, bool addToCache = true, int? cacheExpirationSeconds = null)
         {
-            CachedV8Script cachedScript;
-
-            script.EnsureScriptId();
-
-            if (TryGetCached(script.ScriptId, out cachedScript))
+            try
             {
-                return cachedScript.Script;
-            }
+                CachedV8Script cachedScript;
 
-            if (string.IsNullOrEmpty(script.Code) && !string.IsNullOrEmpty(script.Uri))
-            {
-                script.LoadScript();
-            }
-            if (!string.IsNullOrEmpty(script.Code))
-            {
-                if (script.RequiredPackage != null && !string.IsNullOrEmpty(script.RequiredPackage.PackageId))
+                script.EnsureScriptId();
+
+                if (TryGetCached(script.ScriptId, out cachedScript))
                 {
-                    script.Code = script.Code.Replace("this.exports", script.RequiredPackage.PackageId + ".exports");
+                    return cachedScript.Script;
                 }
-                if (!string.IsNullOrEmpty(script.PrependCode) || !string.IsNullOrEmpty(script.AppendCode))
+
+                if (string.IsNullOrEmpty(script.Code) && !string.IsNullOrEmpty(script.Uri))
                 {
-                    var builder = new StringBuilder();
-                    builder.Append(script.PrependCode).Append(script.Code).Append(script.AppendCode);
-                    return Compile(script.ScriptId, builder.ToString(), addToCache, cacheExpirationSeconds); 
+                    script.LoadScript();
                 }
-                return Compile(script.ScriptId, script.Code, addToCache, cacheExpirationSeconds);
+                if (!string.IsNullOrEmpty(script.Code))
+                {
+                    if (script.RequiredPackage != null && !string.IsNullOrEmpty(script.RequiredPackage.PackageId))
+                    {
+                        script.Code = script.Code.Replace("this.exports", script.RequiredPackage.PackageId + ".exports");
+                    }
+                    if (!string.IsNullOrEmpty(script.PrependCode) || !string.IsNullOrEmpty(script.AppendCode))
+                    {
+                        var builder = new StringBuilder();
+                        builder.Append(script.PrependCode).Append(script.Code).Append(script.AppendCode);
+                        return Compile(script.ScriptId, builder.ToString(), addToCache, cacheExpirationSeconds);
+                    }
+                    return Compile(script.ScriptId, script.Code, addToCache, cacheExpirationSeconds);
+                }
+                return null;
             }
-            return null;
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         public bool TryGetCached(string scriptId, out CachedV8Script cachedScript)

@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Impl\ConsoleLogExecutor.cs" />
+    <Compile Include="Interface\AbstractLogExcutor.cs" />
     <Compile Include="Interface\ILogExecutor.cs" />
     <Compile Include="Packages\LogPackage.cs" />
     <Compile Include="Packages\LogPackageHelpers.cs" />

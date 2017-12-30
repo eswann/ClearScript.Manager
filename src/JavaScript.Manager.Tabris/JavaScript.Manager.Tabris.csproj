@@ -48,8 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Packages\TabrisPackage.cs" />
-    <Compile Include="Packages\TabrisPackageHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tabris.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Scripts\tabris.js" />

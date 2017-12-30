@@ -52,7 +52,7 @@ LogContext.prototype.parseV8OrIE = function (error) {
 
 LogContext.prototype.info = function (err) {
     if (typeof err === 'string') {
-        javascript_log_factory_logExecutor.Info(err.message, '');
+        javascript_log_factory_logExecutor.Info(err, '');
     } else {
         javascript_log_factory_logExecutor.Info(err.message, this.getTrace(err));
     }
@@ -60,7 +60,7 @@ LogContext.prototype.info = function (err) {
 
 LogContext.prototype.warn = function (err) {
     if (typeof err === 'string') {
-        javascript_log_factory_logExecutor.Warn(err.message, '');
+        javascript_log_factory_logExecutor.Warn(err, '');
     } else {
         javascript_log_factory_logExecutor.Warn(err.message, this.getTrace(err));
     }
@@ -68,7 +68,7 @@ LogContext.prototype.warn = function (err) {
 
 LogContext.prototype.error = function (err) {
     if (typeof err === 'string') {
-        javascript_log_factory_logExecutor.Error(err.message, '');
+        javascript_log_factory_logExecutor.Error(err, '');
     } else {
         javascript_log_factory_logExecutor.Error(err.message, this.getTrace(err));
     }
@@ -77,7 +77,7 @@ LogContext.prototype.error = function (err) {
 LogContext.prototype.debug = function (err) {
     
     if (typeof err === 'string') {
-        javascript_log_factory_logExecutor.Debug(err.message, '');
+        javascript_log_factory_logExecutor.Debug(err, '');
     } else {
         javascript_log_factory_logExecutor.Debug(err.message, this.getTrace(err));
     }

@@ -125,6 +125,10 @@
       <Project>{d6d9ccd8-9a9b-4f48-8e82-51f28b35a79a}</Project>
       <Name>JavaScript.Manager.Log</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JavaScript.Manager.Tabris\JavaScript.Manager.Tabris.csproj">
+      <Project>{e37165cd-d4ec-4125-bff1-ca2d48ec8006}</Project>
+      <Name>JavaScript.Manager.Tabris</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -11,21 +11,39 @@ namespace JavaScript.Manager.Log.Package
 {
     public class LogExcutorPackage : RequiredPackage
     {
-        public LogExcutorPackage(Type logExecutoryType = null)
+        public LogExcutorPackage(object logExecutory = null)
         {
             PackageId = "javascript_log_factory_logExecutor";
-            if (logExecutoryType != null)
+            if (logExecutory != null)
             {
-                var isTarget = typeof(ILogExecutor).IsAssignableFrom(logExecutoryType);
-                if (!isTarget)
+                var type = logExecutory as Type;
+                if (type != null)
                 {
-                    throw new NotSupportedException(logExecutoryType.Name + " is not implements ILogExecutor");
+                    var isTarget = typeof(ILogExecutor).IsAssignableFrom(type);
+                    if (!isTarget)
+                    {
+                        throw new NotSupportedException(type.Name + " is not implements ILogExecutor");
+                    }
+                    HostObjects.Add(new HostObject
+                    {
+                        Name = "javascript_log_factory_logExecutor",
+                        Target = Activator.CreateInstance(type)
+                    });
                 }
-                HostObjects.Add(new HostObject
+                else
                 {
-                    Name = "javascript_log_factory_logExecutor",
-                    Target = Activator.CreateInstance(logExecutoryType)
-                });
+                    var isTarget = typeof(AbstractLogExcutor).IsAssignableFrom(logExecutory.GetType());
+                    if (!isTarget)
+                    {
+                        throw new NotSupportedException(logExecutory.GetType().Name + " is not implements ILogExecutor");
+                    }
+                    HostObjects.Add(new HostObject
+                    {
+                        Name = "javascript_log_factory_logExecutor",
+                        Target = logExecutory
+                    });
+                }
+               
             }
             else
             {

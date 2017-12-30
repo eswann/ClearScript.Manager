@@ -12,9 +12,9 @@ namespace JavaScript.Manager.Log.Packages
         /// <summary>
         /// Registers packages needed for using the request include.
         /// </summary>
-        public static void RegisterPackage(Type logExcutorType = null)
+        public static void RegisterPackage(object logExcutor = null)
         {
-            RequireManager.RegisterPackage(new LogExcutorPackage(logExcutorType));
+            RequireManager.RegisterPackage(new LogExcutorPackage(logExcutor));
             RequireManager.RegisterPackage(new LogPackage());
         }
     }

@@ -7,6 +7,7 @@ using JavaScript.Manager.Http.Packages;
 using JavaScript.Manager.Loaders;
 using JavaScript.Manager.Log.Packages;
 using JavaScript.Manager.Sql.Packages;
+using JavaScript.Manager.Tabris;
 using Microsoft.ClearScript;
 using NUnit.Framework;
 using Should;
@@ -134,9 +135,33 @@ namespace ClearScript.Manager.Http.Test
 
             await manager.ExecuteAsync("testScript", code, options);
 
-            subject.StatusCode.ShouldEqual(0);
         }
 
+        [Test]
+        public async void Testtabris()
+        {
+            Tabris.Register();
+            ManagerPool.InitializeCurrentPool(new ManagerSettings());
+            using (var scope = new ManagerScope())
+            {
+
+                var code = "var tabris = require('javascript_tabris');" +
+                           "var log = this.tabris.create('LOG',{trace:true});" +
+                           "try{ aa.ttt =1}catch(err){log.info(err)}";
+
+                await scope.RuntimeManager.ExecuteAsync("btnExcutor_Click", code);
+
+                code = "var tabris = require('javascript_tabris');" +
+                       "var log = this.tabris.create('LOG');" +
+                       "try{ aa.ttt =1}catch(err){log.warn(err)}";
+
+                await scope.RuntimeManager.ExecuteAsync("btnExcutor_Click", code);
+            }
+            
+
+            //RequireManager.ClearPackages();
+
+        }
         public class TestObject
         {
             private string _name = "Name";

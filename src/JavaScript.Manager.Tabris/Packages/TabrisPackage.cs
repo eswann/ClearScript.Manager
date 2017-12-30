@@ -24,7 +24,7 @@ namespace JavaScript.Manager.Tabris.Packages
     {
         public TabrisPackage()
         {
-            PackageId = "tabris";
+            PackageId = "javascript_tabris";
             ScriptUri = "JavaScript.Manager.Tabris.Scripts.tabris.js";
         }
     }
