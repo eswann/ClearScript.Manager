@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ClearScript.Manager.Http.Packages;
 using JavaScript.Manager;
 using JavaScript.Manager.Extensions;
 using JavaScript.Manager.Http.Packages;
 using JavaScript.Manager.Loaders;
+using JavaScript.Manager.Sql.Packages;
 using Microsoft.ClearScript;
 using NUnit.Framework;
 using Should;
@@ -87,14 +87,12 @@ namespace ClearScript.Manager.Http.Test
             options.HostObjects.Add(new HostObject { Name = "scriptAwaiter", Target = scriptAwaiter });
 
             var code = "var requestFactory = require('request');" +
-                         "var http = requestFactory.create();" +
+                         "var http = requestFactory.create({url:'http://www.baidu.com/'});" +
                         "var data = encodeURIComponent('errorMsg=&to=http%253A%252F%252Fwww.zhonghuasuan.com%252F&token=5b9c1a3c6f2db8c737b7788ac560a397&account=111111&password=111111');" +
-                       "http.get({url: ,method:'GET', json: true,headers:{token:'aaaaaatoken'}}," +
-                       " function (error, response, body) {  if(error){subject.Body=error;return;}; subject.Response = response;subject.Body=body; subject.Headers = response.headers; });";
+                       "Console.WriteLine('aaaa111'); var aa = http.getString({timeout:10,headers:{token:'aaaaaatoken'}});Console.WriteLine(aa);";
 
             await manager.ExecuteAsync("testScript", code, options);
 
-            subject.Headers.Count().ShouldBeGreaterThan(0);
         }
 
         [Test]

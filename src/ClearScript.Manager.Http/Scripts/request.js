@@ -1,61 +1,77 @@
-﻿var http = require('http');
+﻿var javascript_http = require('javascript_http');
 
 function requestFactory() {
 
     
 }
 
-requestFactory.create = function () {
-    return new requestFactory.Request();
+requestFactory.create = function (option) {
+    
+    return new requestFactory.Request(option);
 }
 
-function Request() {
-}
-
-Request.prototype.getString = function (url, option) {
-    if (!url) return '';
-    if (!option) {
-        option = {};
+function Request(option) {
+    this.options = option || {};
+    if (!this.options.method) {
+        this.options.method = 'GET';
     }
+   
+    if (this.options.method.toLowerCase() != 'get') {
+        if (!this.options.accept) {
+            this.options.accept = 'application/json';
+        }
+    }
+}
 
-    option.method = 'GET';
-    option.url = url;
-    return http.getResult(option);
-
+Request.prototype.getString = function (option) {
+    return javascript_http.getResult(this.extend(option, this.options));
 };
 
-Request.prototype.getJson = function (url, option) {
-    if (!url) return {};
-    if (!option) {
-        option = {};
-    }
-
-    option.method = 'GET';
-    option.url = url;
-    var body = http.getResult(option);
+Request.prototype.getJson = function (option) {
+    var body = javascript_http.getResult(this.extend(option, this.options));
     try {
         body = JSON.parse(body);
     } catch (e) { }
     return body;
 };
 
-Request.prototype.post = function (url, data, option) {
-    if (!url) return '';
-    if (!option) {
-        option = {};
+Request.prototype.extend = (function () {
+    var isObjFunc = function (name) {
+        var toString = Object.prototype.toString;
+        return function () {
+            return toString.call(arguments[0]) === '[object ' + name + ']';
+        }
     }
-    option.method = 'POST';
-    option.url = url;
-    option.data = data || '';
-    if (!option.accept) {
-        option.accept = 'application/json';
+    var isObject = isObjFunc('Object'),
+        isArray = isObjFunc('Array'),
+        isBoolean = isObjFunc('Boolean');
+    return function extend() {
+        var index = 0, isDeep = false, obj, copy, destination, source, i;
+        if (isBoolean(arguments[0])) {
+            index = 1;
+            isDeep = arguments[0];
+        }
+        for (i = arguments.length - 1; i > index; i--) {
+            destination = arguments[i - 1];
+            source = arguments[i];
+            if (isObject(source) || isArray(source)) {
+                for (var property in source) {
+                    obj = source[property];
+                    if (isDeep && (isObject(obj) || isArray(obj))) {
+                        copy = isObject(obj) ? {} : [];
+                        var extended = extend(isDeep, copy, obj);
+                        destination[property] = extended;
+                    } else {
+                        destination[property] = source[property];
+                    }
+                }
+            } else {
+                destination = source;
+            }
+        }
+        return destination;
     }
-    var body = http.getResult(option);
-    try {
-        body = JSON.parse(body);
-    } catch (e) { }
-    return body;
-};
+})();
 
 //Request.prototype.go = function () {
 //    var me = this;

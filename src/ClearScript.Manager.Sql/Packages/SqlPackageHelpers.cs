@@ -1,7 +1,7 @@
 ﻿using JavaScript.Manager.Loaders;
 using JavaScript.Manager.Sql.Package;
 
-namespace ClearScript.Manager.Http.Packages
+namespace JavaScript.Manager.Sql.Packages
 {
     /// <summary>
     /// Helpers for registering packages.

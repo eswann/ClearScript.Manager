@@ -17,8 +17,8 @@ namespace JavaScript.Manager.Sql.Package
     {
         public SqlExecutor()
         {
-            PackageId = "sqlExecutor";
-            HostObjects.Add(new HostObject { Name = "sqlExecutor", Target = new DbExecutor() });
+            PackageId = "javascript_sqlExecutor";
+            HostObjects.Add(new HostObject { Name = "javascript_sqlExecutor", Target = new DbExecutor() });
         }
 
     }

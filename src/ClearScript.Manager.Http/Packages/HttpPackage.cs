@@ -7,8 +7,8 @@ namespace JavaScript.Manager.Http.Packages
     {
         public HttpPackage()
         {
-            PackageId = "http";
-            HostObjects.Add(new HostObject { Name = "http", Target = new NodeHttp() });
+            PackageId = "javascript_http";
+            HostObjects.Add(new HostObject { Name = "javascript_http", Target = new NodeHttp() });
             //HostTypes.Add(new HostType{ Name="Buffer", Type = typeof(NodeBuffer)});
         }
 
