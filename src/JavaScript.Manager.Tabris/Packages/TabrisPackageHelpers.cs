@@ -24,17 +24,22 @@ namespace JavaScript.Manager.Tabris.Packages
     /// </summary>
     public class TabrisPackageHelpers
     {
-        public static void RegisterTabrisPackages()
+        public static void RegisterTabrisPackages(TabrisOptions options = null)
         {
             //tabris
             RequireManager.RegisterPackage(new TabrisPackage());
 
             //sql
-            SqlPackageHelpers.RegisterSqlPackages();
+            SqlPackageHelpers.RegisterSqlPackages(options?.DbExecutorType);
 
             //http
             HttpPackageHelpers.RegisterRequestPackages();
 
         }
+    }
+
+    public class TabrisOptions
+    {
+        public Type DbExecutorType { get; set; }    
     }
 }

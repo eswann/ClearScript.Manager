@@ -1,4 +1,6 @@
-﻿using JavaScript.Manager.Loaders;
+﻿using System;
+using JavaScript.Manager.Loaders;
+using JavaScript.Manager.Sql.Interface;
 using JavaScript.Manager.Sql.Package;
 
 namespace JavaScript.Manager.Sql.Packages
@@ -11,9 +13,9 @@ namespace JavaScript.Manager.Sql.Packages
         /// <summary>
         /// Registers packages needed for using the request include.
         /// </summary>
-        public static void RegisterSqlPackages()
+        public static void RegisterSqlPackages(Type sqlExcutorType = null)
         {
-            RequireManager.RegisterPackage(new SqlExecutor());
+            RequireManager.RegisterPackage(new SqlExecutor(sqlExcutorType));
             RequireManager.RegisterPackage(new SqlPackage());
         }
     }

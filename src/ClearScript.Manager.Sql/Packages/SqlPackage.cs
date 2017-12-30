@@ -8,17 +8,35 @@ using AntData.ORM.DataProvider;
 using AntData.ORM.DataProvider.MySql;
 using AntData.ORM.DataProvider.SqlServer;
 using JavaScript.Manager.Loaders;
-using JavaScript.Manager.Sql.Helpers;
+using JavaScript.Manager.Sql.Impl;
+using JavaScript.Manager.Sql.Interface;
 using Microsoft.ClearScript;
 
 namespace JavaScript.Manager.Sql.Package
 {
     public class SqlExecutor : RequiredPackage
     {
-        public SqlExecutor()
+        public SqlExecutor(Type sqlExecutoryType = null)
         {
             PackageId = "javascript_sqlExecutor";
-            HostObjects.Add(new HostObject { Name = "javascript_sqlExecutor", Target = new DbExecutor() });
+            if (sqlExecutoryType != null)
+            {
+                var isTarget = typeof(IDbExecutor).IsAssignableFrom(sqlExecutoryType);
+                if (!isTarget)
+                {
+                    throw new NotSupportedException(sqlExecutoryType.Name + " is not implements IDbExecutor");
+                }
+                HostObjects.Add(new HostObject
+                {
+                    Name = "javascript_sqlExecutor",
+                    Target = Activator.CreateInstance(sqlExecutoryType)
+                });
+            }
+            else
+            {
+                HostObjects.Add(new HostObject { Name = "javascript_sqlExecutor", Target = new DbDefaultExecutor() });
+            }
+           
         }
 
     }
@@ -31,10 +49,11 @@ namespace JavaScript.Manager.Sql.Package
             ScriptUri = "JavaScript.Manager.Sql.Scripts.sql.js";
             HostObjects.Add(new HostObject { Name = "xHost", Target = new ExtendedHostFunctions() });
         }
-
-
     }
 
+    /// <summary>
+    /// AntOrm框架的 sqlserver执行Context
+    /// </summary>
     public class SqlServerDb : DbContext
     {
         private static readonly IDataProvider _provider = new SqlServerDataProvider(SqlServerVersion.v2008);
@@ -49,6 +68,9 @@ namespace JavaScript.Manager.Sql.Package
         }
     }
 
+    /// <summary>
+    /// AntOrm框架的 mysql执行Context
+    /// </summary>
     public class MySqlServerDb : DbContext
     {
         private static readonly IDataProvider _provider = new MySqlDataProvider();
@@ -62,8 +84,4 @@ namespace JavaScript.Manager.Sql.Package
         }
     }
 
-    public class Table
-    {
-        
-    }
 }

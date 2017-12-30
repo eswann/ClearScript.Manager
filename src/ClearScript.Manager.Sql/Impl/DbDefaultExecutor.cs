@@ -11,9 +11,10 @@ using System.Dynamic;
 using System.Transactions;
 using AntData.ORM.Data;
 using JavaScript.Manager.Extensions;
+using JavaScript.Manager.Sql.Interface;
 using JavaScript.Manager.Sql.Package;
 
-namespace JavaScript.Manager.Sql.Helpers
+namespace JavaScript.Manager.Sql.Impl
 {
     using System;
     using System.Collections.Generic;
@@ -23,36 +24,16 @@ namespace JavaScript.Manager.Sql.Helpers
 
 
     /// <summary>
-    /// 
+    /// AntORM框架的执行
     /// </summary>
-    public class DbExecutor
+    public class DbDefaultExecutor: IDbExecutor
     {
-       
-        public DbContext CreateDbContext(object options)
-        {
-            var op = options as SqlRequestOptions ?? new SqlRequestOptions((dynamic)options);
-            if (string.IsNullOrEmpty(op.DbType))
-            {
-                op.DbType = "SqlServer";
-            }
 
-            if (string.IsNullOrEmpty(op.DbConnectionString))
-            {
-                throw new ArgumentNullException("DbConnectionString");
-            }
-
-            switch (op.DbType.ToLower())
-            {
-                case "sqlserver":
-                case "mssql":
-                    return new SqlServerDb(op.DbConnectionString);
-                case "mysql":
-                    return new MySqlServerDb(op.DbConnectionString);
-            }
-
-            throw new NotSupportedException(string.Format("dbType:{0} is not supported", op.DbType));
-        }
-
+        /// <summary>
+        /// 在Transaction下执行
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <param name="options"></param>
         public void UseTransaction(dynamic callback, dynamic options)
         {
             if (callback == null)
@@ -128,6 +109,11 @@ namespace JavaScript.Manager.Sql.Helpers
             
         }
 
+        /// <summary>
+        /// 执行查询sql
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns>返回db items</returns>
         public List<List<Object>> DbExecutorQuery(dynamic options)
         {
             var _options = options as DynamicObject;
@@ -167,6 +153,12 @@ namespace JavaScript.Manager.Sql.Helpers
          
             return obj;
         }
+
+        /// <summary>
+        /// 执行insert update delete
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns>返回影响的条数</returns>
         public int DbExecutorNonQuery(dynamic options)
         {
             var _options = options as DynamicObject;
@@ -188,6 +180,11 @@ namespace JavaScript.Manager.Sql.Helpers
             return dbContext.ExecuteNonQuery(sql, new Dictionary<string, AntData.ORM.Common.CustomerParam>());
         }
 
+        /// <summary>
+        /// 执行要拿到返回值 查询 
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns>能拿到返回值</returns>
         public string DbExecutorScalar(dynamic options)
         {
             var _options = options as DynamicObject;
@@ -207,5 +204,34 @@ namespace JavaScript.Manager.Sql.Helpers
             }
             return dbContext.ExecuteScalar(sql, new Dictionary<string, AntData.ORM.Common.CustomerParam>()).ToString();
         }
+
+        #region Private
+        /// <summary>
+        /// 创建DB执行Context
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        private DbContext CreateDbContext(DynamicObject options)
+        {
+
+            var DbType = options.GetMember<string>("dbType", "SqlServer");
+            var DbConnectionString = options.GetMember<string>("connectionString");
+            if (string.IsNullOrEmpty(DbConnectionString))
+            {
+                throw new ArgumentNullException("DbConnectionString");
+            }
+
+            switch (DbType.ToLower())
+            {
+                case "sqlserver":
+                case "mssql":
+                    return new SqlServerDb(DbConnectionString);
+                case "mysql":
+                    return new MySqlServerDb(DbConnectionString);
+            }
+
+            throw new NotSupportedException(string.Format("dbType:{0} is not supported", DbType));
+        }
+        #endregion Private
     }
 }

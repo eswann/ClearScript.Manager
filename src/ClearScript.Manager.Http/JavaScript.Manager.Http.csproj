@@ -72,7 +72,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClearScript.Manager.Http.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

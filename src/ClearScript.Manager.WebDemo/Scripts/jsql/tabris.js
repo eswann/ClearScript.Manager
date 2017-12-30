@@ -237,13 +237,25 @@
                     }
                 },
                 "HTTPProperties": {
-                    "name": {
+                    "url": {
                         "!type": "string",
-                        "!doc": "The db mapping name in config file."
+                        "!doc": "The request url."
                     },
-                    "type": {
+                    "method": {
                         "!type": "string",
-                        "!doc": "The db type(mysql or sqlserver)."
+                        "!doc": "The request method(get or post).default is get"
+                    },
+                    "timeout": {
+                        "!type": "number",
+                        "!doc": "The request timeout(senconds)."
+                    },
+                    "accept": {
+                        "!type": "string",
+                        "!doc": "The request type(application/json or x-www-form-urlencoded)."
+                    },
+                    "headers": {
+                        "!type": "properties",
+                        "!doc": "The request headers(key-value)."
                     }
                 }
             },
@@ -291,13 +303,13 @@
                     "!url": "",
                     "!doc": "HTTP Function .",
                     "prototype": {
-                        "get": {
-                            "!type": "fn(sql: string, options?: ?) -> !this",
-                            "!doc": "Execute sql.Automatically find the type of execution"
+                        "getString": {
+                            "!type": "fn(options?: ?) -> !this",
+                            "!doc": "Execute httpr.request, return result as string"
                         },
-                        "post": {
-                            "!type": "fn(sql: string, options?: ?) -> !this",
-                            "!doc": "Execute sql.Automatically find the type of execution"
+                        "getJson": {
+                            "!type": "fn(options?: ?) -> !this",
+                            "!doc": "Execute httpr.request, return result as json object"
                         }
                     }
                 }
