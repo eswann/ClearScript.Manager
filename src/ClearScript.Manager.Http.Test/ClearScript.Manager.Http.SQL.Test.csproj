@@ -58,9 +58,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Tabris">
-      <HintPath>..\Mega\bin\Debug\Tabris.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -110,6 +107,24 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClearScript.Manager.Http\JavaScript.Manager.Http.csproj">
+      <Project>{190ef179-83f2-4091-ab95-a609d278accc}</Project>
+      <Name>JavaScript.Manager.Http</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClearScript.Manager.Sql\JavaScript.Manager.Sql.csproj">
+      <Project>{0433aa74-0153-4956-8597-d7153e040123}</Project>
+      <Name>JavaScript.Manager.Sql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClearScript.Manager\JavaScript.Manager.csproj">
+      <Project>{cfab8382-b76f-4aa1-ab38-52674f932e52}</Project>
+      <Name>JavaScript.Manager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JavaScript.Manager.Log\JavaScript.Manager.Log.csproj">
+      <Project>{d6d9ccd8-9a9b-4f48-8e82-51f28b35a79a}</Project>
+      <Name>JavaScript.Manager.Log</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

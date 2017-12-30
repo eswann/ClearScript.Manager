@@ -5,6 +5,7 @@ using JavaScript.Manager;
 using JavaScript.Manager.Extensions;
 using JavaScript.Manager.Http.Packages;
 using JavaScript.Manager.Loaders;
+using JavaScript.Manager.Log.Packages;
 using JavaScript.Manager.Sql.Packages;
 using Microsoft.ClearScript;
 using NUnit.Framework;
@@ -27,7 +28,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings{ScriptTimeoutMilliSeconds = 0});
 
-            HttpPackageHelpers.RegisterRequestPackages();
+            HttpPackageHelpers.RegisterPackage();
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
@@ -52,7 +53,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            HttpPackageHelpers.RegisterRequestPackages();
+            HttpPackageHelpers.RegisterPackage();
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
@@ -77,7 +78,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            HttpPackageHelpers.RegisterRequestPackages();
+            HttpPackageHelpers.RegisterPackage();
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
@@ -86,7 +87,7 @@ namespace ClearScript.Manager.Http.Test
             var scriptAwaiter = new ScriptAwaiter();
             options.HostObjects.Add(new HostObject { Name = "scriptAwaiter", Target = scriptAwaiter });
 
-            var code = "var requestFactory = require('javascript_request');" +
+            var code = "var requestFactory = require('javascript_request_factory');" +
                          "var http = requestFactory.create({url:'http://www.baidu.com/'});" +
                         "var data = encodeURIComponent('errorMsg=&to=http%253A%252F%252Fwww.zhonghuasuan.com%252F&token=5b9c1a3c6f2db8c737b7788ac560a397&account=111111&password=111111');" +
                        "Console.WriteLine('aaaa111'); var aa = http.getString({timeout:10,headers:{token:'aaaaaatoken'}});Console.WriteLine(aa);";
@@ -101,15 +102,35 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            SqlPackageHelpers.RegisterSqlPackages();
+            SqlPackageHelpers.RegisterPackage();
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
             options.HostObjects.Add(new HostObject { Name = "subject", Target = subject });
-            var code = "var dbFactory = require('javascript_sql');" +
+            var code = "var dbFactory = require('javascript_sql_factory');" +
                        "var content = this.dbFactory.create('testorm','mysql');" +
                        //"subject.StatusCode = content.ExecuteNonQuery(\"update school set address ='1' where id = 1\");";
                        "var arr = content.query(\"SELECT  DataChange_LastTime FROM school LIMIT 1\");Console.WriteLine(arr.ToString('yyyy-MM-dd'))";
+
+            await manager.ExecuteAsync("testScript", code, options);
+
+            subject.StatusCode.ShouldEqual(0);
+        }
+
+        [Test]
+        public async void TestLog1()
+        {
+            var subject = new TestObject();
+            var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
+
+            LogPackageHelpers.RegisterPackage();
+
+            var options = new ExecutionOptions();
+            options.HostObjects.Add(new HostObject { Name = "subject", Target = subject });
+            var code = "var logFactory = require('javascript_log_factory');" +
+                       "var log = this.logFactory.create();" +
+                       //"subject.StatusCode = content.ExecuteNonQuery(\"update school set address ='1' where id = 1\");";
+                       "try{ aa.ttt =1}catch(err){log.info(err)}";
 
             await manager.ExecuteAsync("testScript", code, options);
 

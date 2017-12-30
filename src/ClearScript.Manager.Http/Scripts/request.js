@@ -1,4 +1,4 @@
-﻿var javascript_http = require('javascript_http');
+﻿var javascript_request_factory_http = require('javascript_request_factory_http');
 
 function requestFactory() {
 
@@ -24,11 +24,11 @@ function Request(option) {
 }
 
 Request.prototype.getString = function (option) {
-    return javascript_http.getResult(this.extend(option, this.options));
+    return javascript_request_factory_http.getResult(this.extend(option, this.options));
 };
 
 Request.prototype.getJson = function (option) {
-    var body = javascript_http.getResult(this.extend(option, this.options));
+    var body = javascript_request_factory_http.getResult(this.extend(option, this.options));
     try {
         body = JSON.parse(body);
     } catch (e) { }

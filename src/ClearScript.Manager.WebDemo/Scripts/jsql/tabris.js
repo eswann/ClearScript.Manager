@@ -226,6 +226,12 @@
         "!name": "tabris",
         "!define": {
             "!properties": {
+                "LOGProperties": {
+                    "trace": {
+                        "!type": "bool",
+                        "!doc": "Is need to append trace log"
+                    }
+                },
                 "SQLProperties": {
                     "name": {
                         "!type": "string",
@@ -310,6 +316,29 @@
                         "getJson": {
                             "!type": "fn(options?: ?) -> !this",
                             "!doc": "Execute httpr.request, return result as json object"
+                        }
+                    }
+                },
+                "LOG": {
+                    "!type": "fn()",
+                    "!url": "",
+                    "!doc": "LOG Function .",
+                    "prototype": {
+                        "info": {
+                            "!type": "fn(msg: string) -> !this",
+                            "!doc": "Execute info log"
+                        },
+                        "warn": {
+                            "!type": "fn(msg: string) -> !this",
+                            "!doc": "Execute warn log"
+                        },
+                        "error": {
+                            "!type": "fn(msg: string) -> !this",
+                            "!doc": "Execute warn log"
+                        },
+                        "debug": {
+                            "!type": "fn(msg: string) -> !this",
+                            "!doc": "Execute warn log"
                         }
                     }
                 }

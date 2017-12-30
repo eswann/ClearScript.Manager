@@ -67,6 +67,10 @@
       <Project>{cfab8382-b76f-4aa1-ab38-52674f932e52}</Project>
       <Name>JavaScript.Manager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JavaScript.Manager.Log\JavaScript.Manager.Log.csproj">
+      <Project>{d6d9ccd8-9a9b-4f48-8e82-51f28b35a79a}</Project>
+      <Name>JavaScript.Manager.Log</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

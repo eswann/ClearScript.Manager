@@ -1,4 +1,4 @@
-﻿var javascript_sqlExecutor = require('javascript_sqlExecutor');
+﻿var javascript_sql_factory_sqlExecutor = require('javascript_sql_factory_sqlExecutor');
 
 function dbFactory() {
 
@@ -81,19 +81,19 @@ DbContext.prototype.newOption = function (sql, options) {
     return this.extend(pp, options);
 }
 DbContext.prototype.insert = function (sql, options) {
-    return javascript_sqlExecutor.DbExecutorNonQuery(this.newOption(sql, options));
+    return javascript_sql_factory_sqlExecutor.DbExecutorNonQuery(this.newOption(sql, options));
 }
 
 DbContext.prototype.update = function (sql, options) {
-    return javascript_sqlExecutor.DbExecutorNonQuery(this.newOption(sql, options));
+    return javascript_sql_factory_sqlExecutor.DbExecutorNonQuery(this.newOption(sql, options));
 }
 
 DbContext.prototype.delete = function (sql, options) {
-    return javascript_sqlExecutor.DbExecutorNonQuery(this.newOption(sql, options));
+    return javascript_sql_factory_sqlExecutor.DbExecutorNonQuery(this.newOption(sql, options));
 }
 
 DbContext.prototype.insertWithIdentity = function (sql, options) {
-    return javascript_sqlExecutor.DbExecutorScalar(this.newOption(sql, options));
+    return javascript_sql_factory_sqlExecutor.DbExecutorScalar(this.newOption(sql, options));
 }
 
 DbContext.prototype.query = function (sql, options) {
@@ -101,7 +101,7 @@ DbContext.prototype.query = function (sql, options) {
     var objList = xHost.type('System.Collections.Generic.List');
     var obj = xHost.type('System.Object');
     var week = xHost.newObj(List(objList(obj)));
-    week = javascript_sqlExecutor.DbExecutorQuery(this.newOption(sql, options));
+    week = javascript_sql_factory_sqlExecutor.DbExecutorQuery(this.newOption(sql, options));
     var first = week[0][0].key;
     //Console.WriteLine(first);
     if (first == 'null_key_') {
@@ -122,7 +122,7 @@ DbContext.prototype.query = function (sql, options) {
 
 DbContext.prototype.useTransaction = function (callback,options) {
     if (!callback) return;
-    javascript_sqlExecutor.UseTransaction(callback, options);
+    javascript_sql_factory_sqlExecutor.UseTransaction(callback, options);
 }
 dbFactory.DbContext = DbContext;
 this.exports = dbFactory;

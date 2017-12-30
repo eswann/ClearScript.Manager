@@ -55,6 +55,10 @@
       <Project>{cfab8382-b76f-4aa1-ab38-52674f932e52}</Project>
       <Name>JavaScript.Manager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JavaScript.Manager.Log\JavaScript.Manager.Log.csproj">
+      <Project>{d6d9ccd8-9a9b-4f48-8e82-51f28b35a79a}</Project>
+      <Name>JavaScript.Manager.Log</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JavaScript.Manager.Tabris\JavaScript.Manager.Tabris.csproj">
       <Project>{e37165cd-d4ec-4125-bff1-ca2d48ec8006}</Project>
       <Name>JavaScript.Manager.Tabris</Name>
@@ -62,7 +66,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>del /f /s /q merge* &amp; "$(SolutionDir)\Tools\ILMerge\ILMerge.exe" /t:dll /ndebug /targetplatform:v4 /log /out:Tabris.dll Tabris.Mega.dll JavaScript.Manager.dll JavaScript.Manager.Http.dll JavaScript.Manager.Sql.dll JavaScript.Manager.Tabris.dll &gt; merge.log &amp; del /f /s /q Tabris.Mega*</PostBuildEvent>
+    <PostBuildEvent>del /f /s /q merge* &amp; "$(SolutionDir)\Tools\ILMerge\ILMerge.exe" /t:dll /ndebug /targetplatform:v4 /log /out:Tabris.dll Tabris.Mega.dll JavaScript.Manager.dll JavaScript.Manager.Http.dll JavaScript.Manager.Sql.dll JavaScript.Manager.Log.dll JavaScript.Manager.Tabris.dll &gt; merge.log &amp; del /f /s /q Tabris.Mega*</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

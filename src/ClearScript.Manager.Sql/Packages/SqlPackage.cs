@@ -18,7 +18,7 @@ namespace JavaScript.Manager.Sql.Package
     {
         public SqlExecutor(Type sqlExecutoryType = null)
         {
-            PackageId = "javascript_sqlExecutor";
+            PackageId = "javascript_sql_factory_sqlExecutor";
             if (sqlExecutoryType != null)
             {
                 var isTarget = typeof(IDbExecutor).IsAssignableFrom(sqlExecutoryType);
@@ -28,13 +28,13 @@ namespace JavaScript.Manager.Sql.Package
                 }
                 HostObjects.Add(new HostObject
                 {
-                    Name = "javascript_sqlExecutor",
+                    Name = "javascript_sql_factory_sqlExecutor",
                     Target = Activator.CreateInstance(sqlExecutoryType)
                 });
             }
             else
             {
-                HostObjects.Add(new HostObject { Name = "javascript_sqlExecutor", Target = new DbDefaultExecutor() });
+                HostObjects.Add(new HostObject { Name = "javascript_sql_factory_sqlExecutor", Target = new DbDefaultExecutor() });
             }
            
         }
@@ -45,7 +45,7 @@ namespace JavaScript.Manager.Sql.Package
     {
         public SqlPackage()
         {
-            PackageId = "javascript_sql";
+            PackageId = "javascript_sql_factory";
             ScriptUri = "JavaScript.Manager.Sql.Scripts.sql.js";
             HostObjects.Add(new HostObject { Name = "xHost", Target = new ExtendedHostFunctions() });
         }

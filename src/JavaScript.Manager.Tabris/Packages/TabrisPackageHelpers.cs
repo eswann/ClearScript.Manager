@@ -8,6 +8,7 @@
 
 using JavaScript.Manager.Http.Packages;
 using JavaScript.Manager.Loaders;
+using JavaScript.Manager.Log.Packages;
 using JavaScript.Manager.Sql.Packages;
 
 namespace JavaScript.Manager.Tabris.Packages
@@ -30,10 +31,13 @@ namespace JavaScript.Manager.Tabris.Packages
             RequireManager.RegisterPackage(new TabrisPackage());
 
             //sql
-            SqlPackageHelpers.RegisterSqlPackages(options?.DbExecutorType);
+            SqlPackageHelpers.RegisterPackage(options?.DbExecutorType);
 
             //http
-            HttpPackageHelpers.RegisterRequestPackages();
+            HttpPackageHelpers.RegisterPackage();
+
+            //log
+            LogPackageHelpers.RegisterPackage(options?.LogExecutorType);
 
         }
     }
@@ -41,5 +45,6 @@ namespace JavaScript.Manager.Tabris.Packages
     public class TabrisOptions
     {
         public Type DbExecutorType { get; set; }    
+        public Type LogExecutorType { get; set; }    
     }
 }
