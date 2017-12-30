@@ -59,15 +59,14 @@ namespace Tabris.Winform
         /// <param name="e"></param>
         private void btnExcutor_Click(object sender, EventArgs e)
         {
-            Log(LogLevel.INFO, "DASaaaaaaaaaaaaaa");
-            //var code = this.codemirrow.InvokeJS("getCode()").ToString();
-            //if (string.IsNullOrEmpty(code))
-            //{
-            //    MessageBox.Show("执行内容为空");
-            //    return;
-            //}
+            var code = this.codemirrow.InvokeJS("getCode()").ToString();
+            if (string.IsNullOrEmpty(code))
+            {
+                MessageBox.Show("执行内容为空");
+                return;
+            }
 
-            //invokeJsCode(code);
+            invokeJsCode(code);
         }
 
         private void btExcutorSelected_Click(object sender, EventArgs e)
@@ -120,7 +119,6 @@ namespace Tabris.Winform
                     {
                     }
 
-                    await Task.Delay(5000);
                 }
                 catch (ScriptEngineException ex)
                 {
@@ -156,49 +154,55 @@ namespace Tabris.Winform
 
         private void Enable(bool flag)
         {
-            this.Invoke(new EventHandler(delegate
+            this.BeginInvoke(new EventHandler(delegate
             {
                 btnExcutor.Enabled = flag;
                 btExcutorSelected.Enabled = flag;
                 reloadRuntime.Enabled = flag;
                 catchBox.Enabled = flag;
+                runtimeTimeout.Enabled = flag;
             }));
         }
-        private void Log(LogLevel level, string msg, string trace = null)
+        private void Log(LogLevel level, string msgStr, string trace = null)
         {
-            msg = msg + trace;
-            this.Invoke(new EventHandler(delegate
+            var msgAll = msgStr + trace;
+            this.BeginInvoke(new EventHandler(delegate
             {
-                var levelStr = GetDescription(level);
-                if (level.Equals(LogLevel.ERROR))
+                foreach (var msg in Split(msgAll, 70))
                 {
-                    logList.Items.Add(new DuiHtmlLabel
+                    var levelStr = GetDescription(level);
+                    if (level.Equals(LogLevel.ERROR))
                     {
-                        Text = string.Format("&nbsp;&nbsp; <label color='red'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
-                        AutoSize = true
-                    });
+                        logList.Items.Add(new DuiHtmlLabel
+                        {
+                            Text = string.Format("&nbsp;&nbsp; <label color='red'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
+                            AutoSize = true
+                        });
+                    }
+                    else if (level.Equals(LogLevel.WARN))
+                    {
+                        logList.Items.Add(new DuiHtmlLabel
+                        {
+                            Text = string.Format("&nbsp;&nbsp; <label color='blue'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
+                            AutoSize = true
+                        });
+                    }
+                    else
+                    {
+                        logList.Items.Add(new DuiHtmlLabel
+                        {
+                            Text = string.Format("&nbsp;&nbsp; [{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2}", DateTime.Now, levelStr, msg),
+                            AutoSize = true
+                        });
+                    }
                 }
-                else if (level.Equals(LogLevel.WARN))
+              
+                SetTimeout(100, () =>
                 {
-                    logList.Items.Add(new DuiHtmlLabel
-                    {
-                        Text = string.Format("&nbsp;&nbsp; <label color='blue'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
-                        AutoSize = true
-                    });
-                }
-                else
-                {
-                    logList.Items.Add(new DuiHtmlLabel
-                    {
-                        Text = string.Format("&nbsp;&nbsp; [{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2}", DateTime.Now, levelStr, msg),
-                        AutoSize = true
-                    });
-                }
-
-                logList.Value = 1;
-
+                    logList.Value = 1;
+                });
+                
             }));
-
         }
 
         private string GetDescription(System.Enum value, Boolean nameInstead = true)
@@ -222,21 +226,56 @@ namespace Tabris.Winform
         {
             try
             {
+                var globalTimeout = this.runtimeTimeout.Text;
+                var intTimeout = 0;
+                int.TryParse(globalTimeout, out intTimeout);
                 manager.Dispose();
-                manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
+                manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = intTimeout });
                 RequireManager.ClearPackages();
                 JavaScript.Manager.Tabris.Tabris.Register(new JavaScript.Manager.Tabris.TabrisOptions
                 {
                     LogExecutor = logExcutor
                 });
 
-                Log(LogLevel.INFO, "重新加载运行时成功");
+                if (intTimeout > 0)
+                {
+                    Log(LogLevel.INFO, "重新加载运行时成功,全局ScriptTimeoutMilliSeconds设置为：" + intTimeout);
+                }
+                else
+                {
+                    Log(LogLevel.INFO, "重新加载运行时成功");
+                }
+                
             }
             catch (Exception ex)
             {
                 Log(LogLevel.ERROR, "重新加载运行时失败" + ex.Message);
             }
         }
+      
+        /// <summary>
+        /// 在指定时间过后执行指定的表达式
+        /// </summary>
+        /// <param name="interval">事件之间经过的时间（以毫秒为单位）</param>
+        /// <param name="action">要执行的表达式</param>
+        private void SetTimeout(double interval, Action action)
+        {
+            System.Timers.Timer timer = new System.Timers.Timer(interval);
+            timer.Elapsed += delegate (object sender, System.Timers.ElapsedEventArgs e)
+            {
+                timer.Enabled = false;
+                action();
+            };
+            timer.Enabled = true;
+        }
+
+        private  IEnumerable<string> Split(string str, int maxChunkSize)
+        {
+            for (int i = 0; i < str.Length; i += maxChunkSize)
+                yield return str.Substring(i, Math.Min(maxChunkSize, str.Length - i));
+        }
+
+       
     }
 
 

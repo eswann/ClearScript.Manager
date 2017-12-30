@@ -39,6 +39,8 @@
             this.btExcutorSelected = new DSkin.Controls.DSkinButton();
             this.btnExcutor = new DSkin.Controls.DSkinButton();
             this.reloadRuntime = new DSkin.Controls.DSkinButton();
+            this.runtimeTimeout = new DSkin.Controls.DSkinTextBox();
+            this.dSkinLabel1 = new DSkin.Controls.DSkinLabel();
             this.dSkinPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logList)).BeginInit();
             this.dSkinPanel2.SuspendLayout();
@@ -110,6 +112,8 @@
             // dSkinPanel3
             // 
             this.dSkinPanel3.BackColor = System.Drawing.Color.Transparent;
+            this.dSkinPanel3.Controls.Add(this.runtimeTimeout);
+            this.dSkinPanel3.Controls.Add(this.dSkinLabel1);
             this.dSkinPanel3.Controls.Add(this.reloadRuntime);
             this.dSkinPanel3.Controls.Add(this.catchBox);
             this.dSkinPanel3.Controls.Add(this.btExcutorSelected);
@@ -219,6 +223,26 @@
             this.reloadRuntime.TextPadding = 0;
             this.reloadRuntime.Click += new System.EventHandler(this.reloadRuntime_Click);
             // 
+            // runtimeTimeout
+            // 
+            this.runtimeTimeout.BitmapCache = false;
+            this.runtimeTimeout.Location = new System.Drawing.Point(40, 354);
+            this.runtimeTimeout.Name = "runtimeTimeout";
+            this.runtimeTimeout.Size = new System.Drawing.Size(106, 21);
+            this.runtimeTimeout.TabIndex = 4;
+            this.runtimeTimeout.TransparencyKey = System.Drawing.Color.Empty;
+            this.runtimeTimeout.WaterFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.runtimeTimeout.WaterText = "默认无限制";
+            this.runtimeTimeout.WaterTextOffset = new System.Drawing.Point(5, 5);
+            // 
+            // dSkinLabel1
+            // 
+            this.dSkinLabel1.Location = new System.Drawing.Point(8, 332);
+            this.dSkinLabel1.Name = "dSkinLabel1";
+            this.dSkinLabel1.Size = new System.Drawing.Size(153, 16);
+            this.dSkinLabel1.TabIndex = 5;
+            this.dSkinLabel1.Text = "超时(毫)需重新加载运行时";
+            // 
             // TabrisWinform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -240,6 +264,7 @@
             this.dSkinPanel2.ResumeLayout(false);
             this.dSkinPanel4.ResumeLayout(false);
             this.dSkinPanel3.ResumeLayout(false);
+            this.dSkinPanel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -256,6 +281,8 @@
         private DSkin.Controls.DSkinListBox logList;
         private DSkin.Controls.DSkinCheckBox catchBox;
         private DSkin.Controls.DSkinButton reloadRuntime;
+        private DSkin.Controls.DSkinTextBox runtimeTimeout;
+        private DSkin.Controls.DSkinLabel dSkinLabel1;
     }
 }
 
