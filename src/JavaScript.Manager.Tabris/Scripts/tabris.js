@@ -1,5 +1,5 @@
-﻿var sql = require('sql');
-var request = require('request');
+﻿var sql = require('javascript_sql');
+var request = require('javascript_request');
 
 function tabrisFactory() {
 

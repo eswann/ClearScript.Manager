@@ -27,7 +27,7 @@ namespace JavaScript.Manager.Sql.Package
     {
         public SqlPackage()
         {
-            PackageId = "sql";
+            PackageId = "javascript_sql";
             ScriptUri = "JavaScript.Manager.Sql.Scripts.sql.js";
             HostObjects.Add(new HostObject { Name = "xHost", Target = new ExtendedHostFunctions() });
         }

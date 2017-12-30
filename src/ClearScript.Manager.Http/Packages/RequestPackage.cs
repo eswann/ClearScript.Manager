@@ -7,7 +7,7 @@ namespace JavaScript.Manager.Http.Packages
     {
         public RequestPackage()
         {
-            PackageId = "request";
+            PackageId = "javascript_request";
             ScriptUri = "JavaScript.Manager.Http.Scripts.request.js";
         }
 
