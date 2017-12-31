@@ -35,7 +35,7 @@ namespace JavaScript.Manager.Log.Package
                     var isTarget = typeof(AbstractLogExcutor).IsAssignableFrom(logExecutory.GetType());
                     if (!isTarget)
                     {
-                        throw new NotSupportedException(logExecutory.GetType().Name + " is not implements ILogExecutor");
+                        throw new NotSupportedException(logExecutory.GetType().Name + " is not implements AbstractLogExcutor");
                     }
                     HostObjects.Add(new HostObject
                     {

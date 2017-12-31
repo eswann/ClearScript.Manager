@@ -16,21 +16,38 @@ namespace JavaScript.Manager.Sql.Package
 {
     public class SqlExecutor : RequiredPackage
     {
-        public SqlExecutor(Type sqlExecutoryType = null)
+        public SqlExecutor(object sqlExecutory = null)
         {
             PackageId = "javascript_sql_factory_sqlExecutor";
-            if (sqlExecutoryType != null)
+            if (sqlExecutory != null)
             {
-                var isTarget = typeof(IDbExecutor).IsAssignableFrom(sqlExecutoryType);
-                if (!isTarget)
+                var type = sqlExecutory as Type;
+                if (type != null)
                 {
-                    throw new NotSupportedException(sqlExecutoryType.Name + " is not implements IDbExecutor");
+                    var isTarget = typeof(IDbExecutor).IsAssignableFrom(type);
+                    if (!isTarget)
+                    {
+                        throw new NotSupportedException(type.Name + " is not implements IDbExecutor");
+                    }
+                    HostObjects.Add(new HostObject
+                    {
+                        Name = "javascript_sql_factory_sqlExecutor",
+                        Target = Activator.CreateInstance(type)
+                    });
                 }
-                HostObjects.Add(new HostObject
+                else
                 {
-                    Name = "javascript_sql_factory_sqlExecutor",
-                    Target = Activator.CreateInstance(sqlExecutoryType)
-                });
+                    var isTarget = typeof(AbstractDbDefaultExecutor).IsAssignableFrom(sqlExecutory.GetType());
+                    if (!isTarget)
+                    {
+                        throw new NotSupportedException(sqlExecutory.GetType().Name + " is not implements AbstractDbDefaultExecutor");
+                    }
+                    HostObjects.Add(new HostObject
+                    {
+                        Name = "javascript_sql_factory_sqlExecutor",
+                        Target = sqlExecutory
+                    });
+                }
             }
             else
             {

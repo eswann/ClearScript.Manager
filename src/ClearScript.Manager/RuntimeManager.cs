@@ -293,6 +293,7 @@ namespace JavaScript.Manager
             {
                 _scriptEngine.Dispose();
                 _scriptEngine = null;
+                RequireManager.ClearPackages();
             }
         }
 

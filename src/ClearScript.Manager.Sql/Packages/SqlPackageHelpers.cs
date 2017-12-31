@@ -13,9 +13,9 @@ namespace JavaScript.Manager.Sql.Packages
         /// <summary>
         /// Registers packages needed for using the request include.
         /// </summary>
-        public static void RegisterPackage(Type sqlExcutorType = null)
+        public static void RegisterPackage(object sqlExcutor = null)
         {
-            RequireManager.RegisterPackage(new SqlExecutor(sqlExcutorType));
+            RequireManager.RegisterPackage(new SqlExecutor(sqlExcutor));
             RequireManager.RegisterPackage(new SqlPackage());
         }
     }

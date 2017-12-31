@@ -6,12 +6,14 @@ function logFactory() {
 }
 
 logFactory.create = function (options) {
-    this.options = options || {};
-    return new logFactory.LogContext();
+    if (!options) {
+        options = { trace: true };
+    }
+    return new logFactory.LogContext(options);
 }
 
-function LogContext() {
-  
+function LogContext(options) {
+    this.options = options;
 }
 
 LogContext.prototype.extractLocation = function (urlLike) {
@@ -84,7 +86,7 @@ LogContext.prototype.debug = function (err) {
 }
 LogContext.prototype.getTrace= function (err)
 {
-    if (this.trace) {
+    if (this.options && this.options.trace) {
         try {
             var tracew = JSON.stringify(this.parseV8OrIE(err));
             return tracew;

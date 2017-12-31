@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Impl\DbDefaultExecutor.cs" />
+    <Compile Include="Interface\AbstractDbDefaultExecutor.cs" />
     <Compile Include="Interface\IDbExecutor.cs" />
     <Compile Include="Packages\SqlPackageHelpers.cs" />
     <Compile Include="Packages\SqlPackage.cs" />

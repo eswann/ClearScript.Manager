@@ -12,9 +12,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DSkin.DirectUI;
 using JavaScript.Manager;
-using JavaScript.Manager.Loaders;
+using JavaScript.Manager.Extensions;
 using Microsoft.ClearScript;
-using Microsoft.ClearScript.V8;
 
 namespace Tabris.Winform
 {
@@ -95,7 +94,7 @@ namespace Tabris.Winform
                     if (this.catchBox.CheckState.Equals(CheckState.Checked))
                     {
                         code = "var tabris = require('javascript_tabris');\n" + "try{\n" + code +
-                               "\n}catch(err){host.err=err.message}";
+                               "\n}catch(err){host.err=err.message;host.ex=err;}";
                     }
                     else
                     {
@@ -113,6 +112,25 @@ namespace Tabris.Winform
                         if (!string.IsNullOrEmpty(host.err.ToString()))
                         {
                             Log(LogLevel.ERROR, host.err);
+                        }
+                        var exception = host.ex as DynamicObject;
+                        if (exception != null)
+                        {
+                            var kv = exception.GetDynamicProperties();
+                            if (kv != null)
+                            {
+                                foreach (var itemKeyValuePair in kv)
+                                {
+                                    if (itemKeyValuePair.Value is Exception)
+                                    {
+                                        Exception ex = (Exception)itemKeyValuePair.Value;
+                                        while (ex.InnerException != null)
+                                            ex = ex.InnerException;
+
+                                        Log(LogLevel.ERROR, ex.Message);
+                                    }
+                                }
+                            }
                         }
                     }
                     catch (Exception)
@@ -154,7 +172,7 @@ namespace Tabris.Winform
 
         private void Enable(bool flag)
         {
-            this.BeginInvoke(new EventHandler(delegate
+            this.Invoke(new EventHandler(delegate
             {
                 btnExcutor.Enabled = flag;
                 btExcutorSelected.Enabled = flag;
@@ -231,7 +249,6 @@ namespace Tabris.Winform
                 int.TryParse(globalTimeout, out intTimeout);
                 manager.Dispose();
                 manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = intTimeout });
-                RequireManager.ClearPackages();
                 JavaScript.Manager.Tabris.Tabris.Register(new JavaScript.Manager.Tabris.TabrisOptions
                 {
                     LogExecutor = logExcutor

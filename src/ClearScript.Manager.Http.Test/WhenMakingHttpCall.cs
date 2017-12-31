@@ -129,7 +129,7 @@ namespace ClearScript.Manager.Http.Test
             var options = new ExecutionOptions();
             options.HostObjects.Add(new HostObject { Name = "subject", Target = subject });
             var code = "var logFactory = require('javascript_log_factory');" +
-                       "var log = this.logFactory.create();" +
+                       "var log = this.logFactory.create({trace:true});" +
                        //"subject.StatusCode = content.ExecuteNonQuery(\"update school set address ='1' where id = 1\");";
                        "try{ aa.ttt =1}catch(err){log.info(err)}";
 
@@ -146,7 +146,7 @@ namespace ClearScript.Manager.Http.Test
             {
 
                 var code = "var tabris = require('javascript_tabris');" +
-                           "var log = this.tabris.create('LOG',{trace:true});" +
+                           "var log = this.tabris.create('LOG');" +
                            "try{ aa.ttt =1}catch(err){log.info(err)}";
 
                 await scope.RuntimeManager.ExecuteAsync("btnExcutor_Click", code);

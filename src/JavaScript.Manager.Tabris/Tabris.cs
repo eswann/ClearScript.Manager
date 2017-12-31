@@ -37,7 +37,7 @@ namespace JavaScript.Manager.Tabris
             RequireManager.RegisterPackage(new TabrisPackage());
 
             //sql
-            SqlPackageHelpers.RegisterPackage(options?.DbExecutorType);
+            SqlPackageHelpers.RegisterPackage(options?.DbExecutor);
 
             //http
             HttpPackageHelpers.RegisterPackage();
@@ -52,7 +52,7 @@ namespace JavaScript.Manager.Tabris
 
     public class TabrisOptions
     {
-        public Type DbExecutorType { get; set; }    
+        public object DbExecutor { get; set; }    
         public object LogExecutor { get; set; }    
     }
 }

@@ -240,6 +240,10 @@
                     "type": {
                         "!type": "string",
                         "!doc": "The db type(mysql or sqlserver)."
+                    },
+                    "connection": {
+                        "!type": "string",
+                        "!doc": "The connection string of db."
                     }
                 },
                 "HTTPProperties": {

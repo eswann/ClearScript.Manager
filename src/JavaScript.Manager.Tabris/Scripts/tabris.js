@@ -9,7 +9,6 @@ function tabrisFactory() {
 
 tabrisFactory.create = function (type, options) {
     if (!type) return undefined;
-    if (!options) return undefined;
     type = type.trim().toLowerCase();
     if (type === 'sql') {
         if (!options.name || !options.type) return undefined;
