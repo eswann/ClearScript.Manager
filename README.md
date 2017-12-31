@@ -1,5 +1,6 @@
 # ClearScript.Manager
 
+![image](https://github.com/yuzd/ClearScript.Manager/blob/master/tabris.gif)  
 [![Build status](https://ci.appveyor.com/api/projects/status/b43oj4a3ccj7fm31?svg=true)](https://ci.appveyor.com/project/eswann/clearscript-manager)
 
 ClearScript Manager was created to encapsulate the use of the ClearScript V8 engine in multi-use scenarios, like in a hosted server project (Ex: for use in a Web App or Web API).
