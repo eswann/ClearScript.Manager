@@ -71,6 +71,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Control\ButtonPannel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Control\LogPannel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Control\TabrisControlContainer.cs" />
+    <Compile Include="Control\TabrisTabItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Tabris.Winform.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +101,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Config\Dal.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -116,6 +127,21 @@
     <Content Include="Lib\v8-ia32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\bt.png" />
+    <Content Include="Resources\ChromeAdd.png" />
+    <Content Include="Resources\ChromeAddHover.png" />
+    <Content Include="Resources\ChromeBackground.png" />
+    <Content Include="Resources\ChromeCenter.png" />
+    <Content Include="Resources\ChromeClose.png" />
+    <Content Include="Resources\ChromeCloseHover.png" />
+    <Content Include="Resources\ChromeInactive.png" />
+    <Content Include="Resources\ChromeInactiveCenter.png" />
+    <Content Include="Resources\ChromeInactiveLeft.png" />
+    <Content Include="Resources\ChromeInactiveRight.png" />
+    <Content Include="Resources\ChromeLeft.png" />
+    <Content Include="Resources\ChromeRight.png" />
+    <Content Include="Resources\ChromeSelect.png" />
+    <None Include="Resources\JSS.png" />
     <Content Include="tabris\tabris.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

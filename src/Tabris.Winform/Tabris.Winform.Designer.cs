@@ -33,19 +33,22 @@
             this.logList = new DSkin.Controls.DSkinListBox();
             this.dSkinPanel2 = new DSkin.Controls.DSkinPanel();
             this.dSkinPanel4 = new DSkin.Controls.DSkinPanel();
-            this.codemirrow = new DSkin.Controls.DSkinWkeBrowser();
+            this.dSkinTabControl1 = new DSkin.Controls.DSkinTabControl();
             this.dSkinPanel3 = new DSkin.Controls.DSkinPanel();
+            this.runtimeTimeout = new DSkin.Controls.DSkinTextBox();
+            this.dSkinLabel1 = new DSkin.Controls.DSkinLabel();
+            this.reloadRuntime = new DSkin.Controls.DSkinButton();
             this.catchBox = new DSkin.Controls.DSkinCheckBox();
             this.btExcutorSelected = new DSkin.Controls.DSkinButton();
             this.btnExcutor = new DSkin.Controls.DSkinButton();
-            this.reloadRuntime = new DSkin.Controls.DSkinButton();
-            this.runtimeTimeout = new DSkin.Controls.DSkinTextBox();
-            this.dSkinLabel1 = new DSkin.Controls.DSkinLabel();
+            this.dSkinTabBar1 = new DSkin.Controls.DSkinTabBar();
+            this.bottomPannel = new DSkin.Controls.DSkinPanel();
             this.dSkinPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logList)).BeginInit();
             this.dSkinPanel2.SuspendLayout();
             this.dSkinPanel4.SuspendLayout();
             this.dSkinPanel3.SuspendLayout();
+            this.bottomPannel.SuspendLayout();
             this.SuspendLayout();
             // 
             // dSkinPanel1
@@ -79,55 +82,125 @@
             this.dSkinPanel2.Controls.Add(this.dSkinPanel4);
             this.dSkinPanel2.Controls.Add(this.dSkinPanel3);
             this.dSkinPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dSkinPanel2.Location = new System.Drawing.Point(4, 34);
+            this.dSkinPanel2.Location = new System.Drawing.Point(4, 29);
             this.dSkinPanel2.Name = "dSkinPanel2";
             this.dSkinPanel2.RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel2.RightBottom")));
-            this.dSkinPanel2.Size = new System.Drawing.Size(762, 406);
+            this.dSkinPanel2.Size = new System.Drawing.Size(762, 411);
             this.dSkinPanel2.TabIndex = 1;
             this.dSkinPanel2.Text = "dSkinPanel2";
             // 
             // dSkinPanel4
             // 
             this.dSkinPanel4.BackColor = System.Drawing.Color.Transparent;
-            this.dSkinPanel4.Controls.Add(this.codemirrow);
+            this.dSkinPanel4.Controls.Add(this.dSkinTabControl1);
             this.dSkinPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dSkinPanel4.Location = new System.Drawing.Point(0, 0);
             this.dSkinPanel4.Name = "dSkinPanel4";
             this.dSkinPanel4.RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel4.RightBottom")));
-            this.dSkinPanel4.Size = new System.Drawing.Size(598, 406);
+            this.dSkinPanel4.Size = new System.Drawing.Size(598, 411);
             this.dSkinPanel4.TabIndex = 2;
             this.dSkinPanel4.Text = "dSkinPanel4";
             // 
-            // codemirrow
+            // dSkinTabControl1
             // 
-            this.codemirrow.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.codemirrow.Location = new System.Drawing.Point(0, 0);
-            this.codemirrow.Name = "codemirrow";
-            this.codemirrow.Size = new System.Drawing.Size(598, 406);
-            this.codemirrow.TabIndex = 0;
-            this.codemirrow.Text = "dSkinWkeBrowser1";
-            this.codemirrow.Url = "";
-            this.codemirrow.ZoomFactor = 1F;
+            this.dSkinTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dSkinTabControl1.BitmapCache = false;
+            this.dSkinTabControl1.HoverBackColors = new System.Drawing.Color[] {
+        System.Drawing.Color.Transparent,
+        System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))))};
+            this.dSkinTabControl1.ItemBackgroundImage = null;
+            this.dSkinTabControl1.ItemBackgroundImageHover = null;
+            this.dSkinTabControl1.ItemBackgroundImageSelected = null;
+            this.dSkinTabControl1.Location = new System.Drawing.Point(3, 3);
+            this.dSkinTabControl1.Name = "dSkinTabControl1";
+            this.dSkinTabControl1.NormalBackColors = new System.Drawing.Color[] {
+        System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128))))),
+        System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))))};
+            this.dSkinTabControl1.PageImagePosition = DSkin.Controls.ePageImagePosition.Left;
+            this.dSkinTabControl1.SelectedBackColors = new System.Drawing.Color[] {
+        System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255))))),
+        System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))))};
+            this.dSkinTabControl1.Size = new System.Drawing.Size(592, 405);
+            this.dSkinTabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.dSkinTabControl1.TabIndex = 1;
+            this.dSkinTabControl1.UpdownBtnArrowNormalColor = System.Drawing.Color.Black;
+            this.dSkinTabControl1.UpdownBtnArrowPressColor = System.Drawing.Color.Gray;
+            this.dSkinTabControl1.UpdownBtnBackColor = System.Drawing.Color.White;
+            this.dSkinTabControl1.UpdownBtnBorderColor = System.Drawing.Color.Black;
             // 
             // dSkinPanel3
             // 
             this.dSkinPanel3.BackColor = System.Drawing.Color.Transparent;
-            this.dSkinPanel3.Controls.Add(this.runtimeTimeout);
-            this.dSkinPanel3.Controls.Add(this.dSkinLabel1);
+            this.dSkinPanel3.Controls.Add(this.bottomPannel);
             this.dSkinPanel3.Controls.Add(this.reloadRuntime);
-            this.dSkinPanel3.Controls.Add(this.catchBox);
             this.dSkinPanel3.Controls.Add(this.btExcutorSelected);
             this.dSkinPanel3.Controls.Add(this.btnExcutor);
             this.dSkinPanel3.Dock = System.Windows.Forms.DockStyle.Right;
             this.dSkinPanel3.Location = new System.Drawing.Point(598, 0);
             this.dSkinPanel3.Name = "dSkinPanel3";
             this.dSkinPanel3.RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel3.RightBottom")));
-            this.dSkinPanel3.Size = new System.Drawing.Size(164, 406);
+            this.dSkinPanel3.Size = new System.Drawing.Size(164, 411);
             this.dSkinPanel3.TabIndex = 1;
             this.dSkinPanel3.Text = "dSkinPanel3";
             // 
+            // runtimeTimeout
+            // 
+            this.runtimeTimeout.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.runtimeTimeout.BitmapCache = false;
+            this.runtimeTimeout.Location = new System.Drawing.Point(8, 86);
+            this.runtimeTimeout.Name = "runtimeTimeout";
+            this.runtimeTimeout.Size = new System.Drawing.Size(137, 21);
+            this.runtimeTimeout.TabIndex = 4;
+            this.runtimeTimeout.TransparencyKey = System.Drawing.Color.Empty;
+            this.runtimeTimeout.Visible = false;
+            this.runtimeTimeout.WaterFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.runtimeTimeout.WaterText = "unlimited default";
+            this.runtimeTimeout.WaterTextOffset = new System.Drawing.Point(5, 5);
+            // 
+            // dSkinLabel1
+            // 
+            this.dSkinLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dSkinLabel1.AutoSize = false;
+            this.dSkinLabel1.Location = new System.Drawing.Point(8, 47);
+            this.dSkinLabel1.Name = "dSkinLabel1";
+            this.dSkinLabel1.Size = new System.Drawing.Size(139, 33);
+            this.dSkinLabel1.TabIndex = 5;
+            this.dSkinLabel1.Text = "Timeout For Runtime(Need reload runtime)";
+            this.dSkinLabel1.Visible = false;
+            // 
+            // reloadRuntime
+            // 
+            this.reloadRuntime.AdaptImage = true;
+            this.reloadRuntime.BaseColor = System.Drawing.Color.Crimson;
+            this.reloadRuntime.ButtonBorderColor = System.Drawing.Color.Gray;
+            this.reloadRuntime.ButtonBorderWidth = 1;
+            this.reloadRuntime.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.reloadRuntime.HoverColor = System.Drawing.Color.Empty;
+            this.reloadRuntime.HoverImage = null;
+            this.reloadRuntime.IsPureColor = false;
+            this.reloadRuntime.Location = new System.Drawing.Point(30, 148);
+            this.reloadRuntime.Name = "reloadRuntime";
+            this.reloadRuntime.NormalImage = null;
+            this.reloadRuntime.PressColor = System.Drawing.Color.Empty;
+            this.reloadRuntime.PressedImage = null;
+            this.reloadRuntime.Radius = 10;
+            this.reloadRuntime.ShowButtonBorder = true;
+            this.reloadRuntime.Size = new System.Drawing.Size(100, 40);
+            this.reloadRuntime.TabIndex = 3;
+            this.reloadRuntime.Text = "Reload(JsRuntime)";
+            this.reloadRuntime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.reloadRuntime.TextPadding = 0;
+            this.reloadRuntime.Visible = false;
+            this.reloadRuntime.Click += new System.EventHandler(this.reloadRuntime_Click);
+            // 
             // catchBox
             // 
+            this.catchBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.catchBox.CheckAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.catchBox.Checked = true;
             this.catchBox.CheckFlagColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(151)))), ((int)(((byte)(2)))));
@@ -142,14 +215,15 @@
             this.catchBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.catchBox.InnerPaddingWidth = 2;
             this.catchBox.InnerRectInflate = 3;
-            this.catchBox.Location = new System.Drawing.Point(40, 381);
+            this.catchBox.Location = new System.Drawing.Point(8, 113);
             this.catchBox.Name = "catchBox";
-            this.catchBox.Size = new System.Drawing.Size(106, 19);
+            this.catchBox.Size = new System.Drawing.Size(137, 18);
             this.catchBox.SpaceBetweenCheckMarkAndText = 3;
             this.catchBox.TabIndex = 2;
-            this.catchBox.Text = "全局Catch异常";
+            this.catchBox.Text = "Catch Global Error";
             this.catchBox.TextColorDisabled = System.Drawing.Color.Gray;
             this.catchBox.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
+            this.catchBox.Visible = false;
             // 
             // btExcutorSelected
             // 
@@ -170,9 +244,10 @@
             this.btExcutorSelected.ShowButtonBorder = true;
             this.btExcutorSelected.Size = new System.Drawing.Size(100, 40);
             this.btExcutorSelected.TabIndex = 1;
-            this.btExcutorSelected.Text = "执行选中";
+            this.btExcutorSelected.Text = "Process(Selected)";
             this.btExcutorSelected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btExcutorSelected.TextPadding = 0;
+            this.btExcutorSelected.Visible = false;
             this.btExcutorSelected.Click += new System.EventHandler(this.btExcutorSelected_Click);
             // 
             // btnExcutor
@@ -194,63 +269,51 @@
             this.btnExcutor.ShowButtonBorder = true;
             this.btnExcutor.Size = new System.Drawing.Size(100, 40);
             this.btnExcutor.TabIndex = 0;
-            this.btnExcutor.Text = "执行";
+            this.btnExcutor.Text = "Process";
             this.btnExcutor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btnExcutor.TextPadding = 0;
+            this.btnExcutor.Visible = false;
             this.btnExcutor.Click += new System.EventHandler(this.btnExcutor_Click);
             // 
-            // reloadRuntime
+            // dSkinTabBar1
             // 
-            this.reloadRuntime.AdaptImage = true;
-            this.reloadRuntime.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(186)))), ((int)(((byte)(233)))));
-            this.reloadRuntime.ButtonBorderColor = System.Drawing.Color.Gray;
-            this.reloadRuntime.ButtonBorderWidth = 1;
-            this.reloadRuntime.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.reloadRuntime.HoverColor = System.Drawing.Color.Empty;
-            this.reloadRuntime.HoverImage = null;
-            this.reloadRuntime.IsPureColor = false;
-            this.reloadRuntime.Location = new System.Drawing.Point(30, 148);
-            this.reloadRuntime.Name = "reloadRuntime";
-            this.reloadRuntime.NormalImage = null;
-            this.reloadRuntime.PressColor = System.Drawing.Color.Empty;
-            this.reloadRuntime.PressedImage = null;
-            this.reloadRuntime.Radius = 10;
-            this.reloadRuntime.ShowButtonBorder = true;
-            this.reloadRuntime.Size = new System.Drawing.Size(100, 40);
-            this.reloadRuntime.TabIndex = 3;
-            this.reloadRuntime.Text = "重新加载运行时";
-            this.reloadRuntime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.reloadRuntime.TextPadding = 0;
-            this.reloadRuntime.Click += new System.EventHandler(this.reloadRuntime_Click);
+            this.dSkinTabBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dSkinTabBar1.BackgroundImage = global::Tabris.Winform.Properties.Resources.ChromeBackground;
+            this.dSkinTabBar1.EnabledLayoutContent = true;
+            this.dSkinTabBar1.Location = new System.Drawing.Point(3, 2);
+            this.dSkinTabBar1.Name = "dSkinTabBar1";
+            this.dSkinTabBar1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.dSkinTabBar1.Size = new System.Drawing.Size(599, 26);
+            this.dSkinTabBar1.TabControl = this.dSkinTabControl1;
+            this.dSkinTabBar1.TabIndex = 2;
+            this.dSkinTabBar1.Text = "dSkinTabBar1";
+            this.dSkinTabBar1.SizeChanged += new System.EventHandler(this.dSkinTabBar1_SizeChanged);
             // 
-            // runtimeTimeout
+            // bottomPannel
             // 
-            this.runtimeTimeout.BitmapCache = false;
-            this.runtimeTimeout.Location = new System.Drawing.Point(40, 354);
-            this.runtimeTimeout.Name = "runtimeTimeout";
-            this.runtimeTimeout.Size = new System.Drawing.Size(106, 21);
-            this.runtimeTimeout.TabIndex = 4;
-            this.runtimeTimeout.TransparencyKey = System.Drawing.Color.Empty;
-            this.runtimeTimeout.WaterFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.runtimeTimeout.WaterText = "默认无限制";
-            this.runtimeTimeout.WaterTextOffset = new System.Drawing.Point(5, 5);
-            // 
-            // dSkinLabel1
-            // 
-            this.dSkinLabel1.Location = new System.Drawing.Point(8, 332);
-            this.dSkinLabel1.Name = "dSkinLabel1";
-            this.dSkinLabel1.Size = new System.Drawing.Size(153, 16);
-            this.dSkinLabel1.TabIndex = 5;
-            this.dSkinLabel1.Text = "超时(毫)需重新加载运行时";
+            this.bottomPannel.BackColor = System.Drawing.Color.Transparent;
+            this.bottomPannel.Controls.Add(this.dSkinLabel1);
+            this.bottomPannel.Controls.Add(this.runtimeTimeout);
+            this.bottomPannel.Controls.Add(this.catchBox);
+            this.bottomPannel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bottomPannel.Location = new System.Drawing.Point(0, 274);
+            this.bottomPannel.Name = "bottomPannel";
+            this.bottomPannel.RightBottom = ((System.Drawing.Image)(resources.GetObject("bottomPannel.RightBottom")));
+            this.bottomPannel.Size = new System.Drawing.Size(164, 137);
+            this.bottomPannel.TabIndex = 6;
+            this.bottomPannel.Text = "dSkinPanel5";
             // 
             // TabrisWinform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CaptionCenter = true;
+            this.CaptionColor = System.Drawing.Color.Transparent;
             this.CaptionFont = new System.Drawing.Font("Ebrima", 9F, System.Drawing.FontStyle.Bold);
             this.CaptionHeight = 25;
             this.ClientSize = new System.Drawing.Size(770, 623);
+            this.CloseBox.HoverColor = System.Drawing.Color.Red;
+            this.Controls.Add(this.dSkinTabBar1);
             this.Controls.Add(this.dSkinPanel2);
             this.Controls.Add(this.dSkinPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -258,13 +321,15 @@
             this.Name = "TabrisWinform";
             this.Radius = 5;
             this.ShowIcon = false;
-            this.Text = "Tabris-jsql脚本工具V1.0";
+            this.Text = "tabris-jsql-v1.0";
+            this.Load += new System.EventHandler(this.TabrisWinform_Load);
             this.dSkinPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.logList)).EndInit();
             this.dSkinPanel2.ResumeLayout(false);
             this.dSkinPanel4.ResumeLayout(false);
             this.dSkinPanel3.ResumeLayout(false);
-            this.dSkinPanel3.PerformLayout();
+            this.bottomPannel.ResumeLayout(false);
+            this.bottomPannel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -275,7 +340,6 @@
         private DSkin.Controls.DSkinPanel dSkinPanel2;
         private DSkin.Controls.DSkinButton btnExcutor;
         private DSkin.Controls.DSkinPanel dSkinPanel4;
-        private DSkin.Controls.DSkinWkeBrowser codemirrow;
         private DSkin.Controls.DSkinPanel dSkinPanel3;
         private DSkin.Controls.DSkinButton btExcutorSelected;
         private DSkin.Controls.DSkinListBox logList;
@@ -283,6 +347,9 @@
         private DSkin.Controls.DSkinButton reloadRuntime;
         private DSkin.Controls.DSkinTextBox runtimeTimeout;
         private DSkin.Controls.DSkinLabel dSkinLabel1;
+        private DSkin.Controls.DSkinTabControl dSkinTabControl1;
+        private DSkin.Controls.DSkinTabBar dSkinTabBar1;
+        private DSkin.Controls.DSkinPanel bottomPannel;
     }
 }
 
