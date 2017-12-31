@@ -53,17 +53,20 @@ namespace Tabris.Winform.Control
 
         void this_MouseClick(object sender, DuiMouseEventArgs e)
         {
-            var container = this.Tag as TabrisControlContainer;
-            if (container != null)
-            {
-                container.ButtonPannel.Show();
-            }
+            CurrentPannelShow();
         }
         void closeBtn_MouseClick(object sender, DuiMouseEventArgs e)
         {
+           
             DSkinTabBar c = this.HostControl as DSkinTabBar;
             if (c != null)
             {
+                var currentIndex = c.Items.IndexOf(this);
+                if (currentIndex == 0)
+                {
+                    return;
+                }
+
                 if (c.TabControl != null)
                 {
                     TabPage p;
@@ -87,8 +90,8 @@ namespace Tabris.Winform.Control
                 {
                     container.Dispose();
                 }
-                LastPannelShow(true);
-                var currentIndex = c.Items.IndexOf(this);
+               
+               
                 int index = currentIndex + 1;
                 DuiBaseControl d = c.Items[index];
                 var lastIndex = currentIndex - 1;
@@ -96,9 +99,10 @@ namespace Tabris.Winform.Control
                 {
                     var item = c.Items[lastIndex] as TabrisTabItem;
                     if (item != null) c.SetSelect(item);
-                } 
-              
-              
+                }
+
+                LastPannelShow();
+
                 int left = d.Left;
                 d.DoEffect(left, left - this.Width + 13, 150, "Left", (p) =>
                 {
@@ -117,30 +121,76 @@ namespace Tabris.Winform.Control
         }
 
 
-        private void LastPannelShow(bool flag)
+        private void CurrentPannelShow()
         {
-            DSkinTabBar c = this.HostControl as DSkinTabBar;
-            if (c != null)
+            try
             {
-                var currentIndex = c.Items.IndexOf(this);
-                var lastIndex = currentIndex - 1;
-                if (lastIndex >= 0)
+                DSkinTabBar c = this.HostControl as DSkinTabBar;
+                if (c != null)
                 {
-                    var item = c.Items[lastIndex] as TabrisTabItem;
-                    var container = item.Tag as TabrisControlContainer;
-                    if (container != null)
+                    var currentIndex = c.Items.IndexOf(this);
+                    for (int i = 0; i < c.Items.Count; i++)
                     {
-                        if (flag)
+                        var item = c.Items[i] as TabrisTabItem;
+                        if (item == null) continue;
+                        if (item.Tag == null) continue;
+                        var container = item.Tag as TabrisControlContainer;
+                        if (container == null) continue;
+                        if (i == currentIndex)
                         {
                             container.ButtonPannel.Show();
+                            container.LogPannel.Show();
                         }
                         else
                         {
                             container.ButtonPannel.Hide();
+                            container.LogPannel.Hide();
                         }
-                       
                     }
+
                 }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        private void LastPannelShow()
+        {
+            try
+            {
+                DSkinTabBar c = this.HostControl as DSkinTabBar;
+                if (c != null)
+                {
+                    var currentIndex = c.Items.IndexOf(this);
+                    var lastIndex = currentIndex - 1;
+                    if (lastIndex < 0) return;
+                    for (int i = 0; i < c.Items.Count; i++)
+                    {
+                        var item = c.Items[i] as TabrisTabItem;
+                        if (item == null) continue;
+                        if (item.Tag == null) continue;
+                        var container = item.Tag as TabrisControlContainer;
+                        if (container == null) continue;
+                        if (i == lastIndex)
+                        {
+                            container.ButtonPannel.Show();
+                            container.LogPannel.Show();
+                        }
+                        else
+                        {
+                            container.ButtonPannel.Hide();
+                            container.LogPannel.Hide();
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
 
@@ -150,7 +200,7 @@ namespace Tabris.Winform.Control
             if (this.ControlState == ControlStates.Pressed)
             {
                 this.BringToFront();
-                LastPannelShow(false);
+                CurrentPannelShow();
             }
         }
 

@@ -42,7 +42,7 @@ namespace Tabris.Winform.Control
             this.Controls.Add(this.btnExcutor);
             this.Controls.Add(this.bottomPannel);
             this.Location = new System.Drawing.Point(0, 0);
-
+            this.bottomPannel.BringToFront();
             initEvent();
 
             this.runtimeTimeout.Text = "" + index;
@@ -70,7 +70,17 @@ namespace Tabris.Winform.Control
         private void reloadRuntime_Click(object sender, EventArgs e)
         {
         }
-
+        private void Enable(bool flag)
+        {
+            this.Invoke(new EventHandler(delegate
+            {
+                btnExcutor.Enabled = flag;
+                btExcutorSelected.Enabled = flag;
+                reloadRuntime.Enabled = flag;
+                catchBox.Enabled = flag;
+                runtimeTimeout.Enabled = flag;
+            }));
+        }
         private void init()
         {
             // 
@@ -181,7 +191,7 @@ namespace Tabris.Winform.Control
             this.dSkinLabel1.Size = new System.Drawing.Size(139, 33);
             this.dSkinLabel1.TabIndex = 5;
             this.dSkinLabel1.Text = "Timeout For Runtime(Need reload runtime)";
-           
+            this.dSkinLabel1.Enabled = true;
 
             // 
             // catchBox
@@ -210,9 +220,9 @@ namespace Tabris.Winform.Control
             this.catchBox.Text = "Catch Global Error";
             this.catchBox.TextColorDisabled = System.Drawing.Color.Gray;
             this.catchBox.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
+            this.catchBox.Enabled = true;
 
 
-          
         }
 
         protected override void OnParentChanged(EventArgs e)

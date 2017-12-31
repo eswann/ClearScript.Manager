@@ -75,6 +75,7 @@
             this.logList.TabIndex = 0;
             this.logList.Text = "dSkinListBox1";
             this.logList.Value = 0D;
+            this.logList.Visible = false;
             // 
             // dSkinPanel2
             // 

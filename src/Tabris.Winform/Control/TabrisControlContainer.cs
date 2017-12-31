@@ -22,14 +22,14 @@ namespace Tabris.Winform.Control
     {
         public ButtonPannel ButtonPannel { get; set; }
 
-        public DSkinWkeBrowser DSkinWkeBrowser { get; set; }
+        public LogPannel LogPannel { get; set; }
 
         public void Dispose()
         {
             try
             {
                 ButtonPannel.Dispose();
-                DSkinWkeBrowser.Dispose();
+                LogPannel.Dispose();
             }
             catch (Exception)
             {

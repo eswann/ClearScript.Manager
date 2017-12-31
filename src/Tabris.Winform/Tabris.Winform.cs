@@ -350,11 +350,13 @@ namespace Tabris.Winform
             dSkinTabBar1.SetSelect(item);
 
             ButtonPannel buttonPannel = new ButtonPannel(index);
+            LogPannel logPannel = new LogPannel(index);
             this.dSkinPanel3.Controls.Add(buttonPannel);
+            this.dSkinPanel1.Controls.Add(logPannel);
             item.Tag = new TabrisControlContainer
             {
                 ButtonPannel = buttonPannel,
-                DSkinWkeBrowser = d
+                LogPannel = logPannel
             };
         }
        
