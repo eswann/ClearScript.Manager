@@ -110,3 +110,7 @@ src/.vs/ClearScript.Manager/v15/Server/sqlite3/db.lock
 src/.vs/ClearScript.Manager/v15/Server/sqlite3/storage.ide
 src/.vs/ClearScript.Manager/v15/Server/sqlite3/storage.ide-shm
 src/.vs/ClearScript.Manager/v15/Server/sqlite3/storage.ide-wal
+src/Tabris.Winform/.vs/Tabris.Winform/v15/Server/sqlite3/db.lock
+src/Tabris.Winform/.vs/Tabris.Winform/v15/Server/sqlite3/storage.ide
+src/Tabris.Winform/.vs/Tabris.Winform/v15/Server/sqlite3/storage.ide-shm
+src/Tabris.Winform/.vs/Tabris.Winform/v15/Server/sqlite3/storage.ide-wal

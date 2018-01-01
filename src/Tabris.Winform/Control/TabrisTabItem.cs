@@ -54,6 +54,7 @@ namespace Tabris.Winform.Control
         }
       
      
+
         void this_MouseClick(object sender, DuiMouseEventArgs e)
         {
             CurrentPannelShow();

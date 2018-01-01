@@ -7,12 +7,7 @@
 //-----------------------------------------------------------------------
 namespace Tabris.Winform.Control
 {
-    using DSkin.Controls;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
 
     /// <summary>
@@ -23,6 +18,7 @@ namespace Tabris.Winform.Control
         public ButtonPannel ButtonPannel { get; set; }
 
         public LogPannel LogPannel { get; set; }
+        public string TagName { get; set; }
 
         public void Dispose()
         {

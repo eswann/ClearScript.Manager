@@ -45,21 +45,70 @@
     <script src="resources/codemirror-javascript/addon/hint/tern/tern-hover.js"></script>
     <script type="text/javascript">
         $(function () {
-            window.cmEditor = window.cmEditor || {}; cmEditor.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-                mode: "application/javascript", theme: "eclipse", styleActiveLine: !0, lineNumbers: !0, lineWrapping: !0, autoCloseBrackets: !0, matchBrackets: !0, extraKeys: {
-                    "'.'": function (a) { setTimeout(function () { CodeMirror.showHint(a, CodeMirror.ternHint, { async: !0 }) }, 100); return CodeMirror.Pass }, "Ctrl-Space": "contextAutocomplete", "Ctrl-I": function (a) { CodeMirror.tern.showType(a) }, "Alt-.": function (a) { CodeMirror.tern.jumpToDef(a) },
-                    "Alt-,": function (a) { CodeMirror.tern.jumpBack(a) }, "Ctrl-Q": function (a) { CodeMirror.tern.rename(a) }
-                }, gutters: ["CodeMirror-linenumbers"], textHover: { delay: 300 }, ternWith: { plugins: { tabris: {} } }
-            })
+            window.cmEditor = window.cmEditor || {};
+            cmEditor.editor = CodeMirror.fromTextArea(document.getElementById("code"),
+                {
+                    mode: "application/javascript",
+                    theme: "eclipse",
+                    styleActiveLine: !0,
+                    lineNumbers: !0,
+                    lineWrapping: !0,
+                    autoCloseBrackets: !0,
+                    matchBrackets: !0,
+                    extraKeys: {
+                        "'.'": function (a) {
+                            setTimeout(function () { CodeMirror.showHint(a, CodeMirror.ternHint, { async: !0 }) }, 100);
+                            return CodeMirror.Pass;
+                        },
+                        "Ctrl-Space": "contextAutocomplete",
+                        "Ctrl-I": function (a) { CodeMirror.tern.showType(a) },
+                        "Alt-.": function (a) { CodeMirror.tern.jumpToDef(a) },
+                        "Alt-,": function (a) { CodeMirror.tern.jumpBack(a) },
+                        "Ctrl-Q": function (a) { CodeMirror.tern.rename(a) },
+                        "Ctrl-S": function (a) { Save(); },
+                        "F5": function (a) {
+                            var sele = getSelectedCode();
+                            if (sele && sele.length > 0) {
+                                ExcuteSelected();
+                            } else {
+                                Excute();
+                            }
+                        }
+                    },
+                    gutters: ["CodeMirror-linenumbers"],
+                    textHover: { delay: 300 },
+                    ternWith: { plugins: { tabris: {} } }
+                });
+
+            $(document).keydown(function (event) {
+                //Ctrl +V
+                if (event.ctrlKey && event.keyCode == 86) {
+                    Modify();
+                }
+                else if (event.ctrlKey && event.keyCode == 90) { //Ctrl +Z
+                    Modify();
+                } 
+                else if (event.ctrlKey ) {
+
+                } else if (event.keyCode >= 116 && event.keyCode >= 123){
+                    //F1-12
+                }else
+                {
+                    Modify();
+                }
+            });
         });
 
-        function getCode()
-        {
+        function getCode() {
             return window.cmEditor.editor.getValue();
         }
 
         function getSelectedCode() {
             return window.cmEditor.editor.getSelection();
+        }
+
+        function setCode(code) {
+            window.cmEditor.editor.setValue(code);
         }
     </script>
 </head>

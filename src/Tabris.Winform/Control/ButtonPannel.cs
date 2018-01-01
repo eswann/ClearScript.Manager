@@ -6,7 +6,9 @@
 // <summary></summary>
 //-----------------------------------------------------------------------
 
-using System.Threading;
+
+using DSkin.DirectUI;
+using System.IO;
 
 namespace Tabris.Winform.Control
 {
@@ -33,24 +35,33 @@ namespace Tabris.Winform.Control
         private DSkin.Controls.DSkinTextBox runtimeTimeout = new DSkin.Controls.DSkinTextBox();
         private DSkin.Controls.DSkinLabel dSkinLabel1 = new DSkin.Controls.DSkinLabel();
         private DSkin.Controls.DSkinPanel bottomPannel = new DSkin.Controls.DSkinPanel();
-
-        private readonly DSkinWkeBrowser codemirrow;
+        private DSkin.Controls.DSkinButton SaveButton = new DSkin.Controls.DSkinButton();
+        private readonly DSkinBrowser codemirrow;
         private RuntimeManager manager;
         private readonly Action<LogLevel, string, string> logAction;
 
+        private string fileOutPath = string.Empty;
+        private bool isRun = false;
         public int Index { get; set; }
-        public ButtonPannel(DSkinWkeBrowser brower, Action<LogLevel, string, string> logAction)
+
+        public Action<string> OnTitleChange { get; set; }
+        public Action OnModify { get; set; }
+        public ButtonPannel(DSkinBrowser brower, Action<LogLevel, string, string> logAction)
         {
             this.logAction = logAction;
             init();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabrisWinform));
             this.codemirrow = brower;
+            this.codemirrow.AllowDrop = true;
+            this.codemirrow.GlobalObject = this;
+
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel3.RightBottom")));
             this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this.reloadRuntime);
             this.Controls.Add(this.btExcutorSelected);
             this.Controls.Add(this.btnExcutor);
+            this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.bottomPannel);
             this.Location = new System.Drawing.Point(0, 0);
             initEvent();
@@ -69,8 +80,14 @@ namespace Tabris.Winform.Control
             this.reloadRuntime.Click += new System.EventHandler(this.reloadRuntime_Click);
 
             this.btExcutorSelected.Click += new System.EventHandler(this.btExcutorSelected_Click);
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
 
             this.btnExcutor.Click += new System.EventHandler(this.btnExcutor_Click);
+        }
+
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+            this.Save();
         }
 
         private void btnExcutor_Click(object sender, EventArgs e)
@@ -125,10 +142,98 @@ namespace Tabris.Winform.Control
                 logAction(LogLevel.ERROR, "重新加载运行时失败" , ex.Message);
             }
         }
+        [JSFunction]
+        public void Modify()
+        {
+            OnModify();
+        }
+        [JSFunction]
+        public void ExcuteSelected()
+        {
+            if (isRun)
+            {
+                logAction(LogLevel.WARN, "请等待当前任务执行完", "");
+                return;
+            }
+            btExcutorSelected_Click(null, null);
+        }
+        [JSFunction]
+        public void Excute()
+        {
+            if (isRun)
+            {
+                logAction(LogLevel.WARN, "请等待当前任务执行完", "");
+                return;
+            }
+            btnExcutor_Click(null, null);
+        }
+
+        [JSFunction]
+        public bool Save()
+        {
+
+            try
+            {
+                var code = this.codemirrow.InvokeJS("getCode()").ToString();
+                if (string.IsNullOrEmpty(code))
+                {
+                    return true;
+                }
 
 
+                if (!string.IsNullOrEmpty(fileOutPath))
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        using (StreamWriter sw = new StreamWriter(fileOutPath, false))
+                        {
+                            sw.Write(code);
+                            sw.Flush();
+                        }
+
+                        logAction(LogLevel.INFO, "保存成功", "");
+                    });
+                    return true;
+                }
+
+                //弹出保存框
+                SaveFileDialog jsFile = new SaveFileDialog();
+                jsFile.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                jsFile.RestoreDirectory = true;
+                jsFile.Filter = "Js文件|*.js";
+                if (jsFile.ShowDialog() == DialogResult.OK)
+                {
+                    using (StreamWriter sw = new StreamWriter(jsFile.FileName, false))
+                    {
+                        sw.Write(code);
+                        sw.Flush();
+                    }
+
+                    fileOutPath = jsFile.FileName;
+                    logAction(LogLevel.INFO, "保存成功", "");
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                logAction(LogLevel.ERROR, "保存出错", ex.Message);
+                return true;
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(fileOutPath))
+                {
+                    var fileNameExt = fileOutPath.Substring(fileOutPath.LastIndexOf("\\") + 1);
+                    if (OnTitleChange != null) OnTitleChange(fileNameExt);
+                }
+             
+            }
+
+        }
         private void invokeJsCode(string code)
         {
+            isRun = true;
             Enable(false);
             Task.Factory.StartNew(async () =>
             {
@@ -185,10 +290,11 @@ namespace Tabris.Winform.Control
                     {
                     }
 
-                    if (Index == 0)
-                    {
-                        Thread.Sleep(10000);
-                    }
+                    //if (Index == 0)
+                    //{
+                    //    Thread.Sleep(10000);
+                    //    logAction(LogLevel.ERROR, "ces", "");
+                    //}
                 }
                 catch (ScriptEngineException ex)
                 {
@@ -201,6 +307,7 @@ namespace Tabris.Winform.Control
                 finally
                 {
                     Enable(true);
+                    isRun = false;
                 }
 
 
@@ -232,6 +339,7 @@ namespace Tabris.Winform.Control
                 reloadRuntime.Enabled = flag;
                 catchBox.Enabled = flag;
                 runtimeTimeout.Enabled = flag;
+                SaveButton.Enabled = flag;
             }));
         }
         private void init()
@@ -293,6 +401,29 @@ namespace Tabris.Winform.Control
             this.btnExcutor.Text = "Process";
             this.btnExcutor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btnExcutor.TextPadding = 0;
+
+            // 
+            // SaveButton
+            // 
+            this.SaveButton.AdaptImage = true;
+            this.SaveButton.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(186)))), ((int)(((byte)(233)))));
+            this.SaveButton.ButtonBorderColor = System.Drawing.Color.Gray;
+            this.SaveButton.ButtonBorderWidth = 1;
+            this.SaveButton.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.SaveButton.HoverColor = System.Drawing.Color.Empty;
+            this.SaveButton.HoverImage = null;
+            this.SaveButton.IsPureColor = false;
+            this.SaveButton.Location = new System.Drawing.Point(30, 213);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.NormalImage = null;
+            this.SaveButton.PressColor = System.Drawing.Color.Empty;
+            this.SaveButton.PressedImage = null;
+            this.SaveButton.Radius = 10;
+            this.SaveButton.ShowButtonBorder = true;
+            this.SaveButton.Size = new System.Drawing.Size(100, 40);
+            this.SaveButton.Text = "Save";
+            this.SaveButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.SaveButton.TextPadding = 0;
 
             // 
             // reloadRuntime
@@ -381,6 +512,13 @@ namespace Tabris.Winform.Control
         protected override void OnParentChanged(EventArgs e)
         {
             base.OnParentChanged(e);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            manager.Dispose();
+            codemirrow.Dispose();
         }
     }
 }

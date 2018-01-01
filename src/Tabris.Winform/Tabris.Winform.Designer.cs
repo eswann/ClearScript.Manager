@@ -43,6 +43,8 @@
             this.btExcutorSelected = new DSkin.Controls.DSkinButton();
             this.btnExcutor = new DSkin.Controls.DSkinButton();
             this.dSkinTabBar1 = new DSkin.Controls.DSkinTabBar();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.SaveButton = new DSkin.Controls.DSkinButton();
             this.dSkinPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logList)).BeginInit();
             this.dSkinPanel2.SuspendLayout();
@@ -104,6 +106,7 @@
             // 
             // dSkinTabControl1
             // 
+            this.dSkinTabControl1.AllowDrop = true;
             this.dSkinTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -130,10 +133,12 @@
             this.dSkinTabControl1.UpdownBtnArrowPressColor = System.Drawing.Color.Gray;
             this.dSkinTabControl1.UpdownBtnBackColor = System.Drawing.Color.White;
             this.dSkinTabControl1.UpdownBtnBorderColor = System.Drawing.Color.Black;
+            this.dSkinTabControl1.DragDrop += new System.Windows.Forms.DragEventHandler(this.dSkinTabControl1_DragDrop);
             // 
             // dSkinPanel3
             // 
             this.dSkinPanel3.BackColor = System.Drawing.Color.Transparent;
+            this.dSkinPanel3.Controls.Add(this.SaveButton);
             this.dSkinPanel3.Controls.Add(this.bottomPannel);
             this.dSkinPanel3.Controls.Add(this.reloadRuntime);
             this.dSkinPanel3.Controls.Add(this.btExcutorSelected);
@@ -184,7 +189,7 @@
             this.runtimeTimeout.TabIndex = 4;
             this.runtimeTimeout.TransparencyKey = System.Drawing.Color.Empty;
             this.runtimeTimeout.Visible = false;
-            this.runtimeTimeout.WaterFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.runtimeTimeout.WaterFont = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.runtimeTimeout.WaterText = "unlimited default";
             this.runtimeTimeout.WaterTextOffset = new System.Drawing.Point(5, 5);
             // 
@@ -303,6 +308,30 @@
             this.dSkinTabBar1.Text = "dSkinTabBar1";
             this.dSkinTabBar1.SizeChanged += new System.EventHandler(this.dSkinTabBar1_SizeChanged);
             // 
+            // SaveButton
+            // 
+            this.SaveButton.AdaptImage = true;
+            this.SaveButton.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(186)))), ((int)(((byte)(233)))));
+            this.SaveButton.ButtonBorderColor = System.Drawing.Color.Gray;
+            this.SaveButton.ButtonBorderWidth = 1;
+            this.SaveButton.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.SaveButton.HoverColor = System.Drawing.Color.Empty;
+            this.SaveButton.HoverImage = null;
+            this.SaveButton.IsPureColor = false;
+            this.SaveButton.Location = new System.Drawing.Point(30, 213);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.NormalImage = null;
+            this.SaveButton.PressColor = System.Drawing.Color.Empty;
+            this.SaveButton.PressedImage = null;
+            this.SaveButton.Radius = 10;
+            this.SaveButton.ShowButtonBorder = true;
+            this.SaveButton.Size = new System.Drawing.Size(100, 40);
+            this.SaveButton.TabIndex = 7;
+            this.SaveButton.Text = "Save";
+            this.SaveButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.SaveButton.TextPadding = 0;
+            this.SaveButton.Visible = false;
+            // 
             // TabrisWinform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -349,6 +378,8 @@
         private DSkin.Controls.DSkinTabControl dSkinTabControl1;
         private DSkin.Controls.DSkinTabBar dSkinTabBar1;
         private DSkin.Controls.DSkinPanel bottomPannel;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private DSkin.Controls.DSkinButton SaveButton;
     }
 }
 

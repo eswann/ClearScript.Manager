@@ -11,13 +11,13 @@ namespace Tabris.Winform.Control
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class EventBus
     {
         public static EventAggregator _eventAggregator = new EventAggregator();
         public static Publisher _publisher = new Publisher(_eventAggregator);
+
+        public delegate void EventHandler(object sender);
     }
 
 

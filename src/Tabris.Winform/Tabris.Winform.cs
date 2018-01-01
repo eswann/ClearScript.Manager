@@ -30,8 +30,10 @@ namespace Tabris.Winform
 
             tabrisUrl = "file:///" + indexFile;
 
-          
+            this.MinimumSize = new Size(770, 570);
+
         }
+
 
         private void TabrisWinform_Load(object sender, EventArgs e)
         {
@@ -68,11 +70,15 @@ namespace Tabris.Winform
         void add_MouseClick(object sender, DuiMouseEventArgs e)
         {
             var index = dSkinTabBar1.Items.IndexOf(addButton);
-            TabrisTabItem item = new TabrisTabItem() { Text = "new " + (index + 1), Image = Properties.Resources.JSS };
+            TabrisTabItem item = new TabrisTabItem()
+            {
+                Text = "new " + (index + 1),
+                Image = Properties.Resources.JSS
+            };
             dSkinTabBar1.Items.Insert(index, item);
             //item.SendToBack();
             //DSkin.Controls.DSkinBaseControl db = new DSkin.Controls.DSkinBaseControl { Dock = DockStyle.Fill };
-            DSkin.Controls.DSkinWkeBrowser brower = new DSkin.Controls.DSkinWkeBrowser { Dock = DockStyle.Fill, Url = tabrisUrl };
+            DSkin.Controls.DSkinBrowser brower = new DSkin.Controls.DSkinBrowser { Dock = DockStyle.Fill, Url = tabrisUrl };
             //db.DUIControls.Add(d);
             TabPage page = new TabPage();
             page.Controls.Add(brower);
@@ -80,15 +86,38 @@ namespace Tabris.Winform
             dSkinTabControl1.TabPages.Add(page);
             dSkinTabBar1.LayoutContent();
             dSkinTabBar1.SetSelect(item);
-
+            
             LogPannel logPannel = new LogPannel();
-            ButtonPannel buttonPannel = new ButtonPannel(brower, logPannel.Log){Index = index};
+            ButtonPannel buttonPannel = new ButtonPannel(brower, logPannel.Log)
+            {
+                Index = index,
+                OnTitleChange = s =>
+                {
+                    item.Text = s;
+                    var tag = item.Tag as TabrisControlContainer;
+                    if (tag != null)
+                    {
+                        tag.TagName = s;
+                    }
+                },
+                OnModify = () =>
+                {
+                    var tag = item.Tag as TabrisControlContainer;
+                    if (tag != null)
+                    {
+                        item.Text = " * " + tag.TagName;
+                    }
+                    
+                }
+            };
+
             this.dSkinPanel3.Controls.Add(buttonPannel);
             this.dSkinPanel1.Controls.Add(logPannel);
             item.Tag = new TabrisControlContainer
             {
                 ButtonPannel = buttonPannel,
-                LogPannel = logPannel
+                LogPannel = logPannel,
+                TagName = item.Text
             };
         }
        
@@ -113,6 +142,11 @@ namespace Tabris.Winform
                     }
                 }
             }
+        }
+
+        private void dSkinTabControl1_DragDrop(object sender, DragEventArgs e)
+        {
+
         }
     }
 
