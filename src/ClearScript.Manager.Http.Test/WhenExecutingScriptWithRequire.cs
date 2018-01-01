@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using JavaScript.Manager;
+﻿using JavaScript.Manager;
 using JavaScript.Manager.Loaders;
 using NUnit.Framework;
 using Should;
+using System.Collections.Generic;
 
 namespace ClearScript.Manager.Http.Test
 {
@@ -12,7 +12,6 @@ namespace ClearScript.Manager.Http.Test
         [SetUp]
         public void Setup()
         {
-            RequireManager.ClearPackages();
         }
 
         [Test]
@@ -21,7 +20,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings {ScriptTimeoutMilliSeconds = 0});
 
-            RequireManager.RegisterPackage(new RequiredPackage { PackageId = "testRequire", ScriptUri = "https://gist.githubusercontent.com/eswann/76ecaba02dee33cf26b4/raw/bcafe0a389c84ba44d6ee1661e66b2213aa2ffa0/testRequire" });
+            manager.RequireManager.RegisterPackage(new RequiredPackage { PackageId = "testRequire", ScriptUri = "https://gist.githubusercontent.com/eswann/76ecaba02dee33cf26b4/raw/bcafe0a389c84ba44d6ee1661e66b2213aa2ffa0/testRequire" });
 
             await
                 manager.ExecuteAsync("testscript",

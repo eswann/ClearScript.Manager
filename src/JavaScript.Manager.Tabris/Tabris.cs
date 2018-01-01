@@ -14,36 +14,29 @@ using JavaScript.Manager.Tabris.Packages;
 
 namespace JavaScript.Manager.Tabris
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
-
     /// <summary>
     /// 打包所有的
     /// </summary>
     public class Tabris
     {
-
         /// <summary>
         /// 注册所有需要使用的包
         /// </summary>
+        /// <param name="RequireManager"></param>
         /// <param name="options"></param>
-        public static void Register(TabrisOptions options = null)
+        public static void Register(RequireManager RequireManager, TabrisOptions options = null)
         {
             //tabris
             RequireManager.RegisterPackage(new TabrisPackage());
 
             //sql
-            SqlPackageHelpers.RegisterPackage(options?.DbExecutor);
+            SqlPackageHelpers.RegisterPackage(RequireManager,options?.DbExecutor);
 
             //http
-            HttpPackageHelpers.RegisterPackage();
+            HttpPackageHelpers.RegisterPackage(RequireManager);
 
             //log
-            LogPackageHelpers.RegisterPackage(options?.LogExecutor);
+            LogPackageHelpers.RegisterPackage(RequireManager,options?.LogExecutor);
 
         }
 

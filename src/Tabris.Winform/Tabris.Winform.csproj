@@ -74,6 +74,7 @@
     <Compile Include="Control\ButtonPannel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Control\EventHanders.cs" />
     <Compile Include="Control\LogPannel.cs">
       <SubType>Component</SubType>
     </Compile>

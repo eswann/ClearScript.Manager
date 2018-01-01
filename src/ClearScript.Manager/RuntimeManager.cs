@@ -1,14 +1,14 @@
-﻿using System;
+﻿using JavaScript.Manager.Caching;
+using JavaScript.Manager.Extensions;
+using JavaScript.Manager.Loaders;
+using Microsoft.ClearScript;
+using Microsoft.ClearScript.V8;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using JavaScript.Manager.Caching;
-using JavaScript.Manager.Extensions;
-using JavaScript.Manager.Loaders;
-using Microsoft.ClearScript;
-using Microsoft.ClearScript.V8;
 
 namespace JavaScript.Manager
 {
@@ -17,6 +17,7 @@ namespace JavaScript.Manager
     /// </summary>
     public interface IRuntimeManager : IDisposable
     {
+        RequireManager RequireManager { get; set; }
         /// <summary>
         /// If True, automatically adds a reference to the .Net Console.
         /// </summary>
@@ -124,6 +125,8 @@ namespace JavaScript.Manager
         private V8ScriptEngine _scriptEngine;
         private bool _disposed;
 
+        public RequireManager RequireManager { get; set; }
+
         /// <summary>
         /// Creates a new Runtime Manager.
         /// </summary>
@@ -140,6 +143,8 @@ namespace JavaScript.Manager
             });
 
             _scriptCompiler = new ScriptCompiler(_v8Runtime, settings);
+
+            RequireManager = new RequireManager();
         }
 
         public bool AddConsoleReference { get; set; }
@@ -293,7 +298,6 @@ namespace JavaScript.Manager
             {
                 _scriptEngine.Dispose();
                 _scriptEngine = null;
-                RequireManager.ClearPackages();
             }
         }
 

@@ -11,10 +11,7 @@ namespace Tabris.Winform.Control
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
     using System.Reflection;
-    using System.Text;
-    using System.Threading.Tasks;
 
 
     /// <summary>
@@ -23,7 +20,7 @@ namespace Tabris.Winform.Control
     public class LogPannel : DSkin.Controls.DSkinPanel
     {
         private DSkin.Controls.DSkinListBox logList;
-        public LogPannel(int i)
+        public LogPannel()
         {
             this.logList = new DSkin.Controls.DSkinListBox();
 
@@ -50,51 +47,50 @@ namespace Tabris.Winform.Control
             this.logList.Size = new System.Drawing.Size(762, 179);
             this.logList.Value = 0D;
 
-            Log(LogLevel.WARN, "" + i);
         }
 
 
-        private void Log(LogLevel level, string msgStr, string trace = null)
+        public void Log(LogLevel level, string msgStr, string trace = null)
         {
             var msgAll = msgStr + trace;
-            //this.BeginInvoke(new EventHandler(delegate
-            //{
-               
-            //}));
-
-            foreach (var msg in Split(msgAll, 70))
+            this.BeginInvoke(new EventHandler(delegate
             {
-                var levelStr = GetDescription(level);
-                if (level.Equals(LogLevel.ERROR))
+                foreach (var msg in Split(msgAll, 70))
                 {
-                    logList.Items.Add(new DuiHtmlLabel
+                    var levelStr = GetDescription(level);
+                    if (level.Equals(LogLevel.ERROR))
                     {
-                        Text = string.Format("&nbsp;&nbsp; <label color='red'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
-                        AutoSize = true
-                    });
-                }
-                else if (level.Equals(LogLevel.WARN))
-                {
-                    logList.Items.Add(new DuiHtmlLabel
+                        logList.Items.Add(new DuiHtmlLabel
+                        {
+                            Text = string.Format("&nbsp;&nbsp; <label color='red'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
+                            AutoSize = true
+                        });
+                    }
+                    else if (level.Equals(LogLevel.WARN))
                     {
-                        Text = string.Format("&nbsp;&nbsp; <label color='blue'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
-                        AutoSize = true
-                    });
-                }
-                else
-                {
-                    logList.Items.Add(new DuiHtmlLabel
+                        logList.Items.Add(new DuiHtmlLabel
+                        {
+                            Text = string.Format("&nbsp;&nbsp; <label color='blue'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
+                            AutoSize = true
+                        });
+                    }
+                    else
                     {
-                        Text = string.Format("&nbsp;&nbsp; [{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2}", DateTime.Now, levelStr, msg),
-                        AutoSize = true
-                    });
+                        logList.Items.Add(new DuiHtmlLabel
+                        {
+                            Text = string.Format("&nbsp;&nbsp; [{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2}", DateTime.Now, levelStr, msg),
+                            AutoSize = true
+                        });
+                    }
                 }
-            }
 
-            SetTimeout(100, () =>
-            {
-                logList.Value = 1;
-            });
+                SetTimeout(100, () =>
+                {
+                    logList.Value = 1;
+                });
+            }));
+
+           
 
         }
 

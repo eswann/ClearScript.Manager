@@ -22,6 +22,8 @@ namespace Tabris.Winform.Control
     /// </summary>
     public class TabrisTabItem : DSkinTabItem
     {
+     
+
         static Image ChromeSelect = Properties.Resources.ChromeSelect;
         static Image ChromeInactive = Properties.Resources.ChromeInactive;
         static Image ChromeClose = Properties.Resources.ChromeClose;
@@ -50,11 +52,13 @@ namespace Tabris.Winform.Control
 
             this.MouseClick += this_MouseClick;
         }
-
+      
+     
         void this_MouseClick(object sender, DuiMouseEventArgs e)
         {
             CurrentPannelShow();
         }
+
         void closeBtn_MouseClick(object sender, DuiMouseEventArgs e)
         {
            
@@ -85,13 +89,6 @@ namespace Tabris.Winform.Control
                     }
                 }
                 this.Visible = false;
-                var container = this.Tag as TabrisControlContainer;
-                if (container != null)
-                {
-                    container.Dispose();
-                }
-               
-               
                 int index = currentIndex + 1;
                 DuiBaseControl d = c.Items[index];
                 var lastIndex = currentIndex - 1;
@@ -100,9 +97,8 @@ namespace Tabris.Winform.Control
                     var item = c.Items[lastIndex] as TabrisTabItem;
                     if (item != null) c.SetSelect(item);
                 }
-
+                
                 LastPannelShow();
-
                 int left = d.Left;
                 d.DoEffect(left, left - this.Width + 13, 150, "Left", (p) =>
                 {
@@ -117,6 +113,15 @@ namespace Tabris.Winform.Control
                 });
 
             }
+
+            var container = this.Tag as TabrisControlContainer;
+            if (container != null)
+            {
+                container.ButtonPannel.Hide();
+                container.LogPannel.Hide();
+                container.Dispose();
+            }
+
             this.Dispose();
         }
 

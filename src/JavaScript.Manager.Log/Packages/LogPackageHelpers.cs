@@ -1,5 +1,4 @@
-﻿using System;
-using JavaScript.Manager.Loaders;
+﻿using JavaScript.Manager.Loaders;
 using JavaScript.Manager.Log.Package;
 
 namespace JavaScript.Manager.Log.Packages
@@ -12,7 +11,7 @@ namespace JavaScript.Manager.Log.Packages
         /// <summary>
         /// Registers packages needed for using the request include.
         /// </summary>
-        public static void RegisterPackage(object logExcutor = null)
+        public static void RegisterPackage(RequireManager RequireManager, object logExcutor = null)
         {
             RequireManager.RegisterPackage(new LogExcutorPackage(logExcutor));
             RequireManager.RegisterPackage(new LogPackage());

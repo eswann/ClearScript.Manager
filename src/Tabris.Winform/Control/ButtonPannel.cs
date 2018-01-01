@@ -5,12 +5,18 @@
 // <author>nainaigu</author>
 // <summary></summary>
 //-----------------------------------------------------------------------
+
+using System.Threading;
+
 namespace Tabris.Winform.Control
 {
+    using DSkin.Controls;
+    using JavaScript.Manager;
+    using JavaScript.Manager.Extensions;
+    using Microsoft.ClearScript;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    using System.Dynamic;
     using System.Threading.Tasks;
     using System.Windows.Forms;
 
@@ -27,13 +33,18 @@ namespace Tabris.Winform.Control
         private DSkin.Controls.DSkinTextBox runtimeTimeout = new DSkin.Controls.DSkinTextBox();
         private DSkin.Controls.DSkinLabel dSkinLabel1 = new DSkin.Controls.DSkinLabel();
         private DSkin.Controls.DSkinPanel bottomPannel = new DSkin.Controls.DSkinPanel();
-        private int _index;
-        public ButtonPannel(int index)
-        {
-            init();
 
+        private readonly DSkinWkeBrowser codemirrow;
+        private RuntimeManager manager;
+        private readonly Action<LogLevel, string, string> logAction;
+
+        public int Index { get; set; }
+        public ButtonPannel(DSkinWkeBrowser brower, Action<LogLevel, string, string> logAction)
+        {
+            this.logAction = logAction;
+            init();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabrisWinform));
-            _index = index;
+            this.codemirrow = brower;
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel3.RightBottom")));
             this.BackColor = System.Drawing.Color.Transparent;
@@ -42,10 +53,14 @@ namespace Tabris.Winform.Control
             this.Controls.Add(this.btnExcutor);
             this.Controls.Add(this.bottomPannel);
             this.Location = new System.Drawing.Point(0, 0);
-            this.bottomPannel.BringToFront();
             initEvent();
 
-            this.runtimeTimeout.Text = "" + index;
+            manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
+            JavaScript.Manager.Tabris.Tabris.Register(manager.RequireManager,new JavaScript.Manager.Tabris.TabrisOptions
+            {
+                LogExecutor = new WinformLogExcutor(logAction)
+            });
+
         }
 
       
@@ -60,16 +75,154 @@ namespace Tabris.Winform.Control
 
         private void btnExcutor_Click(object sender, EventArgs e)
         {
+            var code = this.codemirrow.InvokeJS("getCode()").ToString();
+            if (string.IsNullOrEmpty(code))
+            {
+                MessageBox.Show("执行内容为空");
+                return;
+            }
 
+            invokeJsCode(code);
         }
 
         private void btExcutorSelected_Click(object sender, EventArgs e)
         {
+            var selectedCode = this.codemirrow.InvokeJS("getSelectedCode()").ToString();
+            if (string.IsNullOrEmpty(selectedCode))
+            {
+                MessageBox.Show("获取选择内容为空");
+                return;
+            }
+            invokeJsCode(selectedCode);
         }
 
         private void reloadRuntime_Click(object sender, EventArgs e)
         {
+            try
+            {
+                var globalTimeout = this.runtimeTimeout.Text;
+                var intTimeout = 0;
+                int.TryParse(globalTimeout, out intTimeout);
+                manager.Dispose();
+                manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = intTimeout });
+                JavaScript.Manager.Tabris.Tabris.Register(manager.RequireManager,new JavaScript.Manager.Tabris.TabrisOptions
+                {
+                    LogExecutor = new WinformLogExcutor(logAction)
+                });
+
+                if (intTimeout > 0)
+                {
+                    logAction(LogLevel.INFO,"重新加载运行时成功,全局ScriptTimeoutMilliSeconds设置为：" + intTimeout,"");
+                }
+                else
+                {
+                    logAction(LogLevel.INFO,"重新加载运行时成功","");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logAction(LogLevel.ERROR, "重新加载运行时失败" , ex.Message);
+            }
         }
+
+
+        private void invokeJsCode(string code)
+        {
+            Enable(false);
+            Task.Factory.StartNew(async () =>
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(code))
+                    {
+                        MessageBox.Show("获取选择内容为空");
+                        return;
+                    }
+                    if (this.catchBox.CheckState.Equals(CheckState.Checked))
+                    {
+                        code =  "try{\n" + code + "\n}catch(err){\nhost.err=err.message;\nhost.ex=err;\n}";
+                    }
+
+                    code = "var tabris;" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
+                    dynamic host = new ExpandoObject();
+                    var option = new ExecutionOptions
+                    {
+                        HostObjects = new List<HostObject>
+                        {
+                            new HostObject { Name = "host", Target = host }
+                        }
+                    };
+
+                    await manager.ExecuteAsync(Guid.NewGuid().ToString(), code, option);
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(host.err.ToString()))
+                        {
+                            logAction(LogLevel.ERROR, host.err,"");
+                        }
+                        var exception = host.ex as DynamicObject;
+                        if (exception != null)
+                        {
+                            var kv = exception.GetDynamicProperties();
+                            if (kv != null)
+                            {
+                                foreach (var itemKeyValuePair in kv)
+                                {
+                                    if (itemKeyValuePair.Value is Exception)
+                                    {
+                                        Exception ex = (Exception)itemKeyValuePair.Value;
+                                        while (ex.InnerException != null)
+                                            ex = ex.InnerException;
+
+                                        logAction(LogLevel.ERROR, ex.Message,"");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    if (Index == 0)
+                    {
+                        Thread.Sleep(10000);
+                    }
+                }
+                catch (ScriptEngineException ex)
+                {
+                    logAction(LogLevel.ERROR, ((Microsoft.ClearScript.ScriptEngineException)ex).ErrorDetails,"");
+                }
+                catch (Exception ex)
+                {
+                    logAction(LogLevel.ERROR, ex.Message,"");
+                }
+                finally
+                {
+                    Enable(true);
+                }
+
+
+            }).ContinueWith((t) =>
+            {
+                if (t.IsFaulted)
+                {
+                    Exception ex = t.Exception;
+                    while (ex is AggregateException && ex.InnerException != null)
+                        ex = ex.InnerException;
+                    logAction(LogLevel.ERROR, ex.Message,"");
+                }
+                else if (t.IsCanceled)
+                {
+                    logAction(LogLevel.ERROR, "Canclled.","");
+                }
+            });
+
+
+        }
+
+
         private void Enable(bool flag)
         {
             this.Invoke(new EventHandler(delegate
@@ -178,7 +331,7 @@ namespace Tabris.Winform.Control
             this.runtimeTimeout.WaterFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.runtimeTimeout.WaterText = "unlimited default";
             this.runtimeTimeout.WaterTextOffset = new System.Drawing.Point(5, 5);
-
+            this.runtimeTimeout.Enabled = true;
 
             // 
             // dSkinLabel1

@@ -1,4 +1,4 @@
-﻿var javascript_sql_factory_sqlExecutor = require('javascript_sql_factory_sqlExecutor');
+﻿var javascript_sql_factory_sqlExecutor = javascript_sql_factory_sqlExecutor || require('javascript_sql_factory_sqlExecutor');
 
 function dbFactory() {
 

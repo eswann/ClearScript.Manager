@@ -1,4 +1,4 @@
-﻿var javascript_log_factory_logExecutor = require('javascript_log_factory_logExecutor');
+﻿var javascript_log_factory_logExecutor = javascript_log_factory_logExecutor || require('javascript_log_factory_logExecutor');
 
 function logFactory() {
 

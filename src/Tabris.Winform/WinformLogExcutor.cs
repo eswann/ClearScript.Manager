@@ -6,16 +6,12 @@
 // <summary></summary>
 //-----------------------------------------------------------------------
 
-using System.ComponentModel;
 using JavaScript.Manager.Log.Interface;
+using System.ComponentModel;
 
 namespace Tabris.Winform
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     public enum LogLevel
     {
         [Description("&nbsp;&nbsp;&nbsp;&nbsp;INFO ")]
@@ -33,6 +29,7 @@ namespace Tabris.Winform
     /// </summary>
     public class WinformLogExcutor : AbstractLogExcutor
     {
+       
         private Action<LogLevel, string, string> logAction;
         public WinformLogExcutor(Action<LogLevel, string, string> _logAction)
         {

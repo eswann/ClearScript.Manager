@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using JavaScript.Manager.Extensions;
+﻿using JavaScript.Manager.Extensions;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
+using System;
+using System.Collections.Generic;
 
 namespace JavaScript.Manager.Loaders
 {
@@ -13,6 +13,7 @@ namespace JavaScript.Manager.Loaders
     {
         internal ScriptCompiler Compiler { get; set; }
         internal V8ScriptEngine Engine { get; set; }
+        internal RequireManager RequireManager { get; set; }
 
         /// <summary>
         /// Called via a javascript to require and return the requested package.

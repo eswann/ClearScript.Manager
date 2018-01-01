@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using JavaScript.Manager;
+﻿using JavaScript.Manager;
 using JavaScript.Manager.Extensions;
 using JavaScript.Manager.Http.Packages;
 using JavaScript.Manager.Loaders;
@@ -11,6 +8,7 @@ using JavaScript.Manager.Tabris;
 using Microsoft.ClearScript;
 using NUnit.Framework;
 using Should;
+using System.Threading.Tasks;
 
 namespace ClearScript.Manager.Http.Test
 {
@@ -20,33 +18,9 @@ namespace ClearScript.Manager.Http.Test
         [SetUp]
         public void Setup()
         {
-            RequireManager.ClearPackages();
         }
 
-        [Test]
-        public async void Basic_Http_Get_Succeeds()
-        {
-            var subject = new TestObject();
-            var manager = new RuntimeManager(new ManualManagerSettings{ScriptTimeoutMilliSeconds = 0});
-
-            HttpPackageHelpers.RegisterPackage();
-
-            manager.AddConsoleReference = true;
-            var options = new ExecutionOptions();
-            options.HostObjects.Add(new HostObject {Name = "subject", Target = subject});
-
-            var scriptAwaiter = new ScriptAwaiter();
-            options.HostObjects.Add(new HostObject { Name = "scriptAwaiter", Target = scriptAwaiter });
-
-            var code = "var request = require('request');" +
-                       "request({url: 'http://api.icndb.com/jokes/random/1', json: true}," +
-                       " function (error, response, body) {subject.StatusCode = response.statusCode; subject.Response = response; scriptAwaiter.Callback();});";
-
-            await manager.ExecuteAsync("testScript", code, options);
-            await scriptAwaiter.T;
-
-            subject.StatusCode.ShouldEqual(200);
-        }
+       
 
         [Test]
         public async void Basic_Http_Get_Body_Is_Retrieved()
@@ -54,7 +28,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            HttpPackageHelpers.RegisterPackage();
+            HttpPackageHelpers.RegisterPackage(manager.RequireManager);
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
@@ -79,7 +53,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            HttpPackageHelpers.RegisterPackage();
+            HttpPackageHelpers.RegisterPackage(manager.RequireManager);
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
@@ -103,7 +77,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            SqlPackageHelpers.RegisterPackage();
+            SqlPackageHelpers.RegisterPackage(manager.RequireManager);
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
@@ -124,7 +98,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            LogPackageHelpers.RegisterPackage();
+            LogPackageHelpers.RegisterPackage(manager.RequireManager);
 
             var options = new ExecutionOptions();
             options.HostObjects.Add(new HostObject { Name = "subject", Target = subject });
@@ -140,21 +114,20 @@ namespace ClearScript.Manager.Http.Test
         [Test]
         public async void Testtabris()
         {
-            Tabris.Register();
+            RequireManager requireManager = new RequireManager();
+            Tabris.Register(requireManager);
             ManagerPool.InitializeCurrentPool(new ManagerSettings());
-            using (var scope = new ManagerScope())
+            using (var scope = new ManagerScope(requireManager))
             {
-
-                var code = "var tabris = require('javascript_tabris');" +
-                           "var log = this.tabris.create('LOG');" +
+               
+                var code = "var log = this.tabris.create('LOG');" +
                            "try{ aa.ttt =1}catch(err){log.info(err)}";
-
+                code = "var tabris;" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
                 await scope.RuntimeManager.ExecuteAsync("btnExcutor_Click", code);
 
-                code = "var tabris = require('javascript_tabris');" +
-                       "var log = this.tabris.create('LOG');" +
-                       "try{ aa.ttt =1}catch(err){log.warn(err)}";
-
+                code = "var log = this.tabris.create('LOG');" +
+                           "try{ aa.ttt =1}catch(err){log.info(err)}";
+                code = "var tabris;" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
                 await scope.RuntimeManager.ExecuteAsync("btnExcutor_Click", code);
             }
             

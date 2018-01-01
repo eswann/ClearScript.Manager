@@ -1,4 +1,4 @@
-﻿var javascript_request_factory_http = require('javascript_request_factory_http');
+﻿var javascript_request_factory_http = javascript_request_factory_http || require('javascript_request_factory_http');
 
 function requestFactory() {
 
