@@ -233,22 +233,17 @@ namespace Tabris.Winform.Control
         }
         private void invokeJsCode(string code)
         {
+            if (this.catchBox.CheckState.Equals(CheckState.Checked))
+            {
+                code = "try{\n" + code + "\n}catch(err){\nhost.err=err.message;\nhost.ex=err;\n}";
+            }
             isRun = true;
             Enable(false);
             Task.Factory.StartNew(async () =>
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(code))
-                    {
-                        MessageBox.Show("获取选择内容为空");
-                        return;
-                    }
-                    if (this.catchBox.CheckState.Equals(CheckState.Checked))
-                    {
-                        code =  "try{\n" + code + "\n}catch(err){\nhost.err=err.message;\nhost.ex=err;\n}";
-                    }
-
+                    
                     code = "var tabris;" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
                     dynamic host = new ExpandoObject();
                     var option = new ExecutionOptions
