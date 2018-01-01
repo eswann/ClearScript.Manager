@@ -288,7 +288,7 @@
             this.btnExcutor.ShowButtonBorder = true;
             this.btnExcutor.Size = new System.Drawing.Size(100, 40);
             this.btnExcutor.TabIndex = 0;
-            this.btnExcutor.Text = "Process";
+            this.btnExcutor.Text = "Process         (F5)";
             this.btnExcutor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btnExcutor.TextPadding = 0;
             this.btnExcutor.Visible = false;
@@ -327,7 +327,7 @@
             this.SaveButton.ShowButtonBorder = true;
             this.SaveButton.Size = new System.Drawing.Size(100, 40);
             this.SaveButton.TabIndex = 7;
-            this.SaveButton.Text = "Save";
+            this.SaveButton.Text = "Save To File (Ctrl+S)";
             this.SaveButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.SaveButton.TextPadding = 0;
             this.SaveButton.Visible = false;

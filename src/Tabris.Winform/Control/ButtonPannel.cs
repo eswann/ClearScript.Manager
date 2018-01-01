@@ -398,7 +398,7 @@ namespace Tabris.Winform.Control
             this.btnExcutor.Radius = 10;
             this.btnExcutor.ShowButtonBorder = true;
             this.btnExcutor.Size = new System.Drawing.Size(100, 40);
-            this.btnExcutor.Text = "Process";
+            this.btnExcutor.Text = "Process         (F5)";
             this.btnExcutor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btnExcutor.TextPadding = 0;
 
@@ -421,7 +421,7 @@ namespace Tabris.Winform.Control
             this.SaveButton.Radius = 10;
             this.SaveButton.ShowButtonBorder = true;
             this.SaveButton.Size = new System.Drawing.Size(100, 40);
-            this.SaveButton.Text = "Save";
+            this.SaveButton.Text = "Save To File (Ctrl+S)";
             this.SaveButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.SaveButton.TextPadding = 0;
 
