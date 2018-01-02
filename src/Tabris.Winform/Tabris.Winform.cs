@@ -78,7 +78,12 @@ namespace Tabris.Winform
             dSkinTabBar1.Items.Insert(index, item);
             //item.SendToBack();
             //DSkin.Controls.DSkinBaseControl db = new DSkin.Controls.DSkinBaseControl { Dock = DockStyle.Fill };
-            DSkin.Controls.DSkinBrowser brower = new DSkin.Controls.DSkinBrowser { Dock = DockStyle.Fill, Url = tabrisUrl };
+            DSkin.Controls.DSkinBrowser brower = new DSkin.Controls.DSkinBrowser
+            {
+                Dock = DockStyle.Fill,
+                Url = tabrisUrl,
+                ContextMenuStrip = this.codemirrowMenu
+            };
             //db.DUIControls.Add(d);
             TabPage page = new TabPage();
             page.Controls.Add(brower);
@@ -144,9 +149,60 @@ namespace Tabris.Winform
             }
         }
 
-        private void dSkinTabControl1_DragDrop(object sender, DragEventArgs e)
-        {
+    
 
+        private void 复制ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetSelectedTabrisControlContainer()?.ButtonPannel.PasteToclipboard();
+        }
+
+        private void 粘贴ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetSelectedTabrisControlContainer()?.ButtonPannel.CopyFromclipboard();
+        }
+
+        private void codemirrowMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var seleted = GetSelectedTabrisControlContainer();
+            if (seleted == null )
+            {
+                return;
+            }
+
+            if (seleted.ButtonPannel.HaveSelected())
+            {
+                复制ToolStripMenuItem.Text = "复制";
+            }
+            else
+            {
+                复制ToolStripMenuItem.Text = "复制全部";
+            }
+
+            if (string.IsNullOrEmpty(Clipboard.GetText()))
+            {
+                粘贴ToolStripMenuItem.Enabled = false;
+            }
+
+        }
+
+        private TabrisControlContainer GetSelectedTabrisControlContainer()
+        {
+            try
+            {
+                if (this.dSkinTabBar1.Items.Count == 1) return null;
+                var selectItem = this.dSkinTabBar1.Items[this.dSkinTabBar1.SelectedIndex];
+                return selectItem.Tag as TabrisControlContainer;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private void codemirrowMenu_Closed(object sender, ToolStripDropDownClosedEventArgs e)
+        {
+            复制ToolStripMenuItem.Text = "复制";
+            粘贴ToolStripMenuItem.Enabled = true;
         }
     }
 

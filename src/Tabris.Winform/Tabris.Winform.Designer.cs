@@ -35,6 +35,7 @@
             this.dSkinPanel4 = new DSkin.Controls.DSkinPanel();
             this.dSkinTabControl1 = new DSkin.Controls.DSkinTabControl();
             this.dSkinPanel3 = new DSkin.Controls.DSkinPanel();
+            this.SaveButton = new DSkin.Controls.DSkinButton();
             this.bottomPannel = new DSkin.Controls.DSkinPanel();
             this.dSkinLabel1 = new DSkin.Controls.DSkinLabel();
             this.runtimeTimeout = new DSkin.Controls.DSkinTextBox();
@@ -44,13 +45,16 @@
             this.btnExcutor = new DSkin.Controls.DSkinButton();
             this.dSkinTabBar1 = new DSkin.Controls.DSkinTabBar();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.SaveButton = new DSkin.Controls.DSkinButton();
+            this.codemirrowMenu = new DSkin.Controls.DSkinContextMenuStrip();
+            this.复制ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.粘贴ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dSkinPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logList)).BeginInit();
             this.dSkinPanel2.SuspendLayout();
             this.dSkinPanel4.SuspendLayout();
             this.dSkinPanel3.SuspendLayout();
             this.bottomPannel.SuspendLayout();
+            this.codemirrowMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // dSkinPanel1
@@ -133,7 +137,6 @@
             this.dSkinTabControl1.UpdownBtnArrowPressColor = System.Drawing.Color.Gray;
             this.dSkinTabControl1.UpdownBtnBackColor = System.Drawing.Color.White;
             this.dSkinTabControl1.UpdownBtnBorderColor = System.Drawing.Color.Black;
-            this.dSkinTabControl1.DragDrop += new System.Windows.Forms.DragEventHandler(this.dSkinTabControl1_DragDrop);
             // 
             // dSkinPanel3
             // 
@@ -150,6 +153,30 @@
             this.dSkinPanel3.Size = new System.Drawing.Size(164, 411);
             this.dSkinPanel3.TabIndex = 1;
             this.dSkinPanel3.Text = "dSkinPanel3";
+            // 
+            // SaveButton
+            // 
+            this.SaveButton.AdaptImage = true;
+            this.SaveButton.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(186)))), ((int)(((byte)(233)))));
+            this.SaveButton.ButtonBorderColor = System.Drawing.Color.Gray;
+            this.SaveButton.ButtonBorderWidth = 1;
+            this.SaveButton.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.SaveButton.HoverColor = System.Drawing.Color.Empty;
+            this.SaveButton.HoverImage = null;
+            this.SaveButton.IsPureColor = false;
+            this.SaveButton.Location = new System.Drawing.Point(30, 213);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.NormalImage = null;
+            this.SaveButton.PressColor = System.Drawing.Color.Empty;
+            this.SaveButton.PressedImage = null;
+            this.SaveButton.Radius = 10;
+            this.SaveButton.ShowButtonBorder = true;
+            this.SaveButton.Size = new System.Drawing.Size(100, 40);
+            this.SaveButton.TabIndex = 7;
+            this.SaveButton.Text = "Save To File (Ctrl+S)";
+            this.SaveButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.SaveButton.TextPadding = 0;
+            this.SaveButton.Visible = false;
             // 
             // bottomPannel
             // 
@@ -308,29 +335,50 @@
             this.dSkinTabBar1.Text = "dSkinTabBar1";
             this.dSkinTabBar1.SizeChanged += new System.EventHandler(this.dSkinTabBar1_SizeChanged);
             // 
-            // SaveButton
+            // codemirrowMenu
             // 
-            this.SaveButton.AdaptImage = true;
-            this.SaveButton.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(186)))), ((int)(((byte)(233)))));
-            this.SaveButton.ButtonBorderColor = System.Drawing.Color.Gray;
-            this.SaveButton.ButtonBorderWidth = 1;
-            this.SaveButton.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.SaveButton.HoverColor = System.Drawing.Color.Empty;
-            this.SaveButton.HoverImage = null;
-            this.SaveButton.IsPureColor = false;
-            this.SaveButton.Location = new System.Drawing.Point(30, 213);
-            this.SaveButton.Name = "SaveButton";
-            this.SaveButton.NormalImage = null;
-            this.SaveButton.PressColor = System.Drawing.Color.Empty;
-            this.SaveButton.PressedImage = null;
-            this.SaveButton.Radius = 10;
-            this.SaveButton.ShowButtonBorder = true;
-            this.SaveButton.Size = new System.Drawing.Size(100, 40);
-            this.SaveButton.TabIndex = 7;
-            this.SaveButton.Text = "Save To File (Ctrl+S)";
-            this.SaveButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.SaveButton.TextPadding = 0;
-            this.SaveButton.Visible = false;
+            this.codemirrowMenu.Arrow = System.Drawing.Color.Black;
+            this.codemirrowMenu.Back = System.Drawing.Color.White;
+            this.codemirrowMenu.BackRadius = 4;
+            this.codemirrowMenu.Base = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(200)))), ((int)(((byte)(254)))));
+            this.codemirrowMenu.DropDownImageSeparator = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(197)))), ((int)(((byte)(197)))));
+            this.codemirrowMenu.Fore = System.Drawing.Color.Black;
+            this.codemirrowMenu.HoverFore = System.Drawing.Color.White;
+            this.codemirrowMenu.ItemAnamorphosis = true;
+            this.codemirrowMenu.ItemBorder = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.codemirrowMenu.ItemBorderShow = true;
+            this.codemirrowMenu.ItemHover = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.codemirrowMenu.ItemPressed = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.codemirrowMenu.ItemRadius = 4;
+            this.codemirrowMenu.ItemRadiusStyle = DSkin.Common.RoundStyle.All;
+            this.codemirrowMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.复制ToolStripMenuItem,
+            this.粘贴ToolStripMenuItem});
+            this.codemirrowMenu.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.codemirrowMenu.Name = "codemirrowMenu";
+            this.codemirrowMenu.RadiusStyle = DSkin.Common.RoundStyle.All;
+            this.codemirrowMenu.Size = new System.Drawing.Size(153, 70);
+            this.codemirrowMenu.SkinAllColor = true;
+            this.codemirrowMenu.TitleAnamorphosis = true;
+            this.codemirrowMenu.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
+            this.codemirrowMenu.TitleRadius = 4;
+            this.codemirrowMenu.TitleRadiusStyle = DSkin.Common.RoundStyle.All;
+            this.codemirrowMenu.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.codemirrowMenu_Closed);
+            this.codemirrowMenu.Opening += new System.ComponentModel.CancelEventHandler(this.codemirrowMenu_Opening);
+            // 
+            // 复制ToolStripMenuItem
+            // 
+            this.复制ToolStripMenuItem.Name = "复制ToolStripMenuItem";
+            this.复制ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.复制ToolStripMenuItem.Text = "复制";
+            this.复制ToolStripMenuItem.Click += new System.EventHandler(this.复制ToolStripMenuItem_Click);
+            // 
+            // 粘贴ToolStripMenuItem
+            // 
+            this.粘贴ToolStripMenuItem.Name = "粘贴ToolStripMenuItem";
+            this.粘贴ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.粘贴ToolStripMenuItem.Text = "粘贴";
+            this.粘贴ToolStripMenuItem.Click += new System.EventHandler(this.粘贴ToolStripMenuItem_Click);
             // 
             // TabrisWinform
             // 
@@ -358,6 +406,7 @@
             this.dSkinPanel3.ResumeLayout(false);
             this.bottomPannel.ResumeLayout(false);
             this.bottomPannel.PerformLayout();
+            this.codemirrowMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -380,6 +429,9 @@
         private DSkin.Controls.DSkinPanel bottomPannel;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private DSkin.Controls.DSkinButton SaveButton;
+        private DSkin.Controls.DSkinContextMenuStrip codemirrowMenu;
+        private System.Windows.Forms.ToolStripMenuItem 复制ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 粘贴ToolStripMenuItem;
     }
 }
 

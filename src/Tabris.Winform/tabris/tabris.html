@@ -108,7 +108,21 @@
         }
 
         function setCode(code) {
-            window.cmEditor.editor.setValue(code);
+            window.cmEditor.editor.setValue(Base64.decode(code));
+        }
+
+        function insertCode(code) {
+            window.cmEditor.editor.replaceRange(Base64.decode(code),
+                CodeMirror.Pos(window.cmEditor.editor.getCursor().line, window.cmEditor.editor.getCursor().ch));
+        }
+
+        function getPasteCode() {
+            var selected = getSelectedCode();
+            if (selected && selected.length) {
+                return selected;
+            } else {
+                return getCode();
+            }
         }
     </script>
 </head>

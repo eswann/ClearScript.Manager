@@ -74,6 +74,32 @@ namespace Tabris.Winform.Control
 
         }
 
+        public void CopyFromclipboard()
+        {
+            var getClipData = Clipboard.GetText();
+            if (!string.IsNullOrEmpty(getClipData))
+            {
+                var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(getClipData);
+                var getClipDatabase64 = Convert.ToBase64String(plainTextBytes);
+                this.codemirrow.InvokeJS("insertCode(\"" + getClipDatabase64 + "\")");
+            }
+        }
+
+        public void PasteToclipboard()
+        {
+            var selectedCode = this.codemirrow.InvokeJS("getPasteCode()").ToString();
+            if (!string.IsNullOrEmpty(selectedCode))
+            {
+                Clipboard.SetText(selectedCode);
+            }
+        }
+
+        public bool HaveSelected()
+        {
+            var selectedCode = this.codemirrow.InvokeJS("getSelectedCode()").ToString();
+            return !string.IsNullOrEmpty(selectedCode);
+        }
+
       
         private void initEvent()
         {
@@ -175,10 +201,7 @@ namespace Tabris.Winform.Control
             try
             {
                 var code = this.codemirrow.InvokeJS("getCode()").ToString();
-                if (string.IsNullOrEmpty(code))
-                {
-                    return true;
-                }
+               
 
 
                 if (!string.IsNullOrEmpty(fileOutPath))
