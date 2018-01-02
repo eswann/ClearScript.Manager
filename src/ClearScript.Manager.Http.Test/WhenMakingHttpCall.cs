@@ -9,6 +9,7 @@ using Microsoft.ClearScript;
 using NUnit.Framework;
 using Should;
 using System.Threading.Tasks;
+using JavaScript.Manager.Sql.AntOrm;
 
 namespace ClearScript.Manager.Http.Test
 {
@@ -77,7 +78,7 @@ namespace ClearScript.Manager.Http.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
 
-            SqlPackageHelpers.RegisterPackage(manager.RequireManager);
+            SqlPackageHelpers.RegisterPackage(manager.RequireManager,new AntOrmDbExecutor());
 
             manager.AddConsoleReference = true;
             var options = new ExecutionOptions();
