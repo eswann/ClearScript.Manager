@@ -143,6 +143,9 @@
     <Content Include="Resources\ChromeRight.png" />
     <Content Include="Resources\ChromeSelect.png" />
     <None Include="Resources\JSS.png" />
+    <Content Include="tabris\resources\codemirror-extension\addon\util\formatting.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="tabris\tabris.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

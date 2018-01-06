@@ -48,6 +48,7 @@
             this.codemirrowMenu = new DSkin.Controls.DSkinContextMenuStrip();
             this.复制ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.粘贴ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dSkinPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logList)).BeginInit();
             this.dSkinPanel2.SuspendLayout();
@@ -216,7 +217,7 @@
             this.runtimeTimeout.TabIndex = 4;
             this.runtimeTimeout.TransparencyKey = System.Drawing.Color.Empty;
             this.runtimeTimeout.Visible = false;
-            this.runtimeTimeout.WaterFont = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.runtimeTimeout.WaterFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.runtimeTimeout.WaterText = "unlimited default";
             this.runtimeTimeout.WaterTextOffset = new System.Drawing.Point(5, 5);
             // 
@@ -353,11 +354,12 @@
             this.codemirrowMenu.ItemRadiusStyle = DSkin.Common.RoundStyle.All;
             this.codemirrowMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.复制ToolStripMenuItem,
-            this.粘贴ToolStripMenuItem});
+            this.粘贴ToolStripMenuItem,
+            this.删除ToolStripMenuItem});
             this.codemirrowMenu.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
             this.codemirrowMenu.Name = "codemirrowMenu";
             this.codemirrowMenu.RadiusStyle = DSkin.Common.RoundStyle.All;
-            this.codemirrowMenu.Size = new System.Drawing.Size(153, 70);
+            this.codemirrowMenu.Size = new System.Drawing.Size(153, 92);
             this.codemirrowMenu.SkinAllColor = true;
             this.codemirrowMenu.TitleAnamorphosis = true;
             this.codemirrowMenu.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
@@ -379,6 +381,13 @@
             this.粘贴ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.粘贴ToolStripMenuItem.Text = "粘贴";
             this.粘贴ToolStripMenuItem.Click += new System.EventHandler(this.粘贴ToolStripMenuItem_Click);
+            // 
+            // 删除ToolStripMenuItem
+            // 
+            this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.删除ToolStripMenuItem.Text = "删除";
+            this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
             // 
             // TabrisWinform
             // 
@@ -432,6 +441,7 @@
         private DSkin.Controls.DSkinContextMenuStrip codemirrowMenu;
         private System.Windows.Forms.ToolStripMenuItem 复制ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 粘贴ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem;
     }
 }
 

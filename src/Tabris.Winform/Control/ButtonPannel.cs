@@ -74,6 +74,9 @@ namespace Tabris.Winform.Control
 
         }
 
+        /// <summary>
+        /// 复制选中到粘贴板
+        /// </summary>
         public void CopyFromclipboard()
         {
             var getClipData = Clipboard.GetText();
@@ -85,6 +88,9 @@ namespace Tabris.Winform.Control
             }
         }
 
+        /// <summary>
+        /// 从粘贴板粘贴内容到编辑器
+        /// </summary>
         public void PasteToclipboard()
         {
             var selectedCode = this.codemirrow.InvokeJS("getPasteCode()").ToString();
@@ -94,6 +100,18 @@ namespace Tabris.Winform.Control
             }
         }
 
+        /// <summary>
+        /// 删除选中
+        /// </summary>
+        public void DeleteSeletectd()
+        {
+            this.codemirrow.InvokeJS("window.cmEditor.editor.replaceSelection('')");
+        }
+
+        /// <summary>
+        /// 是否存在有选中
+        /// </summary>
+        /// <returns></returns>
         public bool HaveSelected()
         {
             var selectedCode = this.codemirrow.InvokeJS("getSelectedCode()").ToString();
