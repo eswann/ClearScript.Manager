@@ -170,6 +170,12 @@
     <Content Include="tabris\resources\codemirror\addon\lint\lint.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="tabris\resources\codemirror\addon\scroll\simplescrollbars.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\scroll\simplescrollbars.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="tabris\resources\codemirror\addon\scroll\annotatescrollbar.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -180,6 +186,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="tabris\resources\codemirror\addon\search\jump-to-line.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\search\match-highlighter.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="tabris\resources\codemirror\addon\search\searchcursor.js">
