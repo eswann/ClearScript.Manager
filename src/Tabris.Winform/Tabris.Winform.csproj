@@ -152,6 +152,24 @@
     <Content Include="tabris\resources\codemirror\addon\dialog\dialog.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="tabris\resources\codemirror\addon\lint\javascript-lint.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\lint\json-lint.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\lint\jshint.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\lint\jsonlint.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\lint\lint.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\lint\lint.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="tabris\resources\codemirror\addon\scroll\annotatescrollbar.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -51,6 +51,14 @@
     <script src="resources/codemirror/addon/search/search.js"></script>
     <script src="resources/codemirror/addon/search/searchcursor.js"></script>
 
+    <link href="resources/codemirror/addon/lint/lint.css" rel="stylesheet" />
+    <script src="resources/codemirror/addon/lint/jshint.js"></script>
+    <script src="resources/codemirror/addon/lint/jsonlint.js"></script>
+    <script src="resources/codemirror/addon/lint/lint.js"></script>
+    <script src="resources/codemirror/addon/lint/javascript-lint.js"></script>
+    <script src="resources/codemirror/addon/lint/json-lint.js"></script>
+  
+
     <!--<link rel="stylesheet" href="resources/codemirror-extension/addon/hover/text-hover.css">
     <script src="resources/codemirror-extension/addon/hover/text-hover.js"></script>
     <script src="resources/codemirror-javascript/addon/hint/tern/tern-hover.js"></script>-->
@@ -95,13 +103,13 @@
                             }
                         }
                     },
-                    gutters: ["CodeMirror-linenumbers"],
+                    gutters: ["CodeMirror-lint-markers"],
                     textHover: { delay: 300 },
                     ternWith: { plugins: { tabris: {} } },
-                  
+                    lint: true
                 });
 
-         
+
             $(document).keydown(function (event) {
                 //Ctrl +V
                 if (event.ctrlKey && event.keyCode == 86) {
