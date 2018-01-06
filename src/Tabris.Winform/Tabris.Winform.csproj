@@ -146,6 +146,33 @@
     <Content Include="tabris\resources\codemirror-extension\addon\util\formatting.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="tabris\resources\codemirror\addon\dialog\dialog.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\dialog\dialog.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\scroll\annotatescrollbar.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\search\dialog.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\search\matchesonscrollbar.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\search\jump-to-line.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\search\searchcursor.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\search\search.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\theme\monokai.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="tabris\tabris.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

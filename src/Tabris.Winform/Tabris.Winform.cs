@@ -165,6 +165,19 @@ namespace Tabris.Winform
         {
             GetSelectedTabrisControlContainer()?.ButtonPannel.DeleteSeletectd();
         }
+        private void 格式化ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetSelectedTabrisControlContainer()?.ButtonPannel.FormatSeletectd();
+        }
+
+        private void 注释ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetSelectedTabrisControlContainer()?.ButtonPannel.Annotation(true);
+        }
+        private void 反注释ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetSelectedTabrisControlContainer()?.ButtonPannel.Annotation(false);
+        }
         private void codemirrowMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var seleted = GetSelectedTabrisControlContainer();
@@ -177,11 +190,13 @@ namespace Tabris.Winform
             {
                 复制ToolStripMenuItem.Text = "复制";
                 删除ToolStripMenuItem.Visible = true;
+                格式化ToolStripMenuItem.Visible = true;
             }
             else
             {
                 复制ToolStripMenuItem.Text = "复制全部";
                 删除ToolStripMenuItem.Visible = false;
+                格式化ToolStripMenuItem.Visible = false;
             }
 
             if (string.IsNullOrEmpty(Clipboard.GetText()))
@@ -211,7 +226,7 @@ namespace Tabris.Winform
             粘贴ToolStripMenuItem.Enabled = true;
         }
 
-      
+       
     }
 
 

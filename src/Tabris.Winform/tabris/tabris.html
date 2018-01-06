@@ -41,6 +41,16 @@
     <script src="resources/codemirror/addon/hint/javascript/tabris-templates.js"></script>
     <script src="resources/codemirror/addon/hint/context-autocomplete-hint.js"></script>
     <script src="resources/codemirror-extension/addon/util/formatting.js"></script>
+
+    <link href="resources/codemirror/addon/dialog/dialog.css" rel="stylesheet" />
+    <script src="resources/codemirror/addon/dialog/dialog.js"></script>
+    <link href="resources/codemirror/addon/search/dialog.css" rel="stylesheet" />
+    <script src="resources/codemirror/addon/scroll/annotatescrollbar.js"></script>
+    <script src="resources/codemirror/addon/search/jump-to-line.js"></script>
+    <script src="resources/codemirror/addon/search/matchesonscrollbar.js"></script>
+    <script src="resources/codemirror/addon/search/search.js"></script>
+    <script src="resources/codemirror/addon/search/searchcursor.js"></script>
+
     <!--<link rel="stylesheet" href="resources/codemirror-extension/addon/hover/text-hover.css">
     <script src="resources/codemirror-extension/addon/hover/text-hover.js"></script>
     <script src="resources/codemirror-javascript/addon/hint/tern/tern-hover.js"></script>-->
@@ -149,7 +159,6 @@
 
         function commentSelection(isComment) {
             var range = getSelectedRange();
-          
             window.cmEditor.editor.commentRange(isComment, range.from, range.to);
         }
     </script>

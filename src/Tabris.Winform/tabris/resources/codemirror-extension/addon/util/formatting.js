@@ -49,12 +49,17 @@
 
                 if (from.ch == to.ch) {
                     to = { line: to.line, ch: to.ch, xRel: to.xRel };
-                    var allWorldLength = cm.getLine(to.line).length;
-                    var length = allWorldLength - cm.getLine(to.line).trim().length;
+                    var line = cm.getLine(to.line);
+                    var startIndex = 0;
+                    while (line[startIndex] === '') {
+                        startIndex++;
+                    }
+                    var allWorldLength = line.length;
+                    var length = allWorldLength - line.substr(startIndex).length;
                     if (isComment) {
                         from.ch = length;
                     } else {
-                        from.ch = (length - 1) < 0 ? 0 : (length - 1);
+                        from.ch = (length - 1) <= 0 ? 0 : (length - 1);
                         to.ch = allWorldLength;
                     }
                    

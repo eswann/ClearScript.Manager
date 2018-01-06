@@ -109,6 +109,21 @@ namespace Tabris.Winform.Control
         }
 
         /// <summary>
+        /// 格式化选中
+        /// </summary>
+        public void FormatSeletectd()
+        {
+            this.codemirrow.InvokeJS("autoFormatSelection()");
+        }
+
+        /// <summary>
+        /// 注释
+        /// </summary>
+        public void Annotation(bool flag)
+        {
+            this.codemirrow.InvokeJS(flag?"commentSelection(true)": "commentSelection(false)");
+        }
+        /// <summary>
         /// 是否存在有选中
         /// </summary>
         /// <returns></returns>

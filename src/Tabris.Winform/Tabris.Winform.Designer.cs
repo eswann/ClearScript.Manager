@@ -49,6 +49,9 @@
             this.复制ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.粘贴ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.格式化ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.注释ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.反注释ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dSkinPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logList)).BeginInit();
             this.dSkinPanel2.SuspendLayout();
@@ -355,11 +358,14 @@
             this.codemirrowMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.复制ToolStripMenuItem,
             this.粘贴ToolStripMenuItem,
-            this.删除ToolStripMenuItem});
+            this.删除ToolStripMenuItem,
+            this.格式化ToolStripMenuItem,
+            this.注释ToolStripMenuItem,
+            this.反注释ToolStripMenuItem});
             this.codemirrowMenu.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
             this.codemirrowMenu.Name = "codemirrowMenu";
             this.codemirrowMenu.RadiusStyle = DSkin.Common.RoundStyle.All;
-            this.codemirrowMenu.Size = new System.Drawing.Size(153, 92);
+            this.codemirrowMenu.Size = new System.Drawing.Size(153, 158);
             this.codemirrowMenu.SkinAllColor = true;
             this.codemirrowMenu.TitleAnamorphosis = true;
             this.codemirrowMenu.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
@@ -388,6 +394,27 @@
             this.删除ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.删除ToolStripMenuItem.Text = "删除";
             this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
+            // 
+            // 格式化ToolStripMenuItem
+            // 
+            this.格式化ToolStripMenuItem.Name = "格式化ToolStripMenuItem";
+            this.格式化ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.格式化ToolStripMenuItem.Text = "格式化";
+            this.格式化ToolStripMenuItem.Click += new System.EventHandler(this.格式化ToolStripMenuItem_Click);
+            // 
+            // 注释ToolStripMenuItem
+            // 
+            this.注释ToolStripMenuItem.Name = "注释ToolStripMenuItem";
+            this.注释ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.注释ToolStripMenuItem.Text = "注释";
+            this.注释ToolStripMenuItem.Click += new System.EventHandler(this.注释ToolStripMenuItem_Click);
+            // 
+            // 反注释ToolStripMenuItem
+            // 
+            this.反注释ToolStripMenuItem.Name = "反注释ToolStripMenuItem";
+            this.反注释ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.反注释ToolStripMenuItem.Text = "反注释";
+            this.反注释ToolStripMenuItem.Click += new System.EventHandler(this.反注释ToolStripMenuItem_Click);
             // 
             // TabrisWinform
             // 
@@ -442,6 +469,9 @@
         private System.Windows.Forms.ToolStripMenuItem 复制ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 粘贴ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 格式化ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 注释ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 反注释ToolStripMenuItem;
     }
 }
 
