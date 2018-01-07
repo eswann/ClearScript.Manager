@@ -12,7 +12,7 @@ tabrisFactory.create = function (type, options) {
     type = type.trim().toLowerCase();
     if (type === 'sql') {
         if (!options.name || !options.type) return undefined;
-        return javascript_sql_factory.create(options.name, options.type);
+        return javascript_sql_factory.create(options);
     }else if (type === 'http') {
         return javascript_request_factory.create(options);
     } else if (type === 'log') {

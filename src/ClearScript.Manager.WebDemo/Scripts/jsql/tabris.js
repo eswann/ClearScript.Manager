@@ -244,6 +244,10 @@
                     "connection": {
                         "!type": "string",
                         "!doc": "The connection string of db."
+                    },
+                    "timeout": {
+                        "!type": "number",
+                        "!doc": "The timeout of db excutor."
                     }
                 },
                 "HTTPProperties": {
@@ -279,31 +283,31 @@
                     "!doc": "SQL Function .",
                     "prototype": {
                         "exec": {
-                            "!type": "fn(sql: string, options?: ?) -> !this",
+                            "!type": "fn(sql: string, options?: ?) -> ?",
                             "!doc": "Execute sql.Automatically find the type of execution"
                         },
                         "insertWithIdentity": {
-                            "!type": "fn(sql: string, options?: ?) -> !this",
+                            "!type": "fn(sql: string, options?: ?) -> string",
                             "!doc": "Execute insertWithIdentity sql"
                         },
                         "insert": {
-                            "!type": "fn(sql: string, options?: ?) -> !this",
+                            "!type": "fn(sql: string, options?: ?) -> number",
                             "!doc": "Execute insert sql"
                         },
                         "update": {
-                            "!type": "fn(sql: string, options?: ?) -> !this",
+                            "!type": "fn(sql: string, options?: ?) -> number",
                             "!doc": "Execute update sql"
                         },
                         "delete": {
-                            "!type": "fn(sql: string, options?: ?) -> !this",
+                            "!type": "fn(sql: string, options?: ?) -> number",
                             "!doc": "Execute delete sql"
                         },
                         "query": {
-                            "!type": "fn(sql: string, options?: ?) -> !this",
+                            "!type": "fn(sql: string, options?: ?) -> ?",
                             "!doc": "Execute query sql"
                         },
                         "useTransaction": {
-                            "!type": "fn(func: fn(), options?: ?) -> !this",
+                            "!type": "fn(func: fn(), options?: ?) -> ?",
                             "!doc": "Execute sql in transaction"
                         }
                     }
@@ -314,11 +318,11 @@
                     "!doc": "HTTP Function .",
                     "prototype": {
                         "getString": {
-                            "!type": "fn(options?: ?) -> !this",
+                            "!type": "fn(options?: ?) -> string",
                             "!doc": "Execute httpr.request, return result as string"
                         },
                         "getJson": {
-                            "!type": "fn(options?: ?) -> !this",
+                            "!type": "fn(options?: ?) -> ?",
                             "!doc": "Execute httpr.request, return result as json object"
                         }
                     }
@@ -329,19 +333,19 @@
                     "!doc": "LOG Function .",
                     "prototype": {
                         "info": {
-                            "!type": "fn(msg: string) -> !this",
+                            "!type": "fn(msg: string) -> ?",
                             "!doc": "Execute info log"
                         },
                         "warn": {
-                            "!type": "fn(msg: string) -> !this",
+                            "!type": "fn(msg: string) -> ?",
                             "!doc": "Execute warn log"
                         },
                         "error": {
-                            "!type": "fn(msg: string) -> !this",
+                            "!type": "fn(msg: string) -> ?",
                             "!doc": "Execute warn log"
                         },
                         "debug": {
-                            "!type": "fn(msg: string) -> !this",
+                            "!type": "fn(msg: string) -> ?",
                             "!doc": "Execute warn log"
                         }
                     }

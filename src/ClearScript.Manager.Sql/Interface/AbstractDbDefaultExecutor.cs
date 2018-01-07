@@ -6,18 +6,15 @@
 // <summary></summary>
 //-----------------------------------------------------------------------
 
+using JavaScript.Manager.Extensions;
 using System.Data;
 using System.Dynamic;
 using System.Transactions;
-using JavaScript.Manager.Extensions;
 
 namespace JavaScript.Manager.Sql.Interface
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
 
     /// <summary>
@@ -26,9 +23,9 @@ namespace JavaScript.Manager.Sql.Interface
     public abstract class AbstractDbDefaultExecutor : IDbExecutor
     {
         public abstract void Transaction(dynamic callback, dynamic options);
-        public abstract DataTable ExecutorQuery(dynamic options);
-        public abstract int ExecutorNonQuery(dynamic options);
-        public abstract string ExecutorScalar(dynamic options);
+        public abstract DataTable ExecutorQuery(string sql,dynamic options);
+        public abstract int ExecutorNonQuery(string sql, dynamic options);
+        public abstract string ExecutorScalar(string sql, dynamic options);
 
         public void UseTransaction(dynamic callback, dynamic options)
         {
@@ -117,9 +114,9 @@ namespace JavaScript.Manager.Sql.Interface
             }
         }
 
-        public List<List<object>> DbExecutorQuery(dynamic options)
+        public List<List<object>> DbExecutorQuery(string sql, dynamic options)
         {
-            var table = this.ExecutorQuery(options);
+            var table = this.ExecutorQuery(sql,options);
             if (table == null)
             {
                 return new List<List<object>>();
@@ -145,14 +142,14 @@ namespace JavaScript.Manager.Sql.Interface
             return obj;
         }
 
-        public int DbExecutorNonQuery(dynamic options)
+        public int DbExecutorNonQuery(string sql, dynamic options)
         {
-            return this.ExecutorNonQuery(options);
+            return this.ExecutorNonQuery(sql,options);
         }
 
-        public string DbExecutorScalar(dynamic options)
+        public string DbExecutorScalar(string sql, dynamic options)
         {
-            return this.ExecutorScalar(options);
+            return this.ExecutorScalar(sql, options);
         }
     }
 }

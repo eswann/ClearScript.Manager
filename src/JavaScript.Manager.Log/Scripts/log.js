@@ -2,7 +2,7 @@
 
 function logFactory() {
 
-   
+
 }
 
 logFactory.create = function (options) {
@@ -53,39 +53,41 @@ LogContext.prototype.parseV8OrIE = function (error) {
 }
 
 LogContext.prototype.info = function (err) {
-    if (typeof err === 'string') {
-        javascript_log_factory_logExecutor.Info(err, '');
-    } else {
+    if (err instanceof Error) {
         javascript_log_factory_logExecutor.Info(err.message, this.getTrace(err));
+    }
+    else {
+        javascript_log_factory_logExecutor.Info(JSON.stringify(err), '');
     }
 }
 
 LogContext.prototype.warn = function (err) {
-    if (typeof err === 'string') {
-        javascript_log_factory_logExecutor.Warn(err, '');
-    } else {
+    if (err instanceof Error) {
         javascript_log_factory_logExecutor.Warn(err.message, this.getTrace(err));
+    }
+    else {
+        javascript_log_factory_logExecutor.Warn(JSON.stringify(err), '');
     }
 }
 
 LogContext.prototype.error = function (err) {
-    if (typeof err === 'string') {
-        javascript_log_factory_logExecutor.Error(err, '');
-    } else {
+    if (err instanceof Error) {
         javascript_log_factory_logExecutor.Error(err.message, this.getTrace(err));
+    }
+    else{
+        javascript_log_factory_logExecutor.Error(JSON.stringify(err), '');
     }
 }
 
 LogContext.prototype.debug = function (err) {
-    
-    if (typeof err === 'string') {
-        javascript_log_factory_logExecutor.Debug(err, '');
-    } else {
+    if (err instanceof Error) {
         javascript_log_factory_logExecutor.Debug(err.message, this.getTrace(err));
     }
+    else {
+        javascript_log_factory_logExecutor.Debug(JSON.stringify(err), '');
+    }
 }
-LogContext.prototype.getTrace= function (err)
-{
+LogContext.prototype.getTrace = function (err) {
     if (this.options && this.options.trace) {
         try {
             var tracew = JSON.stringify(this.parseV8OrIE(err));
@@ -96,7 +98,7 @@ LogContext.prototype.getTrace= function (err)
     } else {
         return '';
     }
-    
+
 }
 
 logFactory.LogContext = LogContext;

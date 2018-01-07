@@ -5,21 +5,33 @@ function dbFactory() {
    
 }
 
-dbFactory.create = function (mapping, type) {
-    return new dbFactory.DbContext(mapping, type);
+dbFactory.create = function (option) {
+    return new dbFactory.DbContext(option);
 }
 
-function DbContext(mapping,type) {
-    this.options = {
-        "connectionString": mapping,
-        "DbType": type || "sqlserver"
-    };
+function DbContext(option) {
+    this.options = option;
 }
+
+
+DbContext.prototype.exec = function (sql,options) {
+    var sqlType = sql.trim().toLowerCase().slice(0, 6);
+    if (sqlType === 'insert') {
+        return this.insert(sql, options);
+    } else if (sqlType === 'update') {
+        return this.update(sql,options);
+    } else if (sqlType === 'delete') {
+        return this.delete(sql, options);
+    } else {
+        return this.query(sql, options);
+    }
+}
+
 
 DbContext.prototype.extend = (function () {
-    var isObjFunc = function(name) {
+    var isObjFunc = function (name) {
         var toString = Object.prototype.toString;
-        return function() {
+        return function () {
             return toString.call(arguments[0]) === '[object ' + name + ']';
         }
     }
@@ -55,53 +67,28 @@ DbContext.prototype.extend = (function () {
 })();
 
 
-DbContext.prototype.exec = function (sql,options) {
-    var sqlType = sql.trim().toLowerCase().slice(0, 6);
-    if (sqlType === 'insert') {
-        return this.insert(sql, options);
-    } else if (sqlType === 'update') {
-        return this.update(sql,options);
-    } else if (sqlType === 'delete') {
-        return this.delete(sql, options);
-    } else {
-        return this.query(sql, options);
-    }
+DbContext.prototype.insert = function (sql, option) {
+    return javascript_sql_factory_sqlExecutor.DbExecutorNonQuery(sql, this.extend({ param: option}, this.options));
 }
 
-DbContext.prototype.newOption = function (sql, options) {
-    var me = this;
-    var pp = {
-        "connectionString": me.options.connectionString,
-        "DbType": me.options.DbType,
-        "sql": sql
-    };
-    if (!options) {
-        return pp;
-    }
-    return this.extend(pp, options);
-}
-DbContext.prototype.insert = function (sql, options) {
-    return javascript_sql_factory_sqlExecutor.DbExecutorNonQuery(this.newOption(sql, options));
+DbContext.prototype.update = function (sql, option) {
+    return javascript_sql_factory_sqlExecutor.DbExecutorNonQuery(sql, this.extend({ param: option }, this.options));
 }
 
-DbContext.prototype.update = function (sql, options) {
-    return javascript_sql_factory_sqlExecutor.DbExecutorNonQuery(this.newOption(sql, options));
+DbContext.prototype.delete = function (sql, option) {
+    return javascript_sql_factory_sqlExecutor.DbExecutorNonQuery(sql, this.extend({ param: option }, this.options));
 }
 
-DbContext.prototype.delete = function (sql, options) {
-    return javascript_sql_factory_sqlExecutor.DbExecutorNonQuery(this.newOption(sql, options));
+DbContext.prototype.insertWithIdentity = function (sql, option) {
+    return javascript_sql_factory_sqlExecutor.DbExecutorScalar(sql, this.extend({ param: option }, this.options));
 }
 
-DbContext.prototype.insertWithIdentity = function (sql, options) {
-    return javascript_sql_factory_sqlExecutor.DbExecutorScalar(this.newOption(sql, options));
-}
-
-DbContext.prototype.query = function (sql, options) {
+DbContext.prototype.query = function (sql, option) {
     var List = xHost.type('System.Collections.Generic.List');
     var objList = xHost.type('System.Collections.Generic.List');
     var obj = xHost.type('System.Object');
     var week = xHost.newObj(List(objList(obj)));
-    week = javascript_sql_factory_sqlExecutor.DbExecutorQuery(this.newOption(sql, options));
+    week = javascript_sql_factory_sqlExecutor.DbExecutorQuery(sql, this.extend({ param: option }, this.options));
     var first = week[0][0].key;
     //Console.WriteLine(first);
     if (first == 'null_key_') {
@@ -120,9 +107,9 @@ DbContext.prototype.query = function (sql, options) {
     return ary;
 }
 
-DbContext.prototype.useTransaction = function (callback,options) {
+DbContext.prototype.useTransaction = function (callback,option) {
     if (!callback) return;
-    javascript_sql_factory_sqlExecutor.UseTransaction(callback, options);
+    javascript_sql_factory_sqlExecutor.UseTransaction(callback, option);
 }
 dbFactory.DbContext = DbContext;
 this.exports = dbFactory;

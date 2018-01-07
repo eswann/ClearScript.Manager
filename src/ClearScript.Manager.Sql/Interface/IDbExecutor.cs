@@ -9,9 +9,6 @@ namespace JavaScript.Manager.Sql.Interface
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
 
     /// <summary>
@@ -29,22 +26,25 @@ namespace JavaScript.Manager.Sql.Interface
         /// <summary>
         /// 执行查询sql
         /// </summary>
+        /// <param name="sql"></param>
         /// <param name="options"></param>
         /// <returns>返回db items</returns>
-        List<List<Object>> DbExecutorQuery(dynamic options);
+        List<List<Object>> DbExecutorQuery(string sql,dynamic options);
 
         /// <summary>
         /// 执行insert update delete
         /// </summary>
+        /// <param name="sql"></param>
         /// <param name="options"></param>
         /// <returns>返回影响的条数</returns>
-        int DbExecutorNonQuery(dynamic options);
+        int DbExecutorNonQuery(string sql, dynamic options);
 
         /// <summary>
         /// 执行要拿到返回值 查询 
         /// </summary>
+        /// <param name="sql"></param>
         /// <param name="options"></param>
         /// <returns>能拿到返回值</returns>
-        string DbExecutorScalar(dynamic options);
+        string DbExecutorScalar(string sql, dynamic options);
     }
 }

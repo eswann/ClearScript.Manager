@@ -30,9 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AntData.ORM, Version=1.2.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AntData.ORM.1.2.9\lib\AntData.ORM.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="AntData.ORM, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AntData.ORM.1.3.1\lib\AntData.ORM.dll</HintPath>
     </Reference>
     <Reference Include="ClearScript">
       <HintPath>..\packages\ClearScript.Installer.1.0.1.31662\lib\net45\ClearScript.dll</HintPath>
@@ -70,6 +69,10 @@
     <ProjectReference Include="..\JavaScript.Manager.Log\JavaScript.Manager.Log.csproj">
       <Project>{d6d9ccd8-9a9b-4f48-8e82-51f28b35a79a}</Project>
       <Name>JavaScript.Manager.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JavaScript.Manager.Sql.AntOrm\JavaScript.Manager.Sql.AntOrm.csproj">
+      <Project>{6cd3f9ce-9186-4f9d-b71b-afa4ed932dbb}</Project>
+      <Name>JavaScript.Manager.Sql.AntOrm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

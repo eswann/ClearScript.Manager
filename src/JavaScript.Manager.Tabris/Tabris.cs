@@ -9,6 +9,7 @@
 using JavaScript.Manager.Http.Packages;
 using JavaScript.Manager.Loaders;
 using JavaScript.Manager.Log.Packages;
+using JavaScript.Manager.Sql.AntOrm;
 using JavaScript.Manager.Sql.Packages;
 using JavaScript.Manager.Tabris.Packages;
 
@@ -30,7 +31,7 @@ namespace JavaScript.Manager.Tabris
             RequireManager.RegisterPackage(new TabrisPackage());
 
             //sql
-            SqlPackageHelpers.RegisterPackage(RequireManager,options?.DbExecutor);
+            SqlPackageHelpers.RegisterPackage(RequireManager,options?.DbExecutor ?? new AntOrmDbExecutor());
 
             //http
             HttpPackageHelpers.RegisterPackage(RequireManager);

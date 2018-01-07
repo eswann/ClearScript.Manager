@@ -51,7 +51,7 @@
     Annotation.prototype.computeScale = function () {
         var cm = this.cm;
         var hScale = (cm.getWrapperElement().clientHeight - cm.display.barHeight - this.buttonHeight * 2) /
-          cm.getScrollerElement().scrollHeight
+            cm.getScrollerElement().scrollHeight
         if (hScale != this.hScale) {
             this.hScale = hScale;
             return true;
@@ -102,7 +102,7 @@
 
             var elt = frag.appendChild(document.createElement("div"));
             elt.style.cssText = "position: absolute; right: 0px; width: " + Math.max(cm.display.barWidth - 1, 2) + "px; top: "
-              + (top + this.buttonHeight) + "px; height: " + height + "px";
+                + (top + this.buttonHeight) + "px; height: " + height + "px";
             elt.className = this.options.className;
             if (ann.id) {
                 elt.setAttribute("annotation-id", ann.id);

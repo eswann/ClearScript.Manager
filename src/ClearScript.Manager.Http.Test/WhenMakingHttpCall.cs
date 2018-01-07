@@ -3,13 +3,13 @@ using JavaScript.Manager.Extensions;
 using JavaScript.Manager.Http.Packages;
 using JavaScript.Manager.Loaders;
 using JavaScript.Manager.Log.Packages;
+using JavaScript.Manager.Sql.AntOrm;
 using JavaScript.Manager.Sql.Packages;
 using JavaScript.Manager.Tabris;
 using Microsoft.ClearScript;
 using NUnit.Framework;
 using Should;
 using System.Threading.Tasks;
-using JavaScript.Manager.Sql.AntOrm;
 
 namespace ClearScript.Manager.Http.Test
 {
@@ -84,9 +84,9 @@ namespace ClearScript.Manager.Http.Test
             var options = new ExecutionOptions();
             options.HostObjects.Add(new HostObject { Name = "subject", Target = subject });
             var code = "var dbFactory = require('javascript_sql_factory');" +
-                       "var content = this.dbFactory.create('testorm','mysql');" +
+                       "var content = this.dbFactory.create({name:'testorm',type:'mysql'});" +
                        //"subject.StatusCode = content.ExecuteNonQuery(\"update school set address ='1' where id = 1\");";
-                       "var arr = content.query(\"SELECT  DataChange_LastTime FROM school LIMIT 1\");Console.WriteLine(arr.ToString('yyyy-MM-dd'))";
+                       "var arr = content.insert(\"insert into school (name,address,datachange_lasttime) values (@name,@address,now())\",{name:'test111',address:'wowowo'});";
 
             await manager.ExecuteAsync("testScript", code, options);
 
