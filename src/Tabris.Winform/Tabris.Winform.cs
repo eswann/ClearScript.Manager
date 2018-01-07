@@ -10,7 +10,7 @@ namespace Tabris.Winform
 {
     public partial class TabrisWinform : DSkin.Forms.DSkinForm
     {
-        DuiButton addButton = new DuiButton { NormalImage = Properties.Resources.ChromeAdd, HoverImage = Properties.Resources.ChromeAddHover, Margin = new Padding(0, 3, 0, 0), Name = "add", MouseEventBubble = false };
+        DuiButton addButton = new DuiButton { NormalImage = Properties.Resources.ChromeAdd, HoverImage = Properties.Resources.ChromeAddHover, Margin = new Padding(0, 3, 0, 0), Name = "add", MouseEventBubble = false ,Cursor= System.Windows.Forms.Cursors.Hand };
         private string tabrisUrl = string.Empty;
         public TabrisWinform()
         {

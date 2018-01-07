@@ -2396,7 +2396,7 @@ var JSHINT = (function () {
                 // `undefined` as a function param is a common pattern to protect
                 // against the case when somebody does `undefined = true` and
                 // help with minification. More info: https://gist.github.com/315916
-                if (!fnparam || token.value !== 'undefined') {
+                if ((!fnparam || token.value !== 'undefined') && token.value!=='delete') {
                     warning("Expected an identifier and instead saw '{a}' (a reserved word).",
                             token, token.id);
                 }

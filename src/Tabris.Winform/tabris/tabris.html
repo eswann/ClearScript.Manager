@@ -6,10 +6,19 @@
         .CodeMirror, #codeForm {
             height: 100% !important;
         }
-      .breakpoints {width: .8em;}
-      .breakpoint { color: #822; }
-      
-      .cm-matchhighlight {background-color: rgb(204, 174, 248)}
+
+        .breakpoints {
+            width: .8em;
+        }
+
+        .breakpoint {
+            color: #822;
+        }
+
+        .cm-matchhighlight {
+            background-color: rgb(204, 174, 248)
+        }
+
         .CodeMirror-selection-highlight-scrollbar {
             background-color: rgb(166, 109, 249)
         }
@@ -66,12 +75,21 @@
     <script src="resources/codemirror/addon/lint/lint.js"></script>
     <script src="resources/codemirror/addon/lint/javascript-lint.js"></script>
     <script src="resources/codemirror/addon/lint/json-lint.js"></script>
-  
+
     <link href="resources/codemirror/addon/scroll/simplescrollbars.css" rel="stylesheet" />
     <script src="resources/codemirror/addon/scroll/simplescrollbars.js"></script>
+
+    <link href="resources/codemirror/addon/fold/foldgutter.css" rel="stylesheet" />
+    <script src="resources/codemirror/addon/fold/foldcode.js"></script>
+    <script src="resources/codemirror/addon/fold/foldgutter.js"></script>
+    <script src="resources/codemirror/addon/fold/brace-fold.js"></script>
+    <script src="resources/codemirror/addon/fold/comment-fold.js"></script>
+    <script src="resources/codemirror/addon/fold/indent-fold.js"></script>
+
+
     <!--<link rel="stylesheet" href="resources/codemirror-extension/addon/hover/text-hover.css">
-    <script src="resources/codemirror-extension/addon/hover/text-hover.js"></script>
-    <script src="resources/codemirror-javascript/addon/hint/tern/tern-hover.js"></script>-->
+        <script src="resources/codemirror-extension/addon/hover/text-hover.js"></script>
+        <script src="resources/codemirror-javascript/addon/hint/tern/tern-hover.js"></script>-->
     <script type="text/javascript">
         $(function () {
             window.cmEditor = window.cmEditor || {};
@@ -96,10 +114,10 @@
                         "Ctrl-Q": function (a) { CodeMirror.tern.rename(a) },
                         "Ctrl-S": function (a) { Save(); },
                         "Ctrl-/": function (a) {
-                            commentSelection(true)
+                            commentSelection(true);
                         },
                         "Ctrl-Alt-/": function (a) {
-                            commentSelection(false)
+                            commentSelection(false);
                         },
                         "Ctrl-Alt-C": function (a) {
                             autoFormatSelection();
@@ -113,18 +131,32 @@
                             }
                         }
                     },
-                    gutters: ["CodeMirror-lint-markers", "breakpoints"],
-                    highlightSelectionMatches: {showToken: /\w/, annotateScrollbar: true},
+                    gutters: ["CodeMirror-lint-markers", "breakpoints", "CodeMirror-foldgutter"],
+                    highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
                     textHover: { delay: 300 },
                     ternWith: { plugins: { tabris: {} } },
                     lint: true,
-                    scrollbarStyle: "simple"
+                    scrollbarStyle: "simple",
+                    foldGutter: true,
                 });
 
             cmEditor.editor.on("gutterClick", function (cm, n) {
                 var info = cm.lineInfo(n);
                 cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
             });
+
+            //cmEditor.editor.on("dragstart",function(editor,e) {
+            //    console.log('dragstart')
+            //});
+            //cmEditor.editor.on("dragenter",function(editor,e) {
+            //    console.log('dragenter')
+            //});
+            //cmEditor.editor.on("dragover",function(editor,e) {
+            //    console.log('dragover')
+            //});
+            //cmEditor.editor.on("drop",function(editor,e) { 
+            //    console.log('drop')
+            //});
             function makeMarker() {
                 var marker = document.createElement("div");
                 marker.style.color = "#822";
@@ -138,13 +170,12 @@
                 }
                 else if (event.ctrlKey && event.keyCode == 90) { //Ctrl +Z
                     Modify();
-                } 
-                else if (event.ctrlKey ) {
+                }
+                else if (event.ctrlKey) {
 
-                } else if (event.keyCode >= 116 && event.keyCode >= 123){
+                } else if (event.keyCode >= 116 && event.keyCode >= 123) {
                     //F1-12
-                }else
-                {
+                } else {
                     Modify();
                 }
             });

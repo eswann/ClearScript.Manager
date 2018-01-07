@@ -28,6 +28,7 @@ namespace Tabris.Winform.Control
     /// </summary>
     public class ButtonPannel : DSkin.Controls.DSkinPanel
     {
+        
         private DSkin.Controls.DSkinButton btnExcutor = new DSkin.Controls.DSkinButton();
         private DSkin.Controls.DSkinButton btExcutorSelected = new DSkin.Controls.DSkinButton();
         private DSkin.Controls.DSkinCheckBox catchBox = new DSkin.Controls.DSkinCheckBox();
@@ -407,6 +408,7 @@ namespace Tabris.Winform.Control
             this.bottomPannel.Text = "dSkinPanel5";
             this.bottomPannel.BackColor = System.Drawing.Color.Transparent;
             this.bottomPannel.Location = new System.Drawing.Point(0, 274);
+            
             // 
             // btExcutorSelected
             // 
@@ -429,7 +431,8 @@ namespace Tabris.Winform.Control
             this.btExcutorSelected.Text = "Process(Selected)";
             this.btExcutorSelected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btExcutorSelected.TextPadding = 0;
-           
+            this.btExcutorSelected.Cursor = System.Windows.Forms.Cursors.Hand;
+
             // 
             // btnExcutor
             // 
@@ -452,6 +455,7 @@ namespace Tabris.Winform.Control
             this.btnExcutor.Text = "Process         (F5)";
             this.btnExcutor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btnExcutor.TextPadding = 0;
+            this.btnExcutor.Cursor = System.Windows.Forms.Cursors.Hand;
 
             // 
             // SaveButton
@@ -475,6 +479,7 @@ namespace Tabris.Winform.Control
             this.SaveButton.Text = "Save To File (Ctrl+S)";
             this.SaveButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.SaveButton.TextPadding = 0;
+            this.SaveButton.Cursor = System.Windows.Forms.Cursors.Hand;
 
             // 
             // reloadRuntime
@@ -498,6 +503,7 @@ namespace Tabris.Winform.Control
             this.reloadRuntime.Text = "Reload(JsRuntime)";
             this.reloadRuntime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.reloadRuntime.TextPadding = 0;
+            this.reloadRuntime.Cursor = System.Windows.Forms.Cursors.Hand;
 
 
             // 

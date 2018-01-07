@@ -66,10 +66,10 @@
             this.dSkinPanel1.BackColor = System.Drawing.Color.Transparent;
             this.dSkinPanel1.Controls.Add(this.logList);
             this.dSkinPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dSkinPanel1.Location = new System.Drawing.Point(4, 440);
+            this.dSkinPanel1.Location = new System.Drawing.Point(4, 445);
             this.dSkinPanel1.Name = "dSkinPanel1";
             this.dSkinPanel1.RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel1.RightBottom")));
-            this.dSkinPanel1.Size = new System.Drawing.Size(762, 179);
+            this.dSkinPanel1.Size = new System.Drawing.Size(797, 179);
             this.dSkinPanel1.TabIndex = 0;
             this.dSkinPanel1.Text = "dSkinPanel1";
             // 
@@ -81,7 +81,7 @@
             this.logList.Location = new System.Drawing.Point(0, 0);
             this.logList.Name = "logList";
             this.logList.ScrollBarWidth = 12;
-            this.logList.Size = new System.Drawing.Size(762, 179);
+            this.logList.Size = new System.Drawing.Size(797, 179);
             this.logList.TabIndex = 0;
             this.logList.Text = "dSkinListBox1";
             this.logList.Value = 0D;
@@ -96,7 +96,7 @@
             this.dSkinPanel2.Location = new System.Drawing.Point(4, 29);
             this.dSkinPanel2.Name = "dSkinPanel2";
             this.dSkinPanel2.RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel2.RightBottom")));
-            this.dSkinPanel2.Size = new System.Drawing.Size(762, 411);
+            this.dSkinPanel2.Size = new System.Drawing.Size(797, 416);
             this.dSkinPanel2.TabIndex = 1;
             this.dSkinPanel2.Text = "dSkinPanel2";
             // 
@@ -108,7 +108,7 @@
             this.dSkinPanel4.Location = new System.Drawing.Point(0, 0);
             this.dSkinPanel4.Name = "dSkinPanel4";
             this.dSkinPanel4.RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel4.RightBottom")));
-            this.dSkinPanel4.Size = new System.Drawing.Size(598, 411);
+            this.dSkinPanel4.Size = new System.Drawing.Size(633, 416);
             this.dSkinPanel4.TabIndex = 2;
             this.dSkinPanel4.Text = "dSkinPanel4";
             // 
@@ -134,7 +134,7 @@
             this.dSkinTabControl1.SelectedBackColors = new System.Drawing.Color[] {
         System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255))))),
         System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))))};
-            this.dSkinTabControl1.Size = new System.Drawing.Size(592, 405);
+            this.dSkinTabControl1.Size = new System.Drawing.Size(627, 410);
             this.dSkinTabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.dSkinTabControl1.TabIndex = 1;
             this.dSkinTabControl1.UpdownBtnArrowNormalColor = System.Drawing.Color.Black;
@@ -151,10 +151,10 @@
             this.dSkinPanel3.Controls.Add(this.btExcutorSelected);
             this.dSkinPanel3.Controls.Add(this.btnExcutor);
             this.dSkinPanel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.dSkinPanel3.Location = new System.Drawing.Point(598, 0);
+            this.dSkinPanel3.Location = new System.Drawing.Point(633, 0);
             this.dSkinPanel3.Name = "dSkinPanel3";
             this.dSkinPanel3.RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel3.RightBottom")));
-            this.dSkinPanel3.Size = new System.Drawing.Size(164, 411);
+            this.dSkinPanel3.Size = new System.Drawing.Size(164, 416);
             this.dSkinPanel3.TabIndex = 1;
             this.dSkinPanel3.Text = "dSkinPanel3";
             // 
@@ -164,6 +164,7 @@
             this.SaveButton.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(186)))), ((int)(((byte)(233)))));
             this.SaveButton.ButtonBorderColor = System.Drawing.Color.Gray;
             this.SaveButton.ButtonBorderWidth = 1;
+            this.SaveButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.SaveButton.DialogResult = System.Windows.Forms.DialogResult.None;
             this.SaveButton.HoverColor = System.Drawing.Color.Empty;
             this.SaveButton.HoverImage = null;
@@ -189,7 +190,7 @@
             this.bottomPannel.Controls.Add(this.runtimeTimeout);
             this.bottomPannel.Controls.Add(this.catchBox);
             this.bottomPannel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.bottomPannel.Location = new System.Drawing.Point(0, 274);
+            this.bottomPannel.Location = new System.Drawing.Point(0, 279);
             this.bottomPannel.Name = "bottomPannel";
             this.bottomPannel.RightBottom = ((System.Drawing.Image)(resources.GetObject("bottomPannel.RightBottom")));
             this.bottomPannel.Size = new System.Drawing.Size(164, 137);
@@ -220,7 +221,7 @@
             this.runtimeTimeout.TabIndex = 4;
             this.runtimeTimeout.TransparencyKey = System.Drawing.Color.Empty;
             this.runtimeTimeout.Visible = false;
-            this.runtimeTimeout.WaterFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.runtimeTimeout.WaterFont = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.runtimeTimeout.WaterText = "unlimited default";
             this.runtimeTimeout.WaterTextOffset = new System.Drawing.Point(5, 5);
             // 
@@ -258,6 +259,7 @@
             this.reloadRuntime.BaseColor = System.Drawing.Color.Crimson;
             this.reloadRuntime.ButtonBorderColor = System.Drawing.Color.Gray;
             this.reloadRuntime.ButtonBorderWidth = 1;
+            this.reloadRuntime.Cursor = System.Windows.Forms.Cursors.Hand;
             this.reloadRuntime.DialogResult = System.Windows.Forms.DialogResult.None;
             this.reloadRuntime.HoverColor = System.Drawing.Color.Empty;
             this.reloadRuntime.HoverImage = null;
@@ -282,6 +284,7 @@
             this.btExcutorSelected.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(186)))), ((int)(((byte)(233)))));
             this.btExcutorSelected.ButtonBorderColor = System.Drawing.Color.Gray;
             this.btExcutorSelected.ButtonBorderWidth = 1;
+            this.btExcutorSelected.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btExcutorSelected.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btExcutorSelected.HoverColor = System.Drawing.Color.Empty;
             this.btExcutorSelected.HoverImage = null;
@@ -306,6 +309,7 @@
             this.btnExcutor.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(186)))), ((int)(((byte)(233)))));
             this.btnExcutor.ButtonBorderColor = System.Drawing.Color.Gray;
             this.btnExcutor.ButtonBorderWidth = 1;
+            this.btnExcutor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnExcutor.DialogResult = System.Windows.Forms.DialogResult.None;
             this.btnExcutor.HoverColor = System.Drawing.Color.Empty;
             this.btnExcutor.HoverImage = null;
@@ -333,7 +337,7 @@
             this.dSkinTabBar1.Location = new System.Drawing.Point(3, 2);
             this.dSkinTabBar1.Name = "dSkinTabBar1";
             this.dSkinTabBar1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.dSkinTabBar1.Size = new System.Drawing.Size(599, 26);
+            this.dSkinTabBar1.Size = new System.Drawing.Size(634, 26);
             this.dSkinTabBar1.TabControl = this.dSkinTabControl1;
             this.dSkinTabBar1.TabIndex = 2;
             this.dSkinTabBar1.Text = "dSkinTabBar1";
@@ -365,7 +369,7 @@
             this.codemirrowMenu.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
             this.codemirrowMenu.Name = "codemirrowMenu";
             this.codemirrowMenu.RadiusStyle = DSkin.Common.RoundStyle.All;
-            this.codemirrowMenu.Size = new System.Drawing.Size(153, 158);
+            this.codemirrowMenu.Size = new System.Drawing.Size(113, 136);
             this.codemirrowMenu.SkinAllColor = true;
             this.codemirrowMenu.TitleAnamorphosis = true;
             this.codemirrowMenu.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
@@ -377,42 +381,42 @@
             // 复制ToolStripMenuItem
             // 
             this.复制ToolStripMenuItem.Name = "复制ToolStripMenuItem";
-            this.复制ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.复制ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.复制ToolStripMenuItem.Text = "复制";
             this.复制ToolStripMenuItem.Click += new System.EventHandler(this.复制ToolStripMenuItem_Click);
             // 
             // 粘贴ToolStripMenuItem
             // 
             this.粘贴ToolStripMenuItem.Name = "粘贴ToolStripMenuItem";
-            this.粘贴ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.粘贴ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.粘贴ToolStripMenuItem.Text = "粘贴";
             this.粘贴ToolStripMenuItem.Click += new System.EventHandler(this.粘贴ToolStripMenuItem_Click);
             // 
             // 删除ToolStripMenuItem
             // 
             this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
-            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.删除ToolStripMenuItem.Text = "删除";
             this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
             // 
             // 格式化ToolStripMenuItem
             // 
             this.格式化ToolStripMenuItem.Name = "格式化ToolStripMenuItem";
-            this.格式化ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.格式化ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.格式化ToolStripMenuItem.Text = "格式化";
             this.格式化ToolStripMenuItem.Click += new System.EventHandler(this.格式化ToolStripMenuItem_Click);
             // 
             // 注释ToolStripMenuItem
             // 
             this.注释ToolStripMenuItem.Name = "注释ToolStripMenuItem";
-            this.注释ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.注释ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.注释ToolStripMenuItem.Text = "注释";
             this.注释ToolStripMenuItem.Click += new System.EventHandler(this.注释ToolStripMenuItem_Click);
             // 
             // 反注释ToolStripMenuItem
             // 
             this.反注释ToolStripMenuItem.Name = "反注释ToolStripMenuItem";
-            this.反注释ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.反注释ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.反注释ToolStripMenuItem.Text = "反注释";
             this.反注释ToolStripMenuItem.Click += new System.EventHandler(this.反注释ToolStripMenuItem_Click);
             // 
@@ -423,7 +427,7 @@
             this.CaptionColor = System.Drawing.Color.Transparent;
             this.CaptionFont = new System.Drawing.Font("Ebrima", 9F, System.Drawing.FontStyle.Bold);
             this.CaptionHeight = 25;
-            this.ClientSize = new System.Drawing.Size(770, 623);
+            this.ClientSize = new System.Drawing.Size(805, 628);
             this.CloseBox.HoverColor = System.Drawing.Color.Red;
             this.Controls.Add(this.dSkinTabBar1);
             this.Controls.Add(this.dSkinPanel2);

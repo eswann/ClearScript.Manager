@@ -9,6 +9,7 @@
 using JavaScript.Manager.Extensions;
 using System.Data;
 using System.Dynamic;
+using System.Linq;
 using System.Transactions;
 
 namespace JavaScript.Manager.Sql.Interface
@@ -116,7 +117,7 @@ namespace JavaScript.Manager.Sql.Interface
 
         public List<List<object>> DbExecutorQuery(string sql, dynamic options)
         {
-            var table = this.ExecutorQuery(sql,options);
+            DataTable table = this.ExecutorQuery(sql,options);
             if (table == null)
             {
                 return new List<List<object>>();

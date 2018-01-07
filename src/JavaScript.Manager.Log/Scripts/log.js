@@ -53,7 +53,7 @@ LogContext.prototype.parseV8OrIE = function (error) {
 }
 
 LogContext.prototype.info = function (err) {
-    if (err instanceof Error) {
+    if (err instanceof Error || err instanceof TypeError) {
         javascript_log_factory_logExecutor.Info(err.message, this.getTrace(err));
     }
     else {
@@ -62,7 +62,7 @@ LogContext.prototype.info = function (err) {
 }
 
 LogContext.prototype.warn = function (err) {
-    if (err instanceof Error) {
+    if (err instanceof Error || err instanceof TypeError) {
         javascript_log_factory_logExecutor.Warn(err.message, this.getTrace(err));
     }
     else {
@@ -71,7 +71,7 @@ LogContext.prototype.warn = function (err) {
 }
 
 LogContext.prototype.error = function (err) {
-    if (err instanceof Error) {
+    if (err instanceof Error || err instanceof TypeError) {
         javascript_log_factory_logExecutor.Error(err.message, this.getTrace(err));
     }
     else{
@@ -80,7 +80,7 @@ LogContext.prototype.error = function (err) {
 }
 
 LogContext.prototype.debug = function (err) {
-    if (err instanceof Error) {
+    if (err instanceof Error || err instanceof TypeError) {
         javascript_log_factory_logExecutor.Debug(err.message, this.getTrace(err));
     }
     else {

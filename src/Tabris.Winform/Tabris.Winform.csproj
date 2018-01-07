@@ -151,6 +151,24 @@
     <Content Include="tabris\resources\codemirror\addon\dialog\dialog.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="tabris\resources\codemirror\addon\fold\foldgutter.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\fold\indent-fold.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\fold\foldgutter.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\fold\foldcode.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\fold\comment-fold.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\fold\brace-fold.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="tabris\resources\codemirror\addon\lint\javascript-lint.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
