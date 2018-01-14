@@ -98,12 +98,13 @@ namespace ClearScript.Manager.Http.Test
         {
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
-
+            manager.AddConsoleReference = true;
             LogPackageHelpers.RegisterPackage(manager.RequireManager);
 
             var options = new ExecutionOptions();
             options.HostObjects.Add(new HostObject { Name = "subject", Target = subject });
             var code = "var logFactory = require('javascript_log_factory');" +
+                       "subject.Name = '111';" +
                        "var log = this.logFactory.create({trace:true});" +
                        //"subject.StatusCode = content.ExecuteNonQuery(\"update school set address ='1' where id = 1\");";
                        "try{ aa.ttt =1}catch(err){log.info(err)}";

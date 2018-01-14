@@ -296,6 +296,7 @@ namespace JavaScript.Manager
         {
             if (_scriptEngine != null)
             {
+                _scriptEngine.Interrupt();
                 _scriptEngine.Dispose();
                 _scriptEngine = null;
             }

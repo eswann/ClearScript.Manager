@@ -100,7 +100,7 @@ namespace JavaScript.Manager.Loaders
             }
 
             if (options.HostObjects.SafeAny())
-                return options.HostObjects[0];
+                return options.HostObjects[0].Target;
 
             return null;
         }

@@ -38,8 +38,9 @@
     <Reference Include="AntData.ORM.Mysql, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\AntData.ORM.Mysql.1.3.1\lib\AntData.ORM.Mysql.dll</HintPath>
     </Reference>
-    <Reference Include="ClearScript">
-      <HintPath>..\packages\ClearScript.Installer.1.0.1.31662\lib\net45\ClearScript.dll</HintPath>
+    <Reference Include="ClearScript, Version=5.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\ClearScript.dll</HintPath>
     </Reference>
     <Reference Include="DSkin, Version=16.4.2.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -120,7 +121,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lib\ClearScript.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Lib\ClearScriptV8-32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\v8-base-ia32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Lib\v8-ia32.dll">
