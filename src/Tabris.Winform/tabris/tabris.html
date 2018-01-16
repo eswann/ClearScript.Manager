@@ -142,7 +142,10 @@
 
             cmEditor.editor.on("gutterClick", function (cm, n) {
                 var info = cm.lineInfo(n);
-                cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
+                var breakpoint = SetBreakpoint(info.line);
+                if (breakpoint != -1) {
+                    cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
+                }
             });
 
             //cmEditor.editor.on("dragstart",function(editor,e) {

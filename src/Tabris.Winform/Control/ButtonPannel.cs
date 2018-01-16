@@ -8,6 +8,7 @@
 
 
 using DSkin.DirectUI;
+using JavaScript.Manager.Debugger;
 using System.IO;
 
 namespace Tabris.Winform.Control
@@ -67,12 +68,19 @@ namespace Tabris.Winform.Control
             this.Location = new System.Drawing.Point(0, 0);
             initEvent();
 
-            manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = 0 });
+            manager = new RuntimeManager(new ManualManagerSettings
+            {
+                ScriptTimeoutMilliSeconds = 0,
+                V8DebugEnabled = true,
+                V8DebugPort =0 ,// 9229,
+                LocalV8DebugEnabled = true
+            });
             JavaScript.Manager.Tabris.Tabris.Register(manager.RequireManager,new JavaScript.Manager.Tabris.TabrisOptions
             {
                 LogExecutor = new WinformLogExcutor(logAction)
             });
 
+            
         }
 
         /// <summary>
@@ -201,6 +209,30 @@ namespace Tabris.Winform.Control
             {
                 logAction(LogLevel.ERROR, "重新加载运行时失败" , ex.Message);
             }
+        }
+        [JSFunction]
+        public int SetBreakpoint(int line)
+        {
+            try
+            {
+                var bp = new Breakpoint
+                {
+                    LineNumber = line + 3,
+                    Column = 0,
+                };
+                var response = manager.V8DebuggerEngine.SetBreakpoint(bp).ConfigureAwait(false).GetAwaiter().GetResult();
+                if (response)
+                {
+                    return 1;
+                }
+
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
+
         }
         [JSFunction]
         public void Modify()

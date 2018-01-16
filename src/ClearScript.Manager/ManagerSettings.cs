@@ -53,11 +53,12 @@ namespace JavaScript.Manager
         /// Is debugging enabled.
         /// </summary>
         bool V8DebugEnabled { get; }
+        bool LocalV8DebugEnabled { get; set; }
 
         /// <summary>
         /// What is the debug port.
         /// </summary>
-        int V8DebugPort { get; }
+        int V8DebugPort { get; set; }
     }
 
     /// <summary>
@@ -147,9 +148,16 @@ namespace JavaScript.Manager
             get { return SettingToBool("DebugEnabled"); }
         }
 
+        public bool LocalV8DebugEnabled { get; set; }
+
+        private int _V8DebugPort;
         public int V8DebugPort
         {
-            get { return SettingToInt("DebugPort", DefaultDebugPort); }
+            get
+            {
+               return _V8DebugPort;
+            }
+            set { _V8DebugPort = value; }
         }
 
 
@@ -237,6 +245,7 @@ namespace JavaScript.Manager
         public int ScriptCacheExpirationSeconds { get; set; }
 
         public bool V8DebugEnabled { get; set; }
+        public bool LocalV8DebugEnabled { get; set; }
 
         public int V8DebugPort { get; set; }
 

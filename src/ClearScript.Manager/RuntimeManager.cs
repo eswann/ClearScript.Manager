@@ -1,12 +1,15 @@
 ﻿using JavaScript.Manager.Caching;
+using JavaScript.Manager.Debugger;
 using JavaScript.Manager.Extensions;
 using JavaScript.Manager.Loaders;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +21,7 @@ namespace JavaScript.Manager
     public interface IRuntimeManager : IDisposable
     {
         RequireManager RequireManager { get; set; }
+        V8DebuggerEngine V8DebuggerEngine { get;  set; }
         /// <summary>
         /// If True, automatically adds a reference to the .Net Console.
         /// </summary>
@@ -126,6 +130,7 @@ namespace JavaScript.Manager
         private bool _disposed;
 
         public RequireManager RequireManager { get; set; }
+        public V8DebuggerEngine V8DebuggerEngine { get;  set; }
 
         /// <summary>
         /// Creates a new Runtime Manager.
@@ -145,6 +150,8 @@ namespace JavaScript.Manager
             _scriptCompiler = new ScriptCompiler(_v8Runtime, settings);
 
             RequireManager = new RequireManager();
+
+            GetEngine();
         }
 
         public bool AddConsoleReference { get; set; }
@@ -171,63 +178,74 @@ namespace JavaScript.Manager
 
             IEnumerable<V8Script> compiledScripts = scriptList.Select(x => _scriptCompiler.Compile(x, options.AddToCache, options.CacheExpirationSeconds));
 
-            GetEngine();
-
-            if (AddConsoleReference)
+            try
             {
-                _scriptEngine.AddHostType("Console", typeof (Console));
-            }
 
-            RequireManager.BuildRequirer(_scriptCompiler, _scriptEngine);
-
-            if (configAction != null)
-            {
-                configAction(_scriptEngine);
-            }
-
-            if (options.Scripts != null)
-            {
-                foreach (var script in options.Scripts)
+                if (AddConsoleReference)
                 {
-                    var compiledInclude = _scriptCompiler.Compile(script, options.AddToCache);
-                    if (compiledInclude != null)
-                    {
-                        _scriptEngine.Execute(compiledInclude);
-                    }
+                    _scriptEngine.AddHostType("Console", typeof(Console));
                 }
-            }
 
-            foreach (var compiledScript in compiledScripts)
-            {
-                //Only create a wrapping task if the script has a timeout.
-                CancellationToken cancellationToken;
-                if (TryCreateCancellationToken(out cancellationToken))
+                RequireManager.BuildRequirer(_scriptCompiler, _scriptEngine);
+
+                if (configAction != null)
                 {
-                    using (cancellationToken.Register(_scriptEngine.Interrupt))
-                    {
-                        try
-                        {
-                            V8Script script = compiledScript;
-                            await Task.Run(() => _scriptEngine.Execute(script), cancellationToken).ConfigureAwait(false);
-                        }
-                        catch (ScriptInterruptedException ex)
-                        {
-                            var newEx = new ScriptInterruptedException(
-                                "Script interruption occurred, this often indicates a script timeout.  Examine the data and inner exception for more information.", ex);
-                            newEx.Data.Add("Timeout", _settings.ScriptTimeoutMilliSeconds);
-                            newEx.Data.Add("ScriptId", compiledScript.Name);
+                    configAction(_scriptEngine);
+                }
 
-                            throw newEx;
+                if (options.Scripts != null)
+                {
+                    foreach (var script in options.Scripts)
+                    {
+                        var compiledInclude = _scriptCompiler.Compile(script, options.AddToCache);
+                        if (compiledInclude != null)
+                        {
+                            _scriptEngine.Execute(compiledInclude);
                         }
                     }
                 }
-                else
+
+                foreach (var compiledScript in compiledScripts)
                 {
-                    _scriptEngine.Execute(compiledScript);
+                    //Only create a wrapping task if the script has a timeout.
+                    CancellationToken cancellationToken;
+                    if (TryCreateCancellationToken(out cancellationToken))
+                    {
+                        using (cancellationToken.Register(_scriptEngine.Interrupt))
+                        {
+                            try
+                            {
+                                V8Script script = compiledScript;
+                                await Task.Run(() => _scriptEngine.Execute(script), cancellationToken)
+                                    .ConfigureAwait(false);
+                            }
+                            catch (ScriptInterruptedException ex)
+                            {
+                                var newEx = new ScriptInterruptedException(
+                                    "Script interruption occurred, this often indicates a script timeout.  Examine the data and inner exception for more information.",
+                                    ex);
+                                newEx.Data.Add("Timeout", _settings.ScriptTimeoutMilliSeconds);
+                                newEx.Data.Add("ScriptId", compiledScript.Name);
+
+                                throw newEx;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _scriptEngine.Execute(compiledScript);
+                    }
+                }
+
+                return _scriptEngine;
+            }
+            finally
+            {
+                if (V8DebuggerEngine != null)
+                {
+                    await V8DebuggerEngine.ResetDebuggerScriptEngine();
                 }
             }
-
-            return _scriptEngine;
 
         }
 
@@ -277,7 +295,23 @@ namespace JavaScript.Manager
                     ? V8ScriptEngineFlags.DisableGlobalMembers | V8ScriptEngineFlags.EnableDebugging
                     : V8ScriptEngineFlags.DisableGlobalMembers;
 
+                if (_settings.V8DebugPort <= 0)
+                {
+                    _settings.V8DebugPort = PortUtilities.FindFreePort(IPAddress.Loopback);
+                    Debug.WriteLine("_settings.V8DebugPort:" + _settings.V8DebugPort);
+                }
                 _scriptEngine = _v8Runtime.CreateScriptEngine(flags, _settings.V8DebugPort);
+                if (_settings.V8DebugEnabled)
+                {
+                    _scriptEngine.AllowReflection = true;
+                    
+                }
+
+                if (_settings.LocalV8DebugEnabled)
+                {
+                    V8DebuggerEngine = new V8DebuggerEngine(_scriptEngine, _settings.V8DebugPort);
+                }
+                
             }
             return _scriptEngine;
         }
@@ -296,6 +330,7 @@ namespace JavaScript.Manager
         {
             if (_scriptEngine != null)
             {
+                V8DebuggerEngine?.Dispose();
                 _scriptEngine.Interrupt();
                 _scriptEngine.Dispose();
                 _scriptEngine = null;
