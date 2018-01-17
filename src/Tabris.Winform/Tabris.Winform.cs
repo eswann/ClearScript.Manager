@@ -1,11 +1,11 @@
-﻿using DSkin.Common;
+﻿using CefSharp.WinForms;
+using DSkin.Common;
 using DSkin.DirectUI;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Tabris.Winform.Control;
-
 namespace Tabris.Winform
 {
     public partial class TabrisWinform : DSkin.Forms.DSkinForm
@@ -31,6 +31,8 @@ namespace Tabris.Winform
             tabrisUrl = "file:///" + indexFile;
 
             this.MinimumSize = new Size(770, 570);
+
+            this.IsLayeredWindowForm = false;
 
         }
 
@@ -77,14 +79,13 @@ namespace Tabris.Winform
             };
             dSkinTabBar1.Items.Insert(index, item);
             //item.SendToBack();
-            //DSkin.Controls.DSkinBaseControl db = new DSkin.Controls.DSkinBaseControl { Dock = DockStyle.Fill };
-            DSkin.Controls.DSkinBrowser brower = new DSkin.Controls.DSkinBrowser
+            //DSkin.Controls.ControlHost db = new DSkin.Controls.ControlHost { Dock = DockStyle.Fill };
+            ChromiumWebBrowser brower = new ChromiumWebBrowser(tabrisUrl)
             {
                 Dock = DockStyle.Fill,
-                Url = tabrisUrl,
-                ContextMenuStrip = this.codemirrowMenu
+                ContextMenuStrip = this.codemirrowMenu,
             };
-            //db.DUIControls.Add(d);
+            //db.Controls.Add(brower);
             TabPage page = new TabPage();
             page.Controls.Add(brower);
             item.TabPage = page;
@@ -115,7 +116,7 @@ namespace Tabris.Winform
                     
                 }
             };
-
+            
             this.dSkinPanel3.Controls.Add(buttonPannel);
             this.dSkinPanel1.Controls.Add(logPannel);
             item.Tag = new TabrisControlContainer
@@ -226,8 +227,12 @@ namespace Tabris.Winform
             粘贴ToolStripMenuItem.Enabled = true;
         }
 
-       
-    }
+     
 
+        private void TabrisWinform_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //Cef.Shutdown();
+        }
+    }
 
 }

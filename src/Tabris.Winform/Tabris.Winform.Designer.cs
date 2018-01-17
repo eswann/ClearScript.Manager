@@ -438,6 +438,7 @@
             this.Radius = 5;
             this.ShowIcon = false;
             this.Text = "tabris-jsql-v1.0";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TabrisWinform_FormClosing);
             this.Load += new System.EventHandler(this.TabrisWinform_Load);
             this.dSkinPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.logList)).EndInit();

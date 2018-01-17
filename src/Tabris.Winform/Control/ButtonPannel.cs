@@ -7,13 +7,13 @@
 //-----------------------------------------------------------------------
 
 
-using DSkin.DirectUI;
+using CefSharp;
+using CefSharp.WinForms;
 using JavaScript.Manager.Debugger;
 using System.IO;
 
 namespace Tabris.Winform.Control
 {
-    using DSkin.Controls;
     using JavaScript.Manager;
     using JavaScript.Manager.Extensions;
     using Microsoft.ClearScript;
@@ -38,7 +38,7 @@ namespace Tabris.Winform.Control
         private DSkin.Controls.DSkinLabel dSkinLabel1 = new DSkin.Controls.DSkinLabel();
         private DSkin.Controls.DSkinPanel bottomPannel = new DSkin.Controls.DSkinPanel();
         private DSkin.Controls.DSkinButton SaveButton = new DSkin.Controls.DSkinButton();
-        private readonly DSkinBrowser codemirrow;
+        private readonly ChromiumWebBrowser codemirrow;
         private RuntimeManager manager;
         private readonly Action<LogLevel, string, string> logAction;
 
@@ -48,14 +48,15 @@ namespace Tabris.Winform.Control
 
         public Action<string> OnTitleChange { get; set; }
         public Action OnModify { get; set; }
-        public ButtonPannel(DSkinBrowser brower, Action<LogLevel, string, string> logAction)
+        public ButtonPannel(ChromiumWebBrowser brower, Action<LogLevel, string, string> logAction)
         {
             this.logAction = logAction;
             init();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabrisWinform));
             this.codemirrow = brower;
             this.codemirrow.AllowDrop = true;
-            this.codemirrow.GlobalObject = this;
+
+            codemirrow.RegisterJsObject("csharpJsFunction", new JSFunc(this), new BindingOptions { CamelCaseJavascriptNames = false });
 
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel3.RightBottom")));
@@ -72,8 +73,8 @@ namespace Tabris.Winform.Control
             {
                 ScriptTimeoutMilliSeconds = 0,
                 V8DebugEnabled = true,
-                V8DebugPort =0 ,// 9229,
-                LocalV8DebugEnabled = true
+                V8DebugPort =9229 ,// 9229,
+                LocalV8DebugEnabled = false
             });
             JavaScript.Manager.Tabris.Tabris.Register(manager.RequireManager,new JavaScript.Manager.Tabris.TabrisOptions
             {
@@ -93,16 +94,21 @@ namespace Tabris.Winform.Control
             {
                 var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(getClipData);
                 var getClipDatabase64 = Convert.ToBase64String(plainTextBytes);
-                this.codemirrow.InvokeJS("insertCode(\"" + getClipDatabase64 + "\")");
+                InvokeJS("insertCode(\"" + getClipDatabase64 + "\")");
             }
         }
 
+        private string InvokeJS(string code)
+        {
+            JavascriptResponse task =  this.codemirrow.GetMainFrame().EvaluateScriptAsync(code, null).ConfigureAwait(false).GetAwaiter().GetResult();
+            return task.Success ? (task.Result.ToString() ?? "null") : task.Message;
+        }
         /// <summary>
         /// 从粘贴板粘贴内容到编辑器
         /// </summary>
         public void PasteToclipboard()
         {
-            var selectedCode = this.codemirrow.InvokeJS("getPasteCode()").ToString();
+            var selectedCode = InvokeJS("getPasteCode()");
             if (!string.IsNullOrEmpty(selectedCode))
             {
                 Clipboard.SetText(selectedCode);
@@ -114,7 +120,7 @@ namespace Tabris.Winform.Control
         /// </summary>
         public void DeleteSeletectd()
         {
-            this.codemirrow.InvokeJS("window.cmEditor.editor.replaceSelection('')");
+            InvokeJS("window.cmEditor.editor.replaceSelection('')");
         }
 
         /// <summary>
@@ -122,7 +128,7 @@ namespace Tabris.Winform.Control
         /// </summary>
         public void FormatSeletectd()
         {
-            this.codemirrow.InvokeJS("autoFormatSelection()");
+            InvokeJS("autoFormatSelection()");
         }
 
         /// <summary>
@@ -130,7 +136,7 @@ namespace Tabris.Winform.Control
         /// </summary>
         public void Annotation(bool flag)
         {
-            this.codemirrow.InvokeJS(flag?"commentSelection(true)": "commentSelection(false)");
+            InvokeJS(flag?"commentSelection(true)": "commentSelection(false)");
         }
         /// <summary>
         /// 是否存在有选中
@@ -138,7 +144,7 @@ namespace Tabris.Winform.Control
         /// <returns></returns>
         public bool HaveSelected()
         {
-            var selectedCode = this.codemirrow.InvokeJS("getSelectedCode()").ToString();
+            var selectedCode = InvokeJS("getSelectedCode()");
             return !string.IsNullOrEmpty(selectedCode);
         }
 
@@ -160,7 +166,19 @@ namespace Tabris.Winform.Control
 
         private void btnExcutor_Click(object sender, EventArgs e)
         {
-            var code = this.codemirrow.InvokeJS("getCode()").ToString();
+            if (sender is string)
+            {
+                if (string.IsNullOrEmpty(sender.ToString()))
+                {
+                    MessageBox.Show("执行内容为空");
+                    return;
+                }
+
+                invokeJsCode(sender.ToString());
+                return;
+            }
+            //codemirrow.ShowDevTools();
+            var code = InvokeJS("getCode()");
             if (string.IsNullOrEmpty(code))
             {
                 MessageBox.Show("执行内容为空");
@@ -172,7 +190,19 @@ namespace Tabris.Winform.Control
 
         private void btExcutorSelected_Click(object sender, EventArgs e)
         {
-            var selectedCode = this.codemirrow.InvokeJS("getSelectedCode()").ToString();
+            if (sender is string)
+            {
+                if (string.IsNullOrEmpty(sender.ToString()))
+                {
+                    MessageBox.Show("执行内容为空");
+                    return;
+                }
+
+                invokeJsCode(sender.ToString());
+                return;
+            }
+
+            var selectedCode = InvokeJS("getSelectedCode()").ToString();
             if (string.IsNullOrEmpty(selectedCode))
             {
                 MessageBox.Show("获取选择内容为空");
@@ -210,65 +240,135 @@ namespace Tabris.Winform.Control
                 logAction(LogLevel.ERROR, "重新加载运行时失败" , ex.Message);
             }
         }
-        [JSFunction]
-        public int SetBreakpoint(int line)
+
+        #region JS Function
+
+        public class JSFunc
         {
-            try
+            private readonly ButtonPannel _buttonPannel;
+            public JSFunc(ButtonPannel buttonPannel)
             {
-                var bp = new Breakpoint
+                _buttonPannel = buttonPannel;
+            }
+
+            public int SetBreakpoint(int line)
+            {
+                try
                 {
-                    LineNumber = line + 3,
-                    Column = 0,
-                };
-                var response = manager.V8DebuggerEngine.SetBreakpoint(bp).ConfigureAwait(false).GetAwaiter().GetResult();
-                if (response)
+                    if (_buttonPannel.manager.V8DebuggerEngine == null) return 1;
+                    var bp = new Breakpoint
+                    {
+                        LineNumber = line + 3,
+                        Column = 0,
+                    };
+                    var response = _buttonPannel.manager.V8DebuggerEngine.SetBreakpoint(bp).ConfigureAwait(false).GetAwaiter().GetResult();
+                    if (response)
+                    {
+                        return 1;
+                    }
+
+                    return -1;
+                }
+                catch (Exception ex)
                 {
-                    return 1;
+                    return -1;
                 }
 
-                return -1;
-            }
-            catch (Exception ex)
-            {
-                return -1;
             }
 
-        }
-        [JSFunction]
-        public void Modify()
-        {
-            OnModify();
-        }
-        [JSFunction]
-        public void ExcuteSelected()
-        {
-            if (isRun)
+            public void Modify()
             {
-                logAction(LogLevel.WARN, "请等待当前任务执行完", "");
-                return;
+              
+                _buttonPannel.OnModify();
             }
-            btExcutorSelected_Click(null, null);
-        }
-        [JSFunction]
-        public void Excute()
-        {
-            if (isRun)
+
+            public void ExcuteSelected(string code)
             {
-                logAction(LogLevel.WARN, "请等待当前任务执行完", "");
-                return;
+                if (_buttonPannel.isRun)
+                {
+                    _buttonPannel.logAction(LogLevel.WARN, "请等待当前任务执行完", "");
+                    return;
+                }
+                _buttonPannel.btExcutorSelected_Click(code, null);
+
             }
-            btnExcutor_Click(null, null);
+            public void Excute(string code)
+            {
+                if (_buttonPannel.isRun)
+                {
+                    _buttonPannel.logAction(LogLevel.WARN, "请等待当前任务执行完", "");
+                    return;
+                }
+
+                _buttonPannel.btnExcutor_Click(code, null);
+
+            }
+
+            public bool Save(string code)
+            {
+                try
+                {
+
+                    if (!string.IsNullOrEmpty(_buttonPannel.fileOutPath))
+                    {
+                        Task.Factory.StartNew(() =>
+                        {
+                            using (StreamWriter sw = new StreamWriter(_buttonPannel.fileOutPath, false))
+                            {
+                                sw.Write(code);
+                                sw.Flush();
+                            }
+
+                            _buttonPannel.logAction(LogLevel.INFO, "保存成功", "");
+                        });
+                        return true;
+                    }
+                    this._buttonPannel.Invoke(new EventHandler(delegate
+                    {
+                        //弹出保存框
+                        SaveFileDialog jsFile = new SaveFileDialog();
+                        jsFile.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                        jsFile.RestoreDirectory = true;
+                        jsFile.Filter = "Js文件|*.js";
+                        if (jsFile.ShowDialog() == DialogResult.OK)
+                        {
+                            using (StreamWriter sw = new StreamWriter(jsFile.FileName, false))
+                            {
+                                sw.Write(code);
+                                sw.Flush();
+                            }
+
+                            _buttonPannel.fileOutPath = jsFile.FileName;
+                            _buttonPannel.logAction(LogLevel.INFO, "保存成功", "");
+                        }
+                    }));
+                   
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    _buttonPannel.logAction(LogLevel.ERROR, "保存出错", ex.Message);
+                    return true;
+                }
+                finally
+                {
+                    if (!string.IsNullOrEmpty(_buttonPannel.fileOutPath))
+                    {
+                        var fileNameExt = _buttonPannel.fileOutPath.Substring(_buttonPannel.fileOutPath.LastIndexOf("\\") + 1);
+                        if (_buttonPannel.OnTitleChange != null) _buttonPannel.OnTitleChange(fileNameExt);
+                    }
+
+                }
+
+            }
         }
 
-        [JSFunction]
+
         public bool Save()
         {
-
             try
             {
-                var code = this.codemirrow.InvokeJS("getCode()").ToString();
-               
-
+                var code = InvokeJS("getCode()");
 
                 if (!string.IsNullOrEmpty(fileOutPath))
                 {
@@ -316,10 +416,14 @@ namespace Tabris.Winform.Control
                     var fileNameExt = fileOutPath.Substring(fileOutPath.LastIndexOf("\\") + 1);
                     if (OnTitleChange != null) OnTitleChange(fileNameExt);
                 }
-             
+
             }
 
         }
+
+
+        #endregion
+
         private void invokeJsCode(string code)
         {
             if (this.catchBox.CheckState.Equals(CheckState.Checked))
@@ -606,8 +710,26 @@ namespace Tabris.Winform.Control
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            manager.Dispose();
-            codemirrow.Dispose();
+            try
+            {
+                codemirrow.CloseDevTools();
+            }
+            catch { }
+            try
+            {
+                codemirrow.GetBrowser().CloseBrowser(true);
+            }
+            catch { }
+
+            try
+            {
+                if (codemirrow != null)
+                {
+                    codemirrow.Dispose();
+                   
+                }
+            }
+            catch { }
         }
     }
 }

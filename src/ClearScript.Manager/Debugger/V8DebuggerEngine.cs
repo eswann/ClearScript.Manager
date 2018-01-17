@@ -73,10 +73,10 @@ namespace JavaScript.Manager.Debugger
             await m_debuggerClient.SendRequestAsync("Profiler.enable").ConfigureAwait(false);
             await m_debuggerClient.SendRequestAsync("Runtime.enable").ConfigureAwait(false);
             await m_debuggerClient.SendRequestAsync("Debugger.enable").ConfigureAwait(false);
-            var backtrace = new Request("Debugger.setPauseOnExceptions");
-            backtrace.Arguments = new {state = "none"};
-             await m_debuggerClient.SendRequestAsync(backtrace).ConfigureAwait(false);
-            backtrace = new Request("Debugger.setAsyncCallStackDepth");
+            //var backtrace = new Request("Debugger.setPauseOnExceptions");
+            //backtrace.Arguments = new {state = "none"};
+            // await m_debuggerClient.SendRequestAsync(backtrace).ConfigureAwait(false);
+            var backtrace = new Request("Debugger.setAsyncCallStackDepth");
             backtrace.Arguments = new { maxDepth = 32 };
             await m_debuggerClient.SendRequestAsync(backtrace).ConfigureAwait(false);
             backtrace = new Request("Debugger.setBlackboxPatterns");

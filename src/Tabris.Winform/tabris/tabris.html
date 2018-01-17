@@ -112,7 +112,7 @@
                         "Alt-.": function (a) { CodeMirror.tern.jumpToDef(a) },
                         "Alt-,": function (a) { CodeMirror.tern.jumpBack(a) },
                         "Ctrl-Q": function (a) { CodeMirror.tern.rename(a) },
-                        "Ctrl-S": function (a) { Save(); },
+                        "Ctrl-S": function (a) { csharpJsFunction.Save(getCode()); },
                         "Ctrl-/": function (a) {
                             commentSelection(true);
                         },
@@ -125,9 +125,9 @@
                         "F5": function (a) {
                             var sele = getSelectedCode();
                             if (sele && sele.length > 0) {
-                                ExcuteSelected();
+                                csharpJsFunction.ExcuteSelected(sele);
                             } else {
-                                Excute();
+                                csharpJsFunction.Excute(getCode());
                             }
                         }
                     },
@@ -142,7 +142,7 @@
 
             cmEditor.editor.on("gutterClick", function (cm, n) {
                 var info = cm.lineInfo(n);
-                var breakpoint = SetBreakpoint(info.line);
+                var breakpoint = csharpJsFunction.SetBreakpoint(info.line);
                 if (breakpoint != -1) {
                     cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
                 }
@@ -169,17 +169,17 @@
             $(document).keydown(function (event) {
                 //Ctrl +V
                 if (event.ctrlKey && event.keyCode == 86) {
-                    Modify();
+                    csharpJsFunction.Modify();
                 }
                 else if (event.ctrlKey && event.keyCode == 90) { //Ctrl +Z
-                    Modify();
+                    csharpJsFunction.Modify();
                 }
                 else if (event.ctrlKey) {
 
                 } else if (event.keyCode >= 116 && event.keyCode >= 123) {
                     //F1-12
                 } else {
-                    Modify();
+                    csharpJsFunction.Modify();
                 }
             });
         });

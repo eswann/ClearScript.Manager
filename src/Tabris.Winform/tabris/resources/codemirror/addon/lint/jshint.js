@@ -3821,7 +3821,7 @@ var JSHINT = (function () {
 
     stmt('debugger', function () {
         if (!option.debug) {
-            warning("All 'debugger' statements should be removed.");
+            warning("The 'debugger' statements .");
         }
         return this;
     }).exps = true;
