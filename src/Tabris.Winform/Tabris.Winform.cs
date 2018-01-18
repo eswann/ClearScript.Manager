@@ -83,7 +83,7 @@ namespace Tabris.Winform
             ChromiumWebBrowser brower = new ChromiumWebBrowser(tabrisUrl)
             {
                 Dock = DockStyle.Fill,
-                ContextMenuStrip = this.codemirrowMenu,
+               
             };
             //db.Controls.Add(brower);
             TabPage page = new TabPage();
@@ -152,60 +152,7 @@ namespace Tabris.Winform
 
     
 
-        private void 复制ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GetSelectedTabrisControlContainer()?.ButtonPannel.PasteToclipboard();
-        }
-
-        private void 粘贴ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GetSelectedTabrisControlContainer()?.ButtonPannel.CopyFromclipboard();
-        }
-
-        private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GetSelectedTabrisControlContainer()?.ButtonPannel.DeleteSeletectd();
-        }
-        private void 格式化ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GetSelectedTabrisControlContainer()?.ButtonPannel.FormatSeletectd();
-        }
-
-        private void 注释ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GetSelectedTabrisControlContainer()?.ButtonPannel.Annotation(true);
-        }
-        private void 反注释ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GetSelectedTabrisControlContainer()?.ButtonPannel.Annotation(false);
-        }
-        private void codemirrowMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            var seleted = GetSelectedTabrisControlContainer();
-            if (seleted == null )
-            {
-                return;
-            }
-
-            if (seleted.ButtonPannel.HaveSelected())
-            {
-                复制ToolStripMenuItem.Text = "复制";
-                删除ToolStripMenuItem.Visible = true;
-                格式化ToolStripMenuItem.Visible = true;
-            }
-            else
-            {
-                复制ToolStripMenuItem.Text = "复制全部";
-                删除ToolStripMenuItem.Visible = false;
-                格式化ToolStripMenuItem.Visible = false;
-            }
-
-            if (string.IsNullOrEmpty(Clipboard.GetText()))
-            {
-                粘贴ToolStripMenuItem.Enabled = false;
-            }
-
-        }
+      
 
         private TabrisControlContainer GetSelectedTabrisControlContainer()
         {
@@ -219,12 +166,6 @@ namespace Tabris.Winform
             {
                 return null;
             }
-        }
-
-        private void codemirrowMenu_Closed(object sender, ToolStripDropDownClosedEventArgs e)
-        {
-            复制ToolStripMenuItem.Text = "复制";
-            粘贴ToolStripMenuItem.Enabled = true;
         }
 
      

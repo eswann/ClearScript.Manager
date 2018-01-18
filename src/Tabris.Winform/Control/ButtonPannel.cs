@@ -29,7 +29,7 @@ namespace Tabris.Winform.Control
     /// </summary>
     public class ButtonPannel : DSkin.Controls.DSkinPanel
     {
-        
+
         private DSkin.Controls.DSkinButton btnExcutor = new DSkin.Controls.DSkinButton();
         private DSkin.Controls.DSkinButton btExcutorSelected = new DSkin.Controls.DSkinButton();
         private DSkin.Controls.DSkinCheckBox catchBox = new DSkin.Controls.DSkinCheckBox();
@@ -55,7 +55,7 @@ namespace Tabris.Winform.Control
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabrisWinform));
             this.codemirrow = brower;
             this.codemirrow.AllowDrop = true;
-
+            this.codemirrow.MenuHandler = new JSFunc(this);
             codemirrow.RegisterJsObject("csharpJsFunction", new JSFunc(this), new BindingOptions { CamelCaseJavascriptNames = false });
 
             this.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -73,15 +73,15 @@ namespace Tabris.Winform.Control
             {
                 ScriptTimeoutMilliSeconds = 0,
                 V8DebugEnabled = true,
-                V8DebugPort =9229 ,// 9229,
+                V8DebugPort = 9229,// 9229,
                 LocalV8DebugEnabled = false
             });
-            JavaScript.Manager.Tabris.Tabris.Register(manager.RequireManager,new JavaScript.Manager.Tabris.TabrisOptions
+            JavaScript.Manager.Tabris.Tabris.Register(manager.RequireManager, new JavaScript.Manager.Tabris.TabrisOptions
             {
                 LogExecutor = new WinformLogExcutor(logAction)
             });
 
-            
+
         }
 
         /// <summary>
@@ -89,19 +89,32 @@ namespace Tabris.Winform.Control
         /// </summary>
         public void CopyFromclipboard()
         {
-            var getClipData = Clipboard.GetText();
-            if (!string.IsNullOrEmpty(getClipData))
+            this.BeginInvoke(new EventHandler(delegate
             {
-                var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(getClipData);
-                var getClipDatabase64 = Convert.ToBase64String(plainTextBytes);
-                InvokeJS("insertCode(\"" + getClipDatabase64 + "\")");
-            }
+                var getClipData = Clipboard.GetText();
+                if (!string.IsNullOrEmpty(getClipData))
+                {
+                    var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(getClipData);
+                    var getClipDatabase64 = Convert.ToBase64String(plainTextBytes);
+                    InvokeJS("insertCode(\"" + getClipDatabase64 + "\")");
+                    OnModify();
+                }
+               
+            }));
+           
         }
 
         private string InvokeJS(string code)
         {
-            JavascriptResponse task =  this.codemirrow.GetMainFrame().EvaluateScriptAsync(code, null).ConfigureAwait(false).GetAwaiter().GetResult();
-            return task.Success ? (task.Result.ToString() ?? "null") : task.Message;
+            try
+            {
+                JavascriptResponse task = this.codemirrow.GetMainFrame().EvaluateScriptAsync(code, null).ConfigureAwait(false).GetAwaiter().GetResult();
+                return task.Success ? (task.Result.ToString() ?? "null") : task.Message;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
         /// <summary>
         /// 从粘贴板粘贴内容到编辑器
@@ -111,7 +124,11 @@ namespace Tabris.Winform.Control
             var selectedCode = InvokeJS("getPasteCode()");
             if (!string.IsNullOrEmpty(selectedCode))
             {
-                Clipboard.SetText(selectedCode);
+                this.BeginInvoke(new EventHandler(delegate
+                {
+                    Clipboard.SetText(selectedCode);
+                }));
+           
             }
         }
 
@@ -121,6 +138,7 @@ namespace Tabris.Winform.Control
         public void DeleteSeletectd()
         {
             InvokeJS("window.cmEditor.editor.replaceSelection('')");
+            OnModify();
         }
 
         /// <summary>
@@ -129,6 +147,7 @@ namespace Tabris.Winform.Control
         public void FormatSeletectd()
         {
             InvokeJS("autoFormatSelection()");
+            OnModify();
         }
 
         /// <summary>
@@ -136,7 +155,8 @@ namespace Tabris.Winform.Control
         /// </summary>
         public void Annotation(bool flag)
         {
-            InvokeJS(flag?"commentSelection(true)": "commentSelection(false)");
+            InvokeJS(flag ? "commentSelection(true)" : "commentSelection(false)");
+            OnModify();
         }
         /// <summary>
         /// 是否存在有选中
@@ -148,7 +168,7 @@ namespace Tabris.Winform.Control
             return !string.IsNullOrEmpty(selectedCode);
         }
 
-      
+
         private void initEvent()
         {
             this.reloadRuntime.Click += new System.EventHandler(this.reloadRuntime_Click);
@@ -220,31 +240,43 @@ namespace Tabris.Winform.Control
                 int.TryParse(globalTimeout, out intTimeout);
                 manager.Dispose();
                 manager = new RuntimeManager(new ManualManagerSettings { ScriptTimeoutMilliSeconds = intTimeout });
-                JavaScript.Manager.Tabris.Tabris.Register(manager.RequireManager,new JavaScript.Manager.Tabris.TabrisOptions
+                JavaScript.Manager.Tabris.Tabris.Register(manager.RequireManager, new JavaScript.Manager.Tabris.TabrisOptions
                 {
                     LogExecutor = new WinformLogExcutor(logAction)
                 });
 
                 if (intTimeout > 0)
                 {
-                    logAction(LogLevel.INFO,"重新加载运行时成功,全局ScriptTimeoutMilliSeconds设置为：" + intTimeout,"");
+                    logAction(LogLevel.INFO, "重新加载运行时成功,全局ScriptTimeoutMilliSeconds设置为：" + intTimeout, "");
                 }
                 else
                 {
-                    logAction(LogLevel.INFO,"重新加载运行时成功","");
+                    logAction(LogLevel.INFO, "重新加载运行时成功", "");
                 }
 
             }
             catch (Exception ex)
             {
-                logAction(LogLevel.ERROR, "重新加载运行时失败" , ex.Message);
+                logAction(LogLevel.ERROR, "重新加载运行时失败", ex.Message);
             }
         }
 
         #region JS Function
 
-        public class JSFunc
+        public class JSFunc : IContextMenuHandler
         {
+            enum MenuItem
+            {
+                ShowDevTools = 26501,
+                CloseDevTools = 26502,
+                Copy = 26503,
+                Paste = 26504,
+                Delete = 26505,
+                Format = 26506,
+                Annotation = 26507,
+                UnAnnotation = 26508,
+            }
+
             private readonly ButtonPannel _buttonPannel;
             public JSFunc(ButtonPannel buttonPannel)
             {
@@ -278,7 +310,7 @@ namespace Tabris.Winform.Control
 
             public void Modify()
             {
-              
+
                 _buttonPannel.OnModify();
             }
 
@@ -342,7 +374,7 @@ namespace Tabris.Winform.Control
                             _buttonPannel.logAction(LogLevel.INFO, "保存成功", "");
                         }
                     }));
-                   
+
                     return true;
                 }
                 catch (Exception ex)
@@ -361,6 +393,106 @@ namespace Tabris.Winform.Control
                 }
 
             }
+
+            #region MenuHandler
+
+            void IContextMenuHandler.OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
+            {
+                //To disable the menu then call clear
+                model.Clear();
+
+                model.AddItem((CefMenuCommand)(int)MenuItem.Copy,          "复制    (Ctrl + C)");
+                if (!string.IsNullOrEmpty(Clipboard.GetText()))
+                {
+                    model.AddItem((CefMenuCommand)(int)MenuItem.Paste,     "粘贴    (Ctrl + V)");
+                }
+                model.AddItem((CefMenuCommand)(int)MenuItem.Delete, "删除");
+                model.AddItem((CefMenuCommand)(int)MenuItem.Format,       "格式化   (Ctrl + Alt + C)");
+                
+                model.AddItem((CefMenuCommand)(int)MenuItem.Annotation,   "注释     (Ctrl + /)");
+                model.AddItem((CefMenuCommand)(int)MenuItem.UnAnnotation, "范注释   (Ctrl +Alt + /)");
+
+                //Removing existing menu item
+                //bool removed = model.Remove(CefMenuCommand.ViewSource); // Remove "View Source" option
+
+                //Add new custom menu items
+                model.AddItem((CefMenuCommand)(int)MenuItem.ShowDevTools, "打开 DevTools");
+                //model.AddItem((CefMenuCommand)(int)MenuItem.CloseDevTools, "关闭 DevTools");
+            }
+
+            bool IContextMenuHandler.OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
+            {
+                
+                if ((int)commandId == (int)MenuItem.ShowDevTools)
+                {
+                    browser.ShowDevTools();
+                }
+                if ((int)commandId == (int)MenuItem.CloseDevTools)
+                {
+                    browser.CloseDevTools();
+                }
+                if ((int)commandId == (int)MenuItem.Copy)
+                {
+                    new Task(() =>
+                    {
+                        _buttonPannel.PasteToclipboard();
+                    }).Start();
+                }
+
+                if ((int)commandId == (int)MenuItem.Paste)
+                {
+                    new Task(() =>
+                    {
+                        _buttonPannel.CopyFromclipboard();
+                    }).Start(); 
+                }
+
+
+                if ((int)commandId == (int)MenuItem.Delete)
+                {
+                    new Task(() =>
+                    {
+                        _buttonPannel.DeleteSeletectd();
+                    }).Start();
+                }
+
+                if ((int)commandId == (int)MenuItem.Format)
+                {
+                    new Task(() =>
+                    {
+                        _buttonPannel.FormatSeletectd();
+                    }).Start();
+                }
+
+                if ((int)commandId == (int)MenuItem.Annotation)
+                {
+                    new Task(() =>
+                    {
+                        _buttonPannel.Annotation(true);
+                    }).Start();
+                }
+
+                if ((int)commandId == (int)MenuItem.UnAnnotation)
+                {
+                    new Task(() =>
+                    {
+                        _buttonPannel.Annotation(false);
+                    }).Start();
+                }
+                return false;
+            }
+
+            void IContextMenuHandler.OnContextMenuDismissed(IWebBrowser browserControl, IBrowser browser, IFrame frame)
+            {
+
+            }
+
+            bool IContextMenuHandler.RunContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model, IRunContextMenuCallback callback)
+            {
+                return false;
+            }
+
+            #endregion
         }
 
 
@@ -436,7 +568,7 @@ namespace Tabris.Winform.Control
             {
                 try
                 {
-                    
+
                     code = "var tabris;" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
                     dynamic host = new ExpandoObject();
                     var option = new ExecutionOptions
@@ -452,7 +584,7 @@ namespace Tabris.Winform.Control
                     {
                         if (!string.IsNullOrEmpty(host.err.ToString()))
                         {
-                            logAction(LogLevel.ERROR, host.err,"");
+                            logAction(LogLevel.ERROR, host.err, "");
                         }
                         var exception = host.ex as DynamicObject;
                         if (exception != null)
@@ -468,7 +600,7 @@ namespace Tabris.Winform.Control
                                         while (ex.InnerException != null)
                                             ex = ex.InnerException;
 
-                                        logAction(LogLevel.ERROR, ex.Message,"");
+                                        logAction(LogLevel.ERROR, ex.Message, "");
                                     }
                                 }
                             }
@@ -486,11 +618,11 @@ namespace Tabris.Winform.Control
                 }
                 catch (ScriptEngineException ex)
                 {
-                    logAction(LogLevel.ERROR, ((Microsoft.ClearScript.ScriptEngineException)ex).ErrorDetails,"");
+                    logAction(LogLevel.ERROR, ((Microsoft.ClearScript.ScriptEngineException)ex).ErrorDetails, "");
                 }
                 catch (Exception ex)
                 {
-                    logAction(LogLevel.ERROR, ex.Message,"");
+                    logAction(LogLevel.ERROR, ex.Message, "");
                 }
                 finally
                 {
@@ -506,11 +638,11 @@ namespace Tabris.Winform.Control
                     Exception ex = t.Exception;
                     while (ex is AggregateException && ex.InnerException != null)
                         ex = ex.InnerException;
-                    logAction(LogLevel.ERROR, ex.Message,"");
+                    logAction(LogLevel.ERROR, ex.Message, "");
                 }
                 else if (t.IsCanceled)
                 {
-                    logAction(LogLevel.ERROR, "Canclled.","");
+                    logAction(LogLevel.ERROR, "Canclled.", "");
                 }
             });
 
@@ -544,7 +676,7 @@ namespace Tabris.Winform.Control
             this.bottomPannel.Text = "dSkinPanel5";
             this.bottomPannel.BackColor = System.Drawing.Color.Transparent;
             this.bottomPannel.Location = new System.Drawing.Point(0, 274);
-            
+
             // 
             // btExcutorSelected
             // 
@@ -726,7 +858,7 @@ namespace Tabris.Winform.Control
                 if (codemirrow != null)
                 {
                     codemirrow.Dispose();
-                   
+
                 }
             }
             catch { }
