@@ -410,7 +410,7 @@ namespace Tabris.Winform.Control
                 model.AddItem((CefMenuCommand)(int)MenuItem.Format,       "格式化   (Ctrl + Alt + C)");
                 
                 model.AddItem((CefMenuCommand)(int)MenuItem.Annotation,   "注释     (Ctrl + /)");
-                model.AddItem((CefMenuCommand)(int)MenuItem.UnAnnotation, "范注释   (Ctrl +Alt + /)");
+                model.AddItem((CefMenuCommand)(int)MenuItem.UnAnnotation, "反注释   (Ctrl +Alt + /)");
 
                 //Removing existing menu item
                 //bool removed = model.Remove(CefMenuCommand.ViewSource); // Remove "View Source" option

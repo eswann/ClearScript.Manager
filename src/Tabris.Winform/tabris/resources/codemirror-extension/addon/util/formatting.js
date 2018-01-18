@@ -71,7 +71,6 @@
                 if (from.line == to.line) // An empty comment inserted - put cursor inside
                     cm.setCursor(from.line, from.ch + commentStart.length);
             } else { // Uncomment range
-                debugger
                 var selText = cm.getRange(from, to);
                 var startIndex = selText.indexOf(commentStart);
                 var endIndex = selText.lastIndexOf(commentEnd);

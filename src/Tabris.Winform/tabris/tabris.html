@@ -2,27 +2,32 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <style>
-        .CodeMirror, #codeForm {
-            height: 100% !important;
-        }
+<style>
+    .CodeMirror {
+        font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace !important;
+        font-size: 15px;
+    }
 
-        .breakpoints {
-            width: .8em;
-        }
+     .CodeMirror, #codeForm {
+         height: 100% !important;
+     }
 
-        .breakpoint {
-            color: #822;
-        }
+    .breakpoints {
+        width: .8em;
+    }
 
-        .cm-matchhighlight {
-            background-color: rgb(204, 174, 248)
-        }
+    .breakpoint {
+        color: #822;
+    }
 
-        .CodeMirror-selection-highlight-scrollbar {
-            background-color: rgb(166, 109, 249)
-        }
-    </style>
+    .cm-matchhighlight {
+        background-color: rgb(204, 174, 248)
+    }
+
+    .CodeMirror-selection-highlight-scrollbar {
+        background-color: rgb(166, 109, 249)
+    }
+</style>
     <script src="resources/jquery-2.1.3.js"></script>
     <link rel="stylesheet" href="resources/codemirror/lib/codemirror.css">
     <script src="resources/codemirror/lib/codemirror.js"></script>
@@ -131,7 +136,7 @@
                             }
                         }
                     },
-                    gutters: ["CodeMirror-lint-markers", "breakpoints", "CodeMirror-foldgutter"],
+                    gutters: ["CodeMirror-lint-markers", "CodeMirror-foldgutter","CodeMirror-linenumbers", "breakpoints"],
                     highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
                     textHover: { delay: 300 },
                     ternWith: { plugins: { tabris: {} } },
@@ -142,6 +147,7 @@
 
             cmEditor.editor.on("gutterClick", function (cm, n) {
                 var info = cm.lineInfo(n);
+                if (info.handle && info.handle.text.trim().length === 0) return;
                 var breakpoint = csharpJsFunction.SetBreakpoint(info.line);
                 if (breakpoint != -1) {
                     cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
