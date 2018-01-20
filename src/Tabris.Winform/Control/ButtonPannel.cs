@@ -10,7 +10,10 @@
 using CefSharp;
 using CefSharp.WinForms;
 using JavaScript.Manager.Debugger;
+using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Text;
 
 namespace Tabris.Winform.Control
 {
@@ -43,6 +46,9 @@ namespace Tabris.Winform.Control
         private readonly Action<LogLevel, string, string> logAction;
 
         private string fileOutPath = string.Empty;
+        private string debuggerUrl = string.Empty;
+        private string TargetId = string.Empty;
+        private IManagerSettings _setting;
         private bool isRun = false;
         public int Index { get; set; }
 
@@ -69,19 +75,55 @@ namespace Tabris.Winform.Control
             this.Location = new System.Drawing.Point(0, 0);
             initEvent();
 
-            manager = new RuntimeManager(new ManualManagerSettings
+            _setting = new ManualManagerSettings
             {
                 ScriptTimeoutMilliSeconds = 0,
                 V8DebugEnabled = true,
-                V8DebugPort = 9229,// 9229,
+                V8DebugPort = 9229, // 9229,
                 LocalV8DebugEnabled = false
-            });
+            };
+            manager = new RuntimeManager(_setting);
+
             JavaScript.Manager.Tabris.Tabris.Register(manager.RequireManager, new JavaScript.Manager.Tabris.TabrisOptions
             {
                 LogExecutor = new WinformLogExcutor(logAction)
             });
 
+            //GetDebuggerTargetId();
 
+
+            //debuggerUrl =string.Format(
+            //        "chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=127.0.0.1:{0}/{1}",
+            //        _setting.V8DebugPort, TargetId);
+
+            //Debug.WriteLine("debuggerUrl:" + debuggerUrl);
+        }
+
+        private void GetDebuggerTargetId()
+        {
+            try
+            {
+                var httpRequest = WebRequest.Create( "http://127.0.0.1:"+ _setting.V8DebugPort + "/getTargetId");
+                httpRequest.Method = WebRequestMethods.Http.Get;
+                httpRequest.Timeout = 5000;
+                using (var response = (HttpWebResponse)httpRequest.GetResponse())
+                {
+                    using (var responseStream = response.GetResponseStream())
+                    {
+                        var reader = new StreamReader(responseStream, Encoding.UTF8);
+                        var re = reader.ReadToEnd();
+                        if (!string.IsNullOrEmpty(re))
+                        {
+                            TargetId = re;
+                            Debug.WriteLine("targetId:" + TargetId);
+                        }
+                    }
+                }
+            }
+            catch (WebException)
+            {
+                // If it fails or times out, just go ahead and try to connect anyway, and rely on normal error reporting path.
+            }
         }
 
         /// <summary>

@@ -1,6 +1,4 @@
-﻿using Microsoft.ClearScript.V8;
-
-namespace JavaScript.Manager.Debugger
+﻿namespace JavaScript.Manager.Debugger
 {
     using System;
     using System.Diagnostics;
@@ -141,7 +139,7 @@ namespace JavaScript.Manager.Debugger
             {
                 var message = await m_messages.TakeAsync().ConfigureAwait(false);
                 DebugWriteLine(message);
-                V8DebugAgentFactory.SendCommand(Port,message);
+                //V8DebugAgentFactory.SendCommand(Port,message);
             }
 
 

@@ -11,17 +11,17 @@ namespace JavaScript.Manager.Debugger
     using System.Threading.Tasks;
 
 
-    public class V8Debugger : IV8Debugger
-    {
-        public event EventHandler<MessageEventArgs> OutputMessage;
-        public void OnDebugMessage(string message)
-        {
-            if (OutputMessage != null)
-            {
-                OutputMessage(this, new MessageEventArgs(message));
-            }
-        }
-    }
+    //public class V8Debugger : IV8Debugger
+    //{
+    //    public event EventHandler<MessageEventArgs> OutputMessage;
+    //    public void OnDebugMessage(string message)
+    //    {
+    //        if (OutputMessage != null)
+    //        {
+    //            OutputMessage(this, new MessageEventArgs(message));
+    //        }
+    //    }
+    //}
 
     public class V8DebuggerEngine 
     {
@@ -31,26 +31,26 @@ namespace JavaScript.Manager.Debugger
         private readonly V8ScriptEngine m_scriptEngine;
         private DebuggerConnection m_debuggerConnection;
         private DebuggerClient m_debuggerClient;
-        private IV8Debugger v8Debugger;
+        //private IV8Debugger v8Debugger;
         private string m_currentScriptName;
         private readonly List<Breakpoint> m_breakpoints = new List<Breakpoint>(); 
 
         public V8DebuggerEngine( V8ScriptEngine engine,int debuggingPort)
         {
-            v8Debugger = new V8Debugger();
+            //v8Debugger = new V8Debugger();
             m_scriptEngine = engine;
 
             //Create the connection to the debug port.
             m_debuggerConnection = new DebuggerConnection("ws://127.0.0.1:" + debuggingPort);
             m_debuggerConnection.Connect();
             m_debuggerClient = new DebuggerClient(m_debuggerConnection);
-            ((V8Debugger)v8Debugger).OutputMessage += m_debuggerClient.OnOutputMessage;
+            //((V8Debugger)v8Debugger).OutputMessage += m_debuggerClient.OnOutputMessage;
             m_debuggerClient.ExceptionEvent += debuggerClient_ExceptionEvent;
             m_debuggerClient.BreakpointEvent += m_debuggerClient_BreakpointEvent;
             m_currentScriptName = GetRandomScriptTargetName();
 
             
-            V8DebugAgentFactory.AddV8Debugger(debuggingPort, v8Debugger);
+            //V8DebugAgentFactory.AddV8Debugger(debuggingPort, v8Debugger);
 
             InitDebugger().ConfigureAwait(false).GetAwaiter().GetResult();
         }

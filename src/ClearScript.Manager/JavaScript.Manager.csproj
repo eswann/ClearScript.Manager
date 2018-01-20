@@ -127,12 +127,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Lib\Newtonsoft.Json.dll" />
-    <Content Include="Lib\v8-base-ia32.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Lib\v8-base-x64.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Lib\v8-ia32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
