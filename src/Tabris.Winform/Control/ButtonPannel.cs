@@ -42,24 +42,29 @@ namespace Tabris.Winform.Control
         private DSkin.Controls.DSkinPanel bottomPannel = new DSkin.Controls.DSkinPanel();
         private DSkin.Controls.DSkinButton SaveButton = new DSkin.Controls.DSkinButton();
         private readonly ChromiumWebBrowser codemirrow;
+        private readonly ChromiumWebBrowser debuggerBrower;
         private RuntimeManager manager;
         private readonly Action<LogLevel, string, string> logAction;
 
         private string fileOutPath = string.Empty;
         private string debuggerUrl = string.Empty;
+        private int debuggerPort ;
         private string TargetId = string.Empty;
+        private object lockObject = new object();
         private IManagerSettings _setting;
         private bool isRun = false;
         public int Index { get; set; }
 
         public Action<string> OnTitleChange { get; set; }
         public Action OnModify { get; set; }
-        public ButtonPannel(ChromiumWebBrowser brower, Action<LogLevel, string, string> logAction)
+        public ButtonPannel(ChromiumWebBrowser brower, ChromiumWebBrowser _debuggerBrower,int DebuggerPort ,Action<LogLevel, string, string> logAction)
         {
             this.logAction = logAction;
             init();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabrisWinform));
             this.codemirrow = brower;
+            this.debuggerBrower = _debuggerBrower;
+            debuggerPort = DebuggerPort;
             this.codemirrow.AllowDrop = true;
             this.codemirrow.MenuHandler = new JSFunc(this);
             codemirrow.RegisterJsObject("csharpJsFunction", new JSFunc(this), new BindingOptions { CamelCaseJavascriptNames = false });
@@ -97,6 +102,19 @@ namespace Tabris.Winform.Control
             //        _setting.V8DebugPort, TargetId);
 
             Debug.WriteLine("V8DebugPort:" + _setting.V8DebugPort);
+            debuggerBrower.Load("http://127.0.0.1:" + debuggerPort + "/debug?port=" + _setting.V8DebugPort);
+            debuggerBrower.FrameLoadEnd += DebuggerBrowserForOnFrameLoadEnd;
+         
+        }
+
+        private bool isDebuggerInit;
+        private void DebuggerBrowserForOnFrameLoadEnd(object sender, FrameLoadEndEventArgs e)
+        {
+            if (!isDebuggerInit)
+            {
+                isDebuggerInit = true;
+                OnDebuggingInit();
+            }
         }
 
         private void GetDebuggerTargetId()
@@ -124,6 +142,27 @@ namespace Tabris.Winform.Control
             {
                 // If it fails or times out, just go ahead and try to connect anyway, and rely on normal error reporting path.
             }
+        }
+
+        private void OnDebugging()
+        {
+            if (debuggerBrower == null) return;
+            this.BeginInvoke(new EventHandler(delegate
+            {
+                
+                this.codemirrow.Visible = false;
+                debuggerBrower.Visible = true;
+            }));
+        }
+        private void OnDebuggingInit()
+        {
+            if (debuggerBrower == null) return;
+            this.BeginInvoke(new EventHandler(delegate
+            {
+
+                this.codemirrow.Visible = true;
+                debuggerBrower.Visible = false;
+            }));
         }
 
         /// <summary>
@@ -228,26 +267,41 @@ namespace Tabris.Winform.Control
 
         private void btnExcutor_Click(object sender, EventArgs e)
         {
-            if (sender is string)
+            this.BeginInvoke(new EventHandler(delegate
             {
-                if (string.IsNullOrEmpty(sender.ToString()))
+                if (sender!=null && sender is string)
+                {
+                    if (string.IsNullOrEmpty(sender.ToString()))
+                    {
+                        MessageBox.Show("执行内容为空");
+                        return;
+                    }
+                    if (e != null && e is DebuggeEventArgs)
+                    {
+                        this.OnDebugging();
+                        invokeJsCode(sender.ToString(), true);
+                        return;
+                    }
+                    invokeJsCode(sender.ToString());
+                    return;
+                }
+                //codemirrow.ShowDevTools();
+                var code = InvokeJS("getCode()");
+                if (string.IsNullOrEmpty(code))
                 {
                     MessageBox.Show("执行内容为空");
                     return;
                 }
 
-                invokeJsCode(sender.ToString());
-                return;
-            }
-            //codemirrow.ShowDevTools();
-            var code = InvokeJS("getCode()");
-            if (string.IsNullOrEmpty(code))
-            {
-                MessageBox.Show("执行内容为空");
-                return;
-            }
+                if (e != null && e is DebuggeEventArgs)
+                {
+                    this.OnDebugging();
+                    invokeJsCode(code,true);
+                    return;
+                }
+                invokeJsCode(code);
 
-            invokeJsCode(code);
+            }));
         }
 
         private void btExcutorSelected_Click(object sender, EventArgs e)
@@ -270,6 +324,7 @@ namespace Tabris.Winform.Control
                 MessageBox.Show("获取选择内容为空");
                 return;
             }
+
             invokeJsCode(selectedCode);
         }
 
@@ -356,27 +411,49 @@ namespace Tabris.Winform.Control
                 _buttonPannel.OnModify();
             }
 
+            #region F2
             public void ExcuteSelected(string code)
             {
-                if (_buttonPannel.isRun)
+                lock (this)
                 {
-                    _buttonPannel.logAction(LogLevel.WARN, "请等待当前任务执行完", "");
-                    return;
+                    if (_buttonPannel.isRun)
+                    {
+                        _buttonPannel.logAction(LogLevel.WARN, "请等待当前任务执行完", "");
+                        return;
+                    }
+                    _buttonPannel.btExcutorSelected_Click(code, null); 
                 }
-                _buttonPannel.btExcutorSelected_Click(code, null);
 
             }
             public void Excute(string code)
             {
-                if (_buttonPannel.isRun)
+                lock (this)
                 {
-                    _buttonPannel.logAction(LogLevel.WARN, "请等待当前任务执行完", "");
-                    return;
+                    if (_buttonPannel.isRun)
+                    {
+                        _buttonPannel.logAction(LogLevel.WARN, "请等待当前任务执行完", "");
+                        return;
+                    }
+
+                    _buttonPannel.btnExcutor_Click(code, null); 
                 }
 
-                _buttonPannel.btnExcutor_Click(code, null);
-
             }
+
+            public void DebuggerExcute(string code)
+            {
+                lock (this)
+                {
+                    if (_buttonPannel.isRun)
+                    {
+                        _buttonPannel.logAction(LogLevel.WARN, "请等待当前任务执行完", "");
+                        return;
+                    }
+
+                    _buttonPannel.btnExcutor_Click(code, new DebuggeEventArgs(true));
+                }
+            }
+            #endregion
 
             public bool Save(string code)
             {
@@ -459,6 +536,7 @@ namespace Tabris.Winform.Control
 
                 //Add new custom menu items
                 model.AddItem((CefMenuCommand)(int)MenuItem.ShowDevTools, "打开 DevTools");
+                model.AddItem((CefMenuCommand)(int)MenuItem.CloseDevTools, "Debugger  (F5)");
                 //model.AddItem((CefMenuCommand)(int)MenuItem.CloseDevTools, "关闭 DevTools");
             }
 
@@ -471,7 +549,12 @@ namespace Tabris.Winform.Control
                 }
                 if ((int)commandId == (int)MenuItem.CloseDevTools)
                 {
-                    browser.CloseDevTools();
+                    //browser.CloseDevTools();
+                    new Task(() =>
+                    {
+                        _buttonPannel.btnExcutor_Click(null, new DebuggeEventArgs(true));
+                    }).Start();
+                   
                 }
                 if ((int)commandId == (int)MenuItem.Copy)
                 {
@@ -598,7 +681,7 @@ namespace Tabris.Winform.Control
 
         #endregion
 
-        private void invokeJsCode(string code)
+        private void invokeJsCode(string code,bool isDebuger = false)
         {
             if (this.catchBox.CheckState.Equals(CheckState.Checked))
             {
@@ -610,8 +693,15 @@ namespace Tabris.Winform.Control
             {
                 try
                 {
-
-                    code = "var tabris;" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
+                    if (isDebuger)
+                    {
+                        code = "debugger;\nvar tabris;\n" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
+                    }
+                    else
+                    {
+                        code = "var tabris;\n" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
+                    }
+                   
                     dynamic host = new ExpandoObject();
                     var option = new ExecutionOptions
                     {
@@ -621,13 +711,35 @@ namespace Tabris.Winform.Control
                         }
                     };
 
-                    await manager.ExecuteAsync(Guid.NewGuid().ToString(), code, option);
+                    try
+                    {
+                        await manager.ExecuteAsync(Guid.NewGuid().ToString(), code, option);
+
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                    finally
+                    {
+                        if (isDebuger)
+                        {
+                            this.BeginInvoke(new EventHandler(delegate
+                            {
+                                this.codemirrow.Visible = true;
+                                debuggerBrower.Visible = false;
+                            }));
+                        }
+
+                    }
+
                     try
                     {
                         if (!string.IsNullOrEmpty(host.err.ToString()))
                         {
                             logAction(LogLevel.ERROR, host.err, "");
                         }
+
                         var exception = host.ex as DynamicObject;
                         if (exception != null)
                         {
@@ -638,7 +750,7 @@ namespace Tabris.Winform.Control
                                 {
                                     if (itemKeyValuePair.Value is Exception)
                                     {
-                                        Exception ex = (Exception)itemKeyValuePair.Value;
+                                        Exception ex = (Exception) itemKeyValuePair.Value;
                                         while (ex.InnerException != null)
                                             ex = ex.InnerException;
 
@@ -648,9 +760,10 @@ namespace Tabris.Winform.Control
                             }
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                     }
+                    
 
                     //if (Index == 0)
                     //{
@@ -889,22 +1002,21 @@ namespace Tabris.Winform.Control
             base.Dispose(disposing);
             try
             {
-                codemirrow.CloseDevTools();
+                codemirrow?.CloseDevTools();
+                debuggerBrower?.CloseDevTools();
             }
             catch { }
             try
             {
-                codemirrow.GetBrowser().CloseBrowser(true);
+                codemirrow?.GetBrowser().CloseBrowser(true);
+                debuggerBrower?.GetBrowser().CloseBrowser(true);
             }
             catch { }
 
             try
             {
-                if (codemirrow != null)
-                {
-                    codemirrow.Dispose();
-
-                }
+                codemirrow?.Dispose();
+                debuggerBrower?.Dispose();
             }
             catch { }
         }

@@ -127,13 +127,16 @@
                         "Ctrl-Alt-C": function (a) {
                             autoFormatSelection();
                         },
-                        "F5": function (a) {
+                        "F2": function (a) {
                             var sele = getSelectedCode();
                             if (sele && sele.length > 0) {
                                 csharpJsFunction.ExcuteSelected(sele);
                             } else {
                                 csharpJsFunction.Excute(getCode());
                             }
+                        },
+                        "F5": function (a) {
+                            csharpJsFunction.DebuggerExcute(getCode());
                         }
                     },
                     gutters: ["CodeMirror-lint-markers", "CodeMirror-foldgutter","CodeMirror-linenumbers", "breakpoints"],

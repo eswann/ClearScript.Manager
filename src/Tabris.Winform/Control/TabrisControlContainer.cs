@@ -5,6 +5,8 @@
 // <author>nainaigu</author>
 // <summary></summary>
 //-----------------------------------------------------------------------
+
+
 namespace Tabris.Winform.Control
 {
     using System;
@@ -26,6 +28,7 @@ namespace Tabris.Winform.Control
             {
                 ButtonPannel.Dispose();
                 LogPannel.Dispose();
+
             }
             catch (Exception)
             {

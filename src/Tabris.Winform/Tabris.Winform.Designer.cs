@@ -339,6 +339,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
+            this.BorderColor = System.Drawing.Color.White;
             this.CaptionColor = System.Drawing.Color.Transparent;
             this.CaptionFont = new System.Drawing.Font("Ebrima", 9F, System.Drawing.FontStyle.Bold);
             this.CaptionHeight = 25;

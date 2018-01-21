@@ -1,7 +1,9 @@
 ﻿using CefSharp.WinForms;
 using DSkin.Common;
 using DSkin.DirectUI;
+using JavaScript.Manager.Debugger;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -12,6 +14,8 @@ namespace Tabris.Winform
     {
         DuiButton addButton = new DuiButton { NormalImage = Properties.Resources.ChromeAdd, HoverImage = Properties.Resources.ChromeAddHover, Margin = new Padding(0, 3, 0, 0), Name = "add", MouseEventBubble = false ,Cursor= System.Windows.Forms.Cursors.Hand };
         private string tabrisUrl = string.Empty;
+        private int DebuggerPort;
+        private Process debuggerProcess ;
         public TabrisWinform()
         {
             InitializeComponent();
@@ -39,6 +43,7 @@ namespace Tabris.Winform
 
         private void TabrisWinform_Load(object sender, EventArgs e)
         {
+            StartRDing();
             dSkinTabBar1.Items.ItemAdded += Items_ItemAdded;
             dSkinTabBar1.Items.ItemRemoved += Items_ItemRemoved;
             dSkinTabControl1.ItemSize = new Size(1, 1);
@@ -47,6 +52,8 @@ namespace Tabris.Winform
             dSkinTabBar1.InnerDuiControl.MouseDown += InnerDuiControl_MouseDown;
 
             add_MouseClick(null, null);
+
+            
         }
         void InnerDuiControl_MouseDown(object sender, DuiMouseEventArgs e)
         {
@@ -83,18 +90,20 @@ namespace Tabris.Winform
             ChromiumWebBrowser brower = new ChromiumWebBrowser(tabrisUrl)
             {
                 Dock = DockStyle.Fill,
-               
+                BackColor = System.Drawing.Color.White,
+                Visible = false
+            };
+            var DebuggerBrower = new ChromiumWebBrowser()
+            {
+                Dock = DockStyle.Fill,
+                BackColor = System.Drawing.Color.White,
+                Visible = true
             };
             //db.Controls.Add(brower);
-            TabPage page = new TabPage();
-            page.Controls.Add(brower);
-            item.TabPage = page;
-            dSkinTabControl1.TabPages.Add(page);
-            dSkinTabBar1.LayoutContent();
-            dSkinTabBar1.SetSelect(item);
+          
             
             LogPannel logPannel = new LogPannel();
-            ButtonPannel buttonPannel = new ButtonPannel(brower, logPannel.Log)
+            ButtonPannel buttonPannel = new ButtonPannel(brower,DebuggerBrower,this.DebuggerPort, logPannel.Log)
             {
                 Index = index,
                 OnTitleChange = s =>
@@ -114,9 +123,21 @@ namespace Tabris.Winform
                         item.Text = " * " + tag.TagName;
                     }
                     
-                }
+                },
+                
             };
-            
+
+            TabPage page = new TabPage();
+
+
+            item.TabPage = page;
+            dSkinTabControl1.TabPages.Add(page);
+            dSkinTabBar1.LayoutContent();
+            dSkinTabBar1.SetSelect(item);
+
+            page.Controls.Add(DebuggerBrower);
+            page.Controls.Add(brower);
+
             this.dSkinPanel3.Controls.Add(buttonPannel);
             this.dSkinPanel1.Controls.Add(logPannel);
             item.Tag = new TabrisControlContainer
@@ -173,6 +194,63 @@ namespace Tabris.Winform
         private void TabrisWinform_FormClosing(object sender, FormClosingEventArgs e)
         {
             //Cef.Shutdown();
+            CutProcess();
+        }
+
+        /// <summary>
+        /// 开启应用程序
+        /// </summary>
+        private  void StartRDing()
+        {
+            try
+            {
+                var inteceporPath = Application.StartupPath + "\\" + "inspector.exe";
+                if (!File.Exists(inteceporPath))
+                {
+                    return;
+                }
+
+                DebuggerPort = PortUtilities.FindFreePort();
+                debuggerProcess = new Process();
+                // 设置启动进程路径
+                debuggerProcess.StartInfo.FileName = inteceporPath;
+                debuggerProcess.StartInfo.Arguments = "--web-port="+ DebuggerPort;
+                debuggerProcess.EnableRaisingEvents = true;
+                // 是否在新窗口中启动该进程的值
+                debuggerProcess.StartInfo.CreateNoWindow = true;
+                debuggerProcess.StartInfo.UseShellExecute = true;
+                debuggerProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                debuggerProcess.Exited += new EventHandler(pro_Exited);
+                debuggerProcess.Start();
+            }
+            catch (Exception ex)
+            {
+                //ignore
+                MessageBox.Show("debugger start Error", "Error");
+            }
+        }
+
+        private static void pro_Exited(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+        /// <summary>
+        /// 检测是否存在进程， 存在就杀进程
+        /// </summary>
+        private  void CutProcess()
+        {
+            try
+            {
+                if (debuggerProcess != null)
+                {
+                    debuggerProcess.Kill();
+                }
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("kill debugger error,please try close inspector process in Task Manager!", "Error");
+            }
         }
     }
 

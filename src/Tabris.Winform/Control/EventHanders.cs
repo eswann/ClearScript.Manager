@@ -12,6 +12,15 @@ namespace Tabris.Winform.Control
     using System.Collections.Generic;
     using System.Linq;
 
+    public sealed class DebuggeEventArgs : EventArgs
+    {
+        public DebuggeEventArgs(bool isDebugger)
+        {
+            IsDebugger = isDebugger;
+        }
+
+        public bool IsDebugger { get; private set; }
+    }
     public class EventBus
     {
         public static EventAggregator _eventAggregator = new EventAggregator();
