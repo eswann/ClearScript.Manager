@@ -79,7 +79,7 @@ namespace Tabris.Winform.Control
             {
                 ScriptTimeoutMilliSeconds = 0,
                 V8DebugEnabled = true,
-                V8DebugPort = 9229, // 9229,
+                V8DebugPort = 0, // 9229,
                 LocalV8DebugEnabled = false
             };
             manager = new RuntimeManager(_setting);
@@ -96,7 +96,7 @@ namespace Tabris.Winform.Control
             //        "chrome-devtools://devtools/bundled/inspector.html?experiments=true&v8only=true&ws=127.0.0.1:{0}/{1}",
             //        _setting.V8DebugPort, TargetId);
 
-            //Debug.WriteLine("debuggerUrl:" + debuggerUrl);
+            Debug.WriteLine("V8DebugPort:" + _setting.V8DebugPort);
         }
 
         private void GetDebuggerTargetId()
@@ -722,6 +722,7 @@ namespace Tabris.Winform.Control
             // 
             // btExcutorSelected
             // 
+            // 
             this.btExcutorSelected.AdaptImage = true;
             this.btExcutorSelected.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(186)))), ((int)(((byte)(233)))));
             this.btExcutorSelected.ButtonBorderColor = System.Drawing.Color.Gray;
@@ -730,7 +731,7 @@ namespace Tabris.Winform.Control
             this.btExcutorSelected.HoverColor = System.Drawing.Color.Empty;
             this.btExcutorSelected.HoverImage = null;
             this.btExcutorSelected.IsPureColor = false;
-            this.btExcutorSelected.Location = new System.Drawing.Point(30, 82);
+            this.btExcutorSelected.Location = new System.Drawing.Point(8, 82);
             this.btExcutorSelected.Name = "btExcutorSelected";
             this.btExcutorSelected.NormalImage = null;
             this.btExcutorSelected.PressColor = System.Drawing.Color.Empty;
@@ -738,6 +739,7 @@ namespace Tabris.Winform.Control
             this.btExcutorSelected.Radius = 10;
             this.btExcutorSelected.ShowButtonBorder = true;
             this.btExcutorSelected.Size = new System.Drawing.Size(100, 40);
+            this.btExcutorSelected.TabIndex = 1;
             this.btExcutorSelected.Text = "Process(Selected)";
             this.btExcutorSelected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btExcutorSelected.TextPadding = 0;
@@ -754,7 +756,7 @@ namespace Tabris.Winform.Control
             this.btnExcutor.HoverColor = System.Drawing.Color.Empty;
             this.btnExcutor.HoverImage = null;
             this.btnExcutor.IsPureColor = false;
-            this.btnExcutor.Location = new System.Drawing.Point(30, 20);
+            this.btnExcutor.Location = new System.Drawing.Point(8, 20);
             this.btnExcutor.Name = "btnExcutor";
             this.btnExcutor.NormalImage = null;
             this.btnExcutor.PressColor = System.Drawing.Color.Empty;
@@ -762,6 +764,7 @@ namespace Tabris.Winform.Control
             this.btnExcutor.Radius = 10;
             this.btnExcutor.ShowButtonBorder = true;
             this.btnExcutor.Size = new System.Drawing.Size(100, 40);
+            this.btnExcutor.TabIndex = 0;
             this.btnExcutor.Text = "Process         (F5)";
             this.btnExcutor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.btnExcutor.TextPadding = 0;
@@ -774,11 +777,12 @@ namespace Tabris.Winform.Control
             this.SaveButton.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(133)))), ((int)(((byte)(186)))), ((int)(((byte)(233)))));
             this.SaveButton.ButtonBorderColor = System.Drawing.Color.Gray;
             this.SaveButton.ButtonBorderWidth = 1;
+            this.SaveButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.SaveButton.DialogResult = System.Windows.Forms.DialogResult.None;
             this.SaveButton.HoverColor = System.Drawing.Color.Empty;
             this.SaveButton.HoverImage = null;
             this.SaveButton.IsPureColor = false;
-            this.SaveButton.Location = new System.Drawing.Point(30, 213);
+            this.SaveButton.Location = new System.Drawing.Point(8, 213);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.NormalImage = null;
             this.SaveButton.PressColor = System.Drawing.Color.Empty;
@@ -786,10 +790,10 @@ namespace Tabris.Winform.Control
             this.SaveButton.Radius = 10;
             this.SaveButton.ShowButtonBorder = true;
             this.SaveButton.Size = new System.Drawing.Size(100, 40);
+            this.SaveButton.TabIndex = 7;
             this.SaveButton.Text = "Save To File (Ctrl+S)";
             this.SaveButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.SaveButton.TextPadding = 0;
-            this.SaveButton.Cursor = System.Windows.Forms.Cursors.Hand;
 
             // 
             // reloadRuntime
@@ -798,11 +802,12 @@ namespace Tabris.Winform.Control
             this.reloadRuntime.BaseColor = System.Drawing.Color.Crimson;
             this.reloadRuntime.ButtonBorderColor = System.Drawing.Color.Gray;
             this.reloadRuntime.ButtonBorderWidth = 1;
+            this.reloadRuntime.Cursor = System.Windows.Forms.Cursors.Hand;
             this.reloadRuntime.DialogResult = System.Windows.Forms.DialogResult.None;
             this.reloadRuntime.HoverColor = System.Drawing.Color.Empty;
             this.reloadRuntime.HoverImage = null;
             this.reloadRuntime.IsPureColor = false;
-            this.reloadRuntime.Location = new System.Drawing.Point(30, 148);
+            this.reloadRuntime.Location = new System.Drawing.Point(8, 148);
             this.reloadRuntime.Name = "reloadRuntime";
             this.reloadRuntime.NormalImage = null;
             this.reloadRuntime.PressColor = System.Drawing.Color.Empty;
@@ -810,45 +815,44 @@ namespace Tabris.Winform.Control
             this.reloadRuntime.Radius = 10;
             this.reloadRuntime.ShowButtonBorder = true;
             this.reloadRuntime.Size = new System.Drawing.Size(100, 40);
+            this.reloadRuntime.TabIndex = 3;
             this.reloadRuntime.Text = "Reload(JsRuntime)";
             this.reloadRuntime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.reloadRuntime.TextPadding = 0;
-            this.reloadRuntime.Cursor = System.Windows.Forms.Cursors.Hand;
 
 
             // 
             // runtimeTimeout
             // 
             this.runtimeTimeout.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+                                                                               | System.Windows.Forms.AnchorStyles.Right)));
             this.runtimeTimeout.BitmapCache = false;
             this.runtimeTimeout.Location = new System.Drawing.Point(8, 86);
             this.runtimeTimeout.Name = "runtimeTimeout";
-            this.runtimeTimeout.Size = new System.Drawing.Size(137, 21);
+            this.runtimeTimeout.Size = new System.Drawing.Size(140, 21);
+            this.runtimeTimeout.TabIndex = 4;
             this.runtimeTimeout.TransparencyKey = System.Drawing.Color.Empty;
-            this.runtimeTimeout.WaterFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.runtimeTimeout.WaterText = "unlimited default";
+            this.runtimeTimeout.WaterFont = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.runtimeTimeout.WaterText = "unlimited";
             this.runtimeTimeout.WaterTextOffset = new System.Drawing.Point(5, 5);
-            this.runtimeTimeout.Enabled = true;
 
             // 
             // dSkinLabel1
             // 
             this.dSkinLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+                                                                            | System.Windows.Forms.AnchorStyles.Right)));
             this.dSkinLabel1.AutoSize = false;
-            this.dSkinLabel1.Location = new System.Drawing.Point(8, 47);
+            this.dSkinLabel1.Location = new System.Drawing.Point(8, 34);
             this.dSkinLabel1.Name = "dSkinLabel1";
-            this.dSkinLabel1.Size = new System.Drawing.Size(139, 33);
+            this.dSkinLabel1.Size = new System.Drawing.Size(150, 46);
             this.dSkinLabel1.TabIndex = 5;
             this.dSkinLabel1.Text = "Timeout For Runtime(Need reload runtime)";
-            this.dSkinLabel1.Enabled = true;
 
             // 
             // catchBox
             // 
             this.catchBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+           | System.Windows.Forms.AnchorStyles.Right)));
             this.catchBox.CheckAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.catchBox.Checked = true;
             this.catchBox.CheckFlagColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(151)))), ((int)(((byte)(2)))));
@@ -865,13 +869,12 @@ namespace Tabris.Winform.Control
             this.catchBox.InnerRectInflate = 3;
             this.catchBox.Location = new System.Drawing.Point(8, 113);
             this.catchBox.Name = "catchBox";
-            this.catchBox.Size = new System.Drawing.Size(137, 18);
+            this.catchBox.Size = new System.Drawing.Size(100, 18);
             this.catchBox.SpaceBetweenCheckMarkAndText = 3;
             this.catchBox.TabIndex = 2;
-            this.catchBox.Text = "Catch Global Error";
+            this.catchBox.Text = "Global Catch";
             this.catchBox.TextColorDisabled = System.Drawing.Color.Gray;
             this.catchBox.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
-            this.catchBox.Enabled = true;
 
 
         }

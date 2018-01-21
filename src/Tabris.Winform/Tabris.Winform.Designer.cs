@@ -100,7 +100,7 @@
             this.dSkinPanel4.Location = new System.Drawing.Point(0, 0);
             this.dSkinPanel4.Name = "dSkinPanel4";
             this.dSkinPanel4.RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel4.RightBottom")));
-            this.dSkinPanel4.Size = new System.Drawing.Size(633, 416);
+            this.dSkinPanel4.Size = new System.Drawing.Size(684, 416);
             this.dSkinPanel4.TabIndex = 2;
             this.dSkinPanel4.Text = "dSkinPanel4";
             // 
@@ -126,7 +126,7 @@
             this.dSkinTabControl1.SelectedBackColors = new System.Drawing.Color[] {
         System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255))))),
         System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))))};
-            this.dSkinTabControl1.Size = new System.Drawing.Size(627, 410);
+            this.dSkinTabControl1.Size = new System.Drawing.Size(678, 410);
             this.dSkinTabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.dSkinTabControl1.TabIndex = 1;
             this.dSkinTabControl1.UpdownBtnArrowNormalColor = System.Drawing.Color.Black;
@@ -143,10 +143,10 @@
             this.dSkinPanel3.Controls.Add(this.btExcutorSelected);
             this.dSkinPanel3.Controls.Add(this.btnExcutor);
             this.dSkinPanel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.dSkinPanel3.Location = new System.Drawing.Point(633, 0);
+            this.dSkinPanel3.Location = new System.Drawing.Point(684, 0);
             this.dSkinPanel3.Name = "dSkinPanel3";
             this.dSkinPanel3.RightBottom = ((System.Drawing.Image)(resources.GetObject("dSkinPanel3.RightBottom")));
-            this.dSkinPanel3.Size = new System.Drawing.Size(164, 416);
+            this.dSkinPanel3.Size = new System.Drawing.Size(113, 416);
             this.dSkinPanel3.TabIndex = 1;
             this.dSkinPanel3.Text = "dSkinPanel3";
             // 
@@ -161,7 +161,7 @@
             this.SaveButton.HoverColor = System.Drawing.Color.Empty;
             this.SaveButton.HoverImage = null;
             this.SaveButton.IsPureColor = false;
-            this.SaveButton.Location = new System.Drawing.Point(30, 213);
+            this.SaveButton.Location = new System.Drawing.Point(8, 213);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.NormalImage = null;
             this.SaveButton.PressColor = System.Drawing.Color.Empty;
@@ -185,7 +185,7 @@
             this.bottomPannel.Location = new System.Drawing.Point(0, 279);
             this.bottomPannel.Name = "bottomPannel";
             this.bottomPannel.RightBottom = ((System.Drawing.Image)(resources.GetObject("bottomPannel.RightBottom")));
-            this.bottomPannel.Size = new System.Drawing.Size(164, 137);
+            this.bottomPannel.Size = new System.Drawing.Size(113, 137);
             this.bottomPannel.TabIndex = 6;
             this.bottomPannel.Text = "dSkinPanel5";
             this.bottomPannel.Visible = false;
@@ -195,9 +195,9 @@
             this.dSkinLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dSkinLabel1.AutoSize = false;
-            this.dSkinLabel1.Location = new System.Drawing.Point(8, 47);
+            this.dSkinLabel1.Location = new System.Drawing.Point(8, 34);
             this.dSkinLabel1.Name = "dSkinLabel1";
-            this.dSkinLabel1.Size = new System.Drawing.Size(139, 33);
+            this.dSkinLabel1.Size = new System.Drawing.Size(102, 46);
             this.dSkinLabel1.TabIndex = 5;
             this.dSkinLabel1.Text = "Timeout For Runtime(Need reload runtime)";
             this.dSkinLabel1.Visible = false;
@@ -209,12 +209,12 @@
             this.runtimeTimeout.BitmapCache = false;
             this.runtimeTimeout.Location = new System.Drawing.Point(8, 86);
             this.runtimeTimeout.Name = "runtimeTimeout";
-            this.runtimeTimeout.Size = new System.Drawing.Size(137, 21);
+            this.runtimeTimeout.Size = new System.Drawing.Size(100, 21);
             this.runtimeTimeout.TabIndex = 4;
             this.runtimeTimeout.TransparencyKey = System.Drawing.Color.Empty;
             this.runtimeTimeout.Visible = false;
             this.runtimeTimeout.WaterFont = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.runtimeTimeout.WaterText = "unlimited default";
+            this.runtimeTimeout.WaterText = "unlimited";
             this.runtimeTimeout.WaterTextOffset = new System.Drawing.Point(5, 5);
             // 
             // catchBox
@@ -237,10 +237,10 @@
             this.catchBox.InnerRectInflate = 3;
             this.catchBox.Location = new System.Drawing.Point(8, 113);
             this.catchBox.Name = "catchBox";
-            this.catchBox.Size = new System.Drawing.Size(137, 18);
+            this.catchBox.Size = new System.Drawing.Size(100, 18);
             this.catchBox.SpaceBetweenCheckMarkAndText = 3;
             this.catchBox.TabIndex = 2;
-            this.catchBox.Text = "Catch Global Error";
+            this.catchBox.Text = "Global Catch";
             this.catchBox.TextColorDisabled = System.Drawing.Color.Gray;
             this.catchBox.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
             this.catchBox.Visible = false;
@@ -256,7 +256,7 @@
             this.reloadRuntime.HoverColor = System.Drawing.Color.Empty;
             this.reloadRuntime.HoverImage = null;
             this.reloadRuntime.IsPureColor = false;
-            this.reloadRuntime.Location = new System.Drawing.Point(30, 148);
+            this.reloadRuntime.Location = new System.Drawing.Point(8, 148);
             this.reloadRuntime.Name = "reloadRuntime";
             this.reloadRuntime.NormalImage = null;
             this.reloadRuntime.PressColor = System.Drawing.Color.Empty;
@@ -281,7 +281,7 @@
             this.btExcutorSelected.HoverColor = System.Drawing.Color.Empty;
             this.btExcutorSelected.HoverImage = null;
             this.btExcutorSelected.IsPureColor = false;
-            this.btExcutorSelected.Location = new System.Drawing.Point(30, 82);
+            this.btExcutorSelected.Location = new System.Drawing.Point(8, 82);
             this.btExcutorSelected.Name = "btExcutorSelected";
             this.btExcutorSelected.NormalImage = null;
             this.btExcutorSelected.PressColor = System.Drawing.Color.Empty;
@@ -306,7 +306,7 @@
             this.btnExcutor.HoverColor = System.Drawing.Color.Empty;
             this.btnExcutor.HoverImage = null;
             this.btnExcutor.IsPureColor = false;
-            this.btnExcutor.Location = new System.Drawing.Point(30, 20);
+            this.btnExcutor.Location = new System.Drawing.Point(8, 20);
             this.btnExcutor.Name = "btnExcutor";
             this.btnExcutor.NormalImage = null;
             this.btnExcutor.PressColor = System.Drawing.Color.Empty;
@@ -329,7 +329,7 @@
             this.dSkinTabBar1.Location = new System.Drawing.Point(3, 2);
             this.dSkinTabBar1.Name = "dSkinTabBar1";
             this.dSkinTabBar1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.dSkinTabBar1.Size = new System.Drawing.Size(634, 26);
+            this.dSkinTabBar1.Size = new System.Drawing.Size(685, 26);
             this.dSkinTabBar1.TabControl = this.dSkinTabControl1;
             this.dSkinTabBar1.TabIndex = 2;
             this.dSkinTabBar1.Text = "dSkinTabBar1";
