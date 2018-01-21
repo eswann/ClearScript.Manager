@@ -97,6 +97,7 @@
     <Compile Include="Control\LogPannel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Control\PortUtility.cs" />
     <Compile Include="Control\TabrisControlContainer.cs" />
     <Compile Include="Control\TabrisTabItem.cs">
       <SubType>Component</SubType>

@@ -1,7 +1,6 @@
 ﻿using CefSharp.WinForms;
 using DSkin.Common;
 using DSkin.DirectUI;
-using JavaScript.Manager.Debugger;
 using System;
 using System.Diagnostics;
 using System.Drawing;

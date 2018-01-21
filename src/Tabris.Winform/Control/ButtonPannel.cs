@@ -9,7 +9,6 @@
 
 using CefSharp;
 using CefSharp.WinForms;
-using JavaScript.Manager.Debugger;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -380,30 +379,6 @@ namespace Tabris.Winform.Control
                 _buttonPannel = buttonPannel;
             }
 
-            public int SetBreakpoint(int line)
-            {
-                try
-                {
-                    if (_buttonPannel.manager.V8DebuggerEngine == null) return 1;
-                    var bp = new Breakpoint
-                    {
-                        LineNumber = line + 3,
-                        Column = 0,
-                    };
-                    var response = _buttonPannel.manager.V8DebuggerEngine.SetBreakpoint(bp).ConfigureAwait(false).GetAwaiter().GetResult();
-                    if (response)
-                    {
-                        return 1;
-                    }
-
-                    return -1;
-                }
-                catch (Exception ex)
-                {
-                    return -1;
-                }
-
-            }
 
             public void Modify()
             {
