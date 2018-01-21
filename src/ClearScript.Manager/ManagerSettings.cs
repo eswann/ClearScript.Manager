@@ -53,7 +53,6 @@ namespace JavaScript.Manager
         /// Is debugging enabled.
         /// </summary>
         bool V8DebugEnabled { get; }
-        bool LocalV8DebugEnabled { get; set; }
 
         /// <summary>
         /// What is the debug port.
@@ -148,7 +147,6 @@ namespace JavaScript.Manager
             get { return SettingToBool("DebugEnabled"); }
         }
 
-        public bool LocalV8DebugEnabled { get; set; }
 
         private int _V8DebugPort;
         public int V8DebugPort

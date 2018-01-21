@@ -1,5 +1,4 @@
 ﻿using JavaScript.Manager.Caching;
-using JavaScript.Manager.Debugger;
 using JavaScript.Manager.Extensions;
 using JavaScript.Manager.Loaders;
 using Microsoft.ClearScript;
@@ -10,6 +9,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,7 +21,6 @@ namespace JavaScript.Manager
     public interface IRuntimeManager : IDisposable
     {
         RequireManager RequireManager { get; set; }
-        V8DebuggerEngine V8DebuggerEngine { get;  set; }
         /// <summary>
         /// If True, automatically adds a reference to the .Net Console.
         /// </summary>
@@ -130,7 +129,6 @@ namespace JavaScript.Manager
         private bool _disposed;
 
         public RequireManager RequireManager { get; set; }
-        public V8DebuggerEngine V8DebuggerEngine { get;  set; }
 
         /// <summary>
         /// Creates a new Runtime Manager.
@@ -241,10 +239,7 @@ namespace JavaScript.Manager
             }
             finally
             {
-                if (V8DebuggerEngine != null)
-                {
-                    await V8DebuggerEngine.ResetDebuggerScriptEngine();
-                }
+                
             }
 
         }
@@ -297,7 +292,7 @@ namespace JavaScript.Manager
 
                 if (_settings.V8DebugPort <= 0)
                 {
-                    _settings.V8DebugPort = PortUtilities.FindFreePort(IPAddress.Loopback);
+                    _settings.V8DebugPort = FindFreePort(IPAddress.Loopback);
                     Debug.WriteLine("_settings.V8DebugPort:" + _settings.V8DebugPort);
                 }
                 _scriptEngine = _v8Runtime.CreateScriptEngine(flags, _settings.V8DebugPort);
@@ -307,11 +302,7 @@ namespace JavaScript.Manager
                     
                 }
 
-                if (_settings.LocalV8DebugEnabled)
-                {
-                    V8DebuggerEngine = new V8DebuggerEngine(_scriptEngine, _settings.V8DebugPort);
-                }
-                
+               
             }
             return _scriptEngine;
         }
@@ -330,7 +321,6 @@ namespace JavaScript.Manager
         {
             if (_scriptEngine != null)
             {
-                V8DebuggerEngine?.Dispose();
                 _scriptEngine.Interrupt();
                 _scriptEngine.Dispose();
                 _scriptEngine = null;
@@ -351,7 +341,26 @@ namespace JavaScript.Manager
 
             return true;
         }
+        private static int FindFreePort(IPAddress address = null)
+        {
+            if (address == null)
+                address = IPAddress.Any;
 
+            int port;
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            try
+            {
+                var pEndPoint = new IPEndPoint(address, 0);
+                socket.Bind(pEndPoint);
+                pEndPoint = (IPEndPoint)socket.LocalEndPoint;
+                port = pEndPoint.Port;
+            }
+            finally
+            {
+                socket.Close();
+            }
+            return port;
+        }
         private static IList<IncludeScript> PrecheckScripts(IEnumerable<IncludeScript> scripts)
         {
             if (scripts == null)

@@ -1,4 +1,4 @@
-﻿namespace JavaScript.Manager.Debugger
+﻿namespace Tabris.Winform.Control
 {
     using System.Net;
     using System.Net.Sockets;
