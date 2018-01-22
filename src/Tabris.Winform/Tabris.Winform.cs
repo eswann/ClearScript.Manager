@@ -203,6 +203,12 @@ namespace Tabris.Winform
         {
             try
             {
+                Process[] processes = Process.GetProcessesByName("inspector");
+                foreach (Process process in processes)
+                {
+                    process.Kill();
+                }
+
                 var inteceporPath = Application.StartupPath + "\\" + "inspector.exe";
                 if (!File.Exists(inteceporPath))
                 {

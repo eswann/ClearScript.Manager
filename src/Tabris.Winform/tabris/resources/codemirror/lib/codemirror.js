@@ -6915,7 +6915,7 @@
         indentAuto: function (cm) { return cm.indentSelection("smart"); },
         indentMore: function (cm) { return cm.indentSelection("add"); },
         indentLess: function (cm) { return cm.indentSelection("subtract"); },
-        insertTab: function (cm) { return cm.replaceSelection("\t"); },
+        insertTab: function (cm) { return cm.replaceSelection("  "); },
         insertSoftTab: function (cm) {
             var spaces = [], ranges = cm.listSelections(), tabSize = cm.options.tabSize
             for (var i = 0; i < ranges.length; i++) {

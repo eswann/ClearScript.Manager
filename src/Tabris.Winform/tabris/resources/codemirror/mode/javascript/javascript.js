@@ -101,7 +101,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     } else if (/[\[\]{}\(\),;\:\.]/.test(ch)) {
       return ret(ch);
     } else if (ch == "=" && stream.eat(">")) {
-      return ret("=>", "operator");
+      return ret("=>", "def");
     } else if (ch == "0" && stream.eat(/x/i)) {
       stream.eatWhile(/[\da-f]/i);
       return ret("number", "number");
@@ -127,6 +127,8 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     } else if (ch == "`") {
       state.tokenize = tokenQuasi;
       return tokenQuasi(stream, state);
+    } else if(ch === "$") {
+        return chain(stream, state, tokenVariable);
     } else if (ch == "#") {
       stream.skipToEnd();
       return ret("error", "error");
@@ -140,7 +142,88 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
                      ret("variable", "variable", word);
     }
   }
+    var GLOBAL_SCOPE = "global", LOCAL_SCOPE = "local", PARAM_SCOPE = "func_param";
 
+    function getVarScope(state) {
+        //console.log(state.lastType);
+        if(state.lastType=="var") {
+            return GLOBAL_SCOPE;
+        }
+        if(state.lastType=="let" || state.lastType=="for") {
+            return LOCAL_SCOPE;
+        }
+        //var functionDecl = state.functionDecl;
+        //if(functionDecl && functionDecl.paramsParsing){
+        //    return PARAM_SCOPE;
+        //}
+        return null;
+    }
+    // tokenizer for variables
+    function tokenVariable(stream, state) {
+        var isVariableChar = /[\w\$_-]/;
+
+        // a variable may start with a quoted EQName so if the next character is quote, consume to the next quote
+        if(stream.eat("\"")) {
+            while(stream.next() !== '\"'){};
+            stream.eat(":");
+        } else {
+            stream.eatWhile(isVariableChar);
+            if(!stream.match(":=", false)) stream.eat(":");
+        }
+        stream.eatWhile(isVariableChar);
+        state.tokenize = tokenBase;
+
+        if (true) {
+            var scope = getVarScope(state);
+            if(scope != null) {
+                var varname = stream.current();
+                register1(varname, state, scope);
+                if (PARAM_SCOPE === scope) {
+                    return ret(scope, "variable-2");
+                }
+                return ret(scope, "variable");
+            }
+        }
+        return ret("variable", "variable");
+    }
+    function VarDecl(name, scope) {
+        this.name = name;
+        this.scope = scope;
+        this.hasAs = false;
+        this.dataType = null;
+        this.functionDecl = null;
+    }
+    function register1(varname, state, scope) {
+        function inList(list) {
+            if (!list)
+                return false;
+            for (var v = list; v; v = v.next)
+                if (v.name == varname) return true;
+            return false;
+        }
+        var varDecl = new VarDecl(varname, scope);
+        state.currentVar = varDecl;
+        switch(scope) {
+            case GLOBAL_SCOPE:
+                if (inList(state.globalVars)) return;
+                state.globalVars = {varDecl: varDecl, next: state.globalVars};
+                break;
+            case LOCAL_SCOPE:
+                if (inList(state.localVars)) return;
+                state.localVars = {varDecl: varDecl, next: state.localVars};
+                break;
+            case PARAM_SCOPE:
+                var functionDecl = state.functionDecl;
+                varDecl.functionDecl = functionDecl;
+                if (inList(functionDecl.params)) return;
+                functionDecl.params = {varDecl: varDecl, next: functionDecl.params};
+                break;
+        }
+    }
+    function chain(stream, state, f) {
+        state.tokenize = f;
+        return f(stream, state);
+    }
   function tokenString(quote) {
     return function(stream, state) {
       var escaped = false, next;

@@ -17,7 +17,8 @@
 
     var ourMap = {
       Tab : selectNextVariable,
-      Esc : uninstall
+      Esc: uninstall,
+      Enter: selectNewlineAndIndent
     }
 
     function TemplateState() {
@@ -66,6 +67,18 @@
       }
     }
 
+
+    function selectNewlineAndIndent(cm) {
+        if (!cm._templateState_newLineNumber) return;
+        $('.CodeMirror-templates-variable-selected').removeClass('CodeMirror-templates-variable-selected');
+        $('.CodeMirror-templates-variable').removeClass('CodeMirror-templates-variable');
+        var line = cm.getLine(cm._templateState_newLineNumber);
+        cm.setCursor(cm._templateState_newLineNumber, line.length);
+        if (cm._templateState) {
+            uninstall(cm);
+        }
+
+    }
     function selectNextVariable(cm) {
       var state = cm._templateState;
       if (state && state.selectableMarkers.length > 0) {
@@ -169,7 +182,6 @@
       }
       var state = new TemplateState();
       cm._templateState = state;
-
       var template = completion.template;
       var tokens = parseTemplate(template);
       var content = '';
@@ -179,25 +191,45 @@
       for ( var i = 0; i < tokens.length; i++) {
         var token = tokens[i];
         if (token.variable) {
-          if (!isSpecialVar(token.variable)) {
-            content += token.variable;
-            var from = Pos(data.from.line + line, data.from.ch + token.x);
-            var to = Pos(data.from.line + line, data.from.ch + token.x
-                + token.variable.length);
-            var selectable = variables[token.variable] != false;
-            markers.push({
-              from : from,
-              to : to,
-              variable : token.variable,
-              selectable : selectable
-            });
-            variables[token.variable] = false;
-          }
+            if (token == '}' && i == tokens.length - 1) {
+                debugger
+                for (var k = 0; k < data.from.ch; k++) {
+                    content += ' ';
+                }
+            }
+            else if (!isSpecialVar(token.variable)) {
+                content += token.variable;
+                var from = Pos(data.from.line + line, data.from.ch + token.x);
+                var to = Pos(data.from.line + line, data.from.ch + token.x
+                    + token.variable.length);
+                var selectable = variables[token.variable] != false;
+                markers.push({
+                  from : from,
+                  to : to,
+                  variable : token.variable,
+                  selectable : selectable
+                });
+                variables[token.variable] = false; 
+            }
+            else {
+               cm._templateState_newLineNumber = data.from.line + line;
+            }
         } else {
-          content += token;
-          if (token == "\n") {
-            line++;
-          }
+            if (token == '}' && i == tokens.length - 1) {
+                for (var k = 0; k < data.from.ch; k++) {
+                    content += ' ';
+                }
+                content += token;
+            }
+            else if (token == "\n") {
+              line++;
+              for (var k = 0; k < data.from.ch; k++) {
+                  content += ' ';
+              }
+              content += token;
+            } else {
+              content += token;
+            }
         }
       }
 
@@ -239,6 +271,7 @@
       cm.off("change", onChange);
       cm.removeKeyMap(ourMap);
       delete cm._templateState;
+      delete cm._templateState_newLineNumber;
     }
 
     var mode = cm.doc.mode.name;

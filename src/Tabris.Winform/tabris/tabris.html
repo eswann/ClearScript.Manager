@@ -52,17 +52,24 @@
     <link rel="stylesheet" href="resources/codemirror-javascript/addon/hint/tern/tern-extension.css">
     <script src="resources/codemirror-javascript/addon/hint/tern/tern-extension.js"></script>
     <script src="resources/codemirror-javascript/addon/hint/tern/defs/ecma5.json.js"></script>
+    <script src="resources/codemirror-javascript/addon/hint/tern/defs/browser.json.js"></script>
+    <script src="resources/codemirror-javascript/addon/hint/tern/defs/underscore.json.js"></script>
+
     <link rel="stylesheet" href="resources/codemirror-extension/addon/hint/show-hint-eclipse.css">
     <script src="resources/codemirror-extension/addon/hint/show-context-info.js"></script>
     <link rel="stylesheet" href="resources/codemirror-extension/addon/hint/show-context-info.css">
     <link rel="stylesheet" href="resources/codemirror-extension/addon/hint/templates-hint.css">
     <script src="resources/codemirror-extension/addon/hint/templates-hint.js"></script>
     <script src="resources/codemirror-javascript/addon/hint/javascript/javascript-templates.js"></script>
+    <script src="resources/codemirror/addon/hint/javascript/javascript-hint.js"></script>
     <link rel="stylesheet" href="resources/codemirror/doc/docs.css">
     <script src="resources/codemirror/addon/hint/javascript/tabris-templates.js"></script>
     <script src="resources/codemirror/addon/hint/context-autocomplete-hint.js"></script>
     <script src="resources/codemirror-extension/addon/util/formatting.js"></script>
 
+	<link rel="stylesheet" href="resources/codemirror-extension/addon/hint/xquery-hint.css">
+	<script src="resources/codemirror-extension/addon/hint/xquery-hint.js"></script>
+	
     <link href="resources/codemirror/addon/dialog/dialog.css" rel="stylesheet" />
     <script src="resources/codemirror/addon/dialog/dialog.js"></script>
     <link href="resources/codemirror/addon/search/dialog.css" rel="stylesheet" />
@@ -98,6 +105,10 @@
     <script type="text/javascript">
         $(function () {
             window.cmEditor = window.cmEditor || {};
+			function passAndHint(cm) {
+				setTimeout(function() {CodeMirror.showHint(cm, CodeMirror.xqueryHint);}, 100);
+				return CodeMirror.Pass;
+			}
             cmEditor.editor = CodeMirror.fromTextArea(document.getElementById("code"),
                 {
                     mode: "application/javascript",
@@ -112,12 +123,15 @@
                             setTimeout(function () { CodeMirror.showHint(a, CodeMirror.ternHint, { async: !0 }) }, 100);
                             return CodeMirror.Pass;
                         },
+						"'$'": passAndHint,
                         "Ctrl-Space": "contextAutocomplete",
                         "Ctrl-I": function (a) { CodeMirror.tern.showType(a) },
                         "Alt-.": function (a) { CodeMirror.tern.jumpToDef(a) },
                         "Alt-,": function (a) { CodeMirror.tern.jumpBack(a) },
                         "Ctrl-Q": function (a) { CodeMirror.tern.rename(a) },
-                        "Ctrl-S": function (a) { csharpJsFunction.Save(getCode()); },
+                        "Ctrl-S": function (a) { 
+							try{csharpJsFunction && csharpJsFunction.Save(getCode());}catch(e){} 
+						},
                         "Ctrl-/": function (a) {
                             commentSelection(true);
                         },
@@ -130,45 +144,38 @@
                         "F2": function (a) {
                             var sele = getSelectedCode();
                             if (sele && sele.length > 0) {
-                                csharpJsFunction.ExcuteSelected(sele);
+                                try{(csharpJsFunction && csharpJsFunction.ExcuteSelected(sele));}catch(e){} 
                             } else {
-                                csharpJsFunction.Excute(getCode());
+                                try{(csharpJsFunction && csharpJsFunction.Excute(getCode()));}catch(e){} 
                             }
                         },
                         "F5": function (a) {
-                            csharpJsFunction.DebuggerExcute(getCode());
+                            try{(csharpJsFunction && csharpJsFunction.DebuggerExcute(getCode()));}catch(e){} 
                         }
                     },
                     gutters: ["CodeMirror-lint-markers", "CodeMirror-foldgutter","CodeMirror-linenumbers", "breakpoints"],
                     highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
                     textHover: { delay: 300 },
                     ternWith: { plugins: { tabris: {} } },
-                    lint: true,
+                    lint: {
+                        esversion: 6
+                    },
                     scrollbarStyle: "simple",
                     foldGutter: true,
                 });
 
             cmEditor.editor.on("gutterClick", function (cm, n) {
-                var info = cm.lineInfo(n);
-                if (info.handle && info.handle.text.trim().length === 0) return;
-                var breakpoint = csharpJsFunction.SetBreakpoint(info.line);
-                if (breakpoint != -1) {
-                    cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
-                }
+				try{
+					var info = cm.lineInfo(n);
+					if (info.handle && info.handle.text.trim().length === 0) return;
+					var breakpoint = (csharpJsFunction && csharpJsFunction.SetBreakpoint(info.line));
+					if (breakpoint != -1) {
+						cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
+					}
+				}catch(e){} 
             });
 
-            //cmEditor.editor.on("dragstart",function(editor,e) {
-            //    console.log('dragstart')
-            //});
-            //cmEditor.editor.on("dragenter",function(editor,e) {
-            //    console.log('dragenter')
-            //});
-            //cmEditor.editor.on("dragover",function(editor,e) {
-            //    console.log('dragover')
-            //});
-            //cmEditor.editor.on("drop",function(editor,e) { 
-            //    console.log('drop')
-            //});
+           
             function makeMarker() {
                 var marker = document.createElement("div");
                 marker.style.color = "#822";
@@ -178,17 +185,17 @@
             $(document).keydown(function (event) {
                 //Ctrl +V
                 if (event.ctrlKey && event.keyCode == 86) {
-                    csharpJsFunction.Modify();
+                    try{(csharpJsFunction && csharpJsFunction.Modify());}catch(e){} 
                 }
                 else if (event.ctrlKey && event.keyCode == 90) { //Ctrl +Z
-                    csharpJsFunction.Modify();
+                    try{(csharpJsFunction && csharpJsFunction.Modify());}catch(e){} 
                 }
                 else if (event.ctrlKey) {
 
                 } else if (event.keyCode >= 116 && event.keyCode >= 123) {
                     //F1-12
                 } else {
-                    csharpJsFunction.Modify();
+                    try{(csharpJsFunction && csharpJsFunction.Modify());}catch(e){} 
                 }
             });
         });

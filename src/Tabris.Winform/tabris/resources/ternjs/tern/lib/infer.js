@@ -868,6 +868,7 @@
 
   function propName(node, scope, c) {
     var prop = node.property;
+    if(!prop) return;
     if (!node.computed) return prop.name;
     if (prop.type == "Literal" && typeof prop.value == "string") return prop.value;
     if (c) infer(prop, scope, c, ANull);
@@ -959,6 +960,14 @@
       if (node.id) inner.getProp(node.id.name).addType(fn);
       return fn;
     }),
+      ArrowFunctionExpression: ret(function(node, scope, c, name) {
+          var inner = node.body.scope, fn = inner.fnType;
+          if (name && !fn.name) fn.name = name;
+          c(node.body, scope, "ScopeBody");
+          maybeTagAsInstantiated(node, inner) || maybeTagAsGeneric(inner);
+          if (node.id) inner.getProp(node.id.name).addType(fn);
+          return fn;
+      }),
     SequenceExpression: ret(function(node, scope, c) {
       for (var i = 0, l = node.expressions.length - 1; i < l; ++i)
         infer(node.expressions[i], scope, c, ANull);
@@ -1097,7 +1106,7 @@
   };
 
   function infer(node, scope, c, out, name) {
-    return inferExprVisitor[node.type](node, scope, c, out, name);
+      return inferExprVisitor[node.type](node, scope, c, out, name);
   }
 
   var inferWrapper = walk.make({
@@ -1277,6 +1286,9 @@
     FunctionExpression: function(node) {
       return node.body.scope.fnType;
     },
+      ArrowFunctionExpression: function(node) {
+          return node.body.scope.fnType;
+      },
     SequenceExpression: function(node, scope) {
       return findType(node.expressions[node.expressions.length-1], scope);
     },
