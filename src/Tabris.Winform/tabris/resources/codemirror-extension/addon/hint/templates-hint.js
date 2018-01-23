@@ -77,7 +77,11 @@
         $('.CodeMirror-templates-variable-selected').removeClass('CodeMirror-templates-variable-selected');
         $('.CodeMirror-templates-variable').removeClass('CodeMirror-templates-variable');
         var line = cm.getLine(cm._templateState_newLineNumber) || '';
-        cm.setCursor(cm._templateState_newLineNumber, line.length);
+        try {
+            cm.setCursor(cm._templateState_newLineNumber, line.length);
+        } catch (e) {
+            uninstall(cm);
+        }
         if (cm._templateState) {
             uninstall(cm);
         }
