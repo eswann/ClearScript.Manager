@@ -200,14 +200,20 @@
     ts.request(cm, {type: "completions", types: true, docs: true, urls: true}, function(error, data) {
       if (error) return showError(ts, cm, error);
       var completions = [], after = "";
-
+        
       var from = data.start, to = data.end;
-      var prefixWord = cm.getRange(Pos(from.line, from.ch-1), from);
-      var selectionWord =cm.getRange(from, to) || '';
-        //console.log(prefixWord,data,from.ch,to.ch,selectionWord);
-      //if( prefixWord == ' ' || prefixWord == ';' || prefixWord =='=' || prefixWord =='}') {
-      //    return {from: from, to: to, list: []};
+      //var line = cm.getLineHandle(cm.getCursor(false).line);
+      //if (line && line.stateAfter && line.stateAfter.lastType == 'string') {
+         
+      //    return { from: from, to: to, list: [] };
       //}
+      var prefixWord = cm.getRange(Pos(from.line, from.ch - 1), from);
+      var lastxWord =cm.getRange({ line: to.line, ch: to.ch }, { line: to.line, ch: to.ch+1 });
+      var selectionWord =cm.getRange(from, to) || '';
+//console.log(prefixWord, lastxWord, data, from, to, selectionWord);
+      if (prefixWord == '\'' || lastxWord == '\'' || prefixWord == '\"' || lastxWord == '\"' || prefixWord == '/'|| lastxWord == '/') {
+          return {from: from, to: to, list: []};
+      }
       //if(words.length<=0 || from.line === to.line && from.ch === to.ch) return {from: from, to: to, list: []};
       if (cm.getRange(Pos(from.line, from.ch - 2), from) == "[\"" &&
           cm.getRange(to, Pos(to.line, to.ch + 2)) != "\"]")

@@ -73,7 +73,7 @@
       if (!data || !data.list.length || !this.active()) return this.close();
 
       if (this.options.completeSingle && data.list.length == 1)
-          this.pick(data, 0);
+            this.showWidget(data);//this.pick(data, 0);
       else
         this.showWidget(data);
     },

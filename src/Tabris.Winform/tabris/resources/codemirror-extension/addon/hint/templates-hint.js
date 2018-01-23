@@ -69,10 +69,14 @@
 
 
     function selectNewlineAndIndent(cm) {
-        if (!cm._templateState_newLineNumber) return;
+        if (!cm._templateState_newLineNumber) {
+            if (cm._templateState) {
+                uninstall(cm);
+            }
+        };
         $('.CodeMirror-templates-variable-selected').removeClass('CodeMirror-templates-variable-selected');
         $('.CodeMirror-templates-variable').removeClass('CodeMirror-templates-variable');
-        var line = cm.getLine(cm._templateState_newLineNumber);
+        var line = cm.getLine(cm._templateState_newLineNumber) || '';
         cm.setCursor(cm._templateState_newLineNumber, line.length);
         if (cm._templateState) {
             uninstall(cm);
@@ -191,6 +195,7 @@
       for ( var i = 0; i < tokens.length; i++) {
         var token = tokens[i];
         if (token.variable) {
+            variables["newline"] = false;
             if (token == '}' && i == tokens.length - 1) {
                 for (var k = 0; k < data.from.ch; k++) {
                     content += ' ';
@@ -215,18 +220,26 @@
             }
         } else {
             if (token == '}' && i == tokens.length - 1) {
+                variables["newline"] = false;
                 for (var k = 0; k < data.from.ch; k++) {
                     content += ' ';
                 }
                 content += token;
             }
             else if (token == "\n") {
-              line++;
+                line++;
+                variables["newline"] = true; 
               for (var k = 0; k < data.from.ch; k++) {
                   content += ' ';
               }
               content += token;
             } else {
+                if (line == 1 && variables["newline"] == true) {
+                    variables["newline"] = false;
+                    for (var k = 0; k < data.from.ch; k++) {
+                        content += ' ';
+                    }
+                }
               content += token;
             }
         }

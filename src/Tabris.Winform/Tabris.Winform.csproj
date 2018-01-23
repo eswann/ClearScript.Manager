@@ -180,6 +180,15 @@
     <Content Include="tabris\resources\codemirror-extension\addon\util\formatting.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="tabris\resources\codemirror-javascript\addon\hint\tern\defs\browser.json.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror-javascript\addon\hint\tern\defs\jquery.json.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror-javascript\addon\hint\tern\defs\underscore.json.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="tabris\resources\codemirror\addon\dialog\dialog.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -203,6 +212,9 @@
     </Content>
     <Content Include="tabris\resources\codemirror\addon\fold\brace-fold.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tabris\resources\codemirror\addon\hint\javascript\javascript-hint.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="tabris\resources\codemirror\addon\lint\javascript-lint.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

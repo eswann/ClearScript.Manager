@@ -1106,7 +1106,11 @@
   };
 
   function infer(node, scope, c, out, name) {
-      return inferExprVisitor[node.type](node, scope, c, out, name);
+      try {
+          return inferExprVisitor[node.type](node, scope, c, out, name);
+      } catch (e) {
+          console.log(node.type);
+      }
   }
 
   var inferWrapper = walk.make({

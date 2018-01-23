@@ -176,7 +176,7 @@
 
             function onChange(cm, textChanged){
                 cm.off("cursorActivity", autoComplete);
-                console.log('textChanged',textChanged);
+//console.log('textChanged',textChanged);
                 (_setTimer && clearTimeout(_setTimer));
                 if (!textChanged.origin || textChanged.text.length ==0 || textChanged.origin == '+delete' || textChanged.origin == '+undo') {
                     return;
@@ -184,7 +184,7 @@
 
                 if(textChanged.origin === '+input'){
                     if(textChanged.text.length == 1){
-                        if(textChanged.text[0].trim().length == 0|| textChanged.text[0] == ':' || textChanged.text[0] == ','  || textChanged.text[0] == ';'  || textChanged.text[0] == '=' || textChanged.text[0] == '{}'){
+                        if (textChanged.text[0].trim().length == 0 || textChanged.text[0] == ':' || textChanged.text[0] == ',' || textChanged.text[0] == '\''  || textChanged.text[0] == ';'  || textChanged.text[0] == '=' || textChanged.text[0] == '{}'){
                             return;
                         }
                     }else if(textChanged.text.length == 2){
@@ -193,7 +193,7 @@
                         }
                     }
                 }
-
+               
                 _setTimer = setTimeout(function(){
                     cm.on("cursorActivity", autoComplete);
                 }, 100);
