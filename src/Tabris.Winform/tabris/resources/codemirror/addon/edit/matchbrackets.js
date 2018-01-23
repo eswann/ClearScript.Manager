@@ -64,6 +64,7 @@
     return lineNo - dir == (dir > 0 ? cm.lastLine() : cm.firstLine()) ? false : null;
   }
 
+
   function matchBrackets(cm, autoclear, config) {
     // Disable brace matching in long lines, since it'll cause hugely slow updates
     var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000;
@@ -87,8 +88,10 @@
         cm.operation(function() {
           for (var i = 0; i < marks.length; i++) marks[i].clear();
         });
+          delete cm.matchingbracket;
+
       };
-      if (autoclear) setTimeout(clear, 800);
+      if (autoclear) setTimeout(clear, 300);
       else return clear;
     }
   }
@@ -97,7 +100,7 @@
   function doMatchBrackets(cm) {
     cm.operation(function() {
       if (currentlyHighlighted) {currentlyHighlighted(); currentlyHighlighted = null;}
-      currentlyHighlighted = matchBrackets(cm, false, cm.state.matchBrackets);
+      currentlyHighlighted = matchBrackets(cm, true, cm.state.matchBrackets);
     });
   }
 

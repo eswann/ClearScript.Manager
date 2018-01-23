@@ -127,7 +127,9 @@
 
       this.server.request(request, function (error, data) {
         if (!error && self.options.responseFilter)
-          data = self.options.responseFilter(doc, query, request, error, data);
+        {
+            data = self.options.responseFilter(doc, query, request, error, data);
+        }
         c(error, data);
       });
     }
@@ -198,14 +200,23 @@
     ts.request(cm, {type: "completions", types: true, docs: true, urls: true}, function(error, data) {
       if (error) return showError(ts, cm, error);
       var completions = [], after = "";
+
       var from = data.start, to = data.end;
+      var prefixWord = cm.getRange(Pos(from.line, from.ch-1), from);
+      var selectionWord =cm.getRange(from, to) || '';
+        //console.log(prefixWord,data,from.ch,to.ch,selectionWord);
+      //if( prefixWord == ' ' || prefixWord == ';' || prefixWord =='=' || prefixWord =='}') {
+      //    return {from: from, to: to, list: []};
+      //}
+      //if(words.length<=0 || from.line === to.line && from.ch === to.ch) return {from: from, to: to, list: []};
       if (cm.getRange(Pos(from.line, from.ch - 2), from) == "[\"" &&
           cm.getRange(to, Pos(to.line, to.ch + 2)) != "\"]")
         after = "\"]";
-
       for (var i = 0; i < data.completions.length; ++i) {
         var completion = data.completions[i], className = typeToIcon(completion.type);
         if (data.guess) className += " " + cls + "guess";
+          //if(completion.type =='?')continue;
+        if(selectionWord == completion.name) continue;
         completions.push({text: completion.name + after,
                           displayText: completion.name,
                           className: className,
@@ -225,6 +236,7 @@
           tooltip.className += " " + cls + "hint-doc";
         }
       });
+      if(obj.list.length>100 && prefixWord!='.') return {from: from, to: to, list: []};
       c(obj);
     });
   }
@@ -632,6 +644,7 @@
   }
 
   function showError(ts, cm, msg) {
+    return;
     if (ts.options.showError)
       ts.options.showError(cm, msg);
     else

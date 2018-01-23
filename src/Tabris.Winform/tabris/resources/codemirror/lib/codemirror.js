@@ -2122,7 +2122,7 @@
             setTimeout(fireOrphanDelayed, 0)
         }
         var loop = function (i) {
-            list.push(function () { return arr[i].apply(null, args); })
+            if(arr[i])list.push(function () { return arr[i].apply(null, args); })
         };
 
         for (var i = 0; i < arr.length; ++i)
@@ -4490,7 +4490,7 @@
     // Compute the position of the end of a change (its 'to' property
     // refers to the pre-change end).
     function changeEnd(change) {
-        if (!change.text) { return change.to }
+        if (!change.text || change.text.length == 0) { return change.to }
         return Pos(change.from.line + change.text.length - 1,
             lst(change.text).length + (change.text.length == 1 ? change.from.ch : 0))
     }
@@ -9546,7 +9546,7 @@
     // Extra arguments are stored as the mode's dependencies, which is
     // used by (legacy) mechanisms like loadmode.js to automatically
     // load a mode. (Preferred mechanism is the require/define calls.)
-    CodeMirror.defineMode = function (name/*, mode, ¡­*/) {
+    CodeMirror.defineMode = function (name/*, mode, ï¿½ï¿½*/) {
         if (!CodeMirror.defaults.mode && name != "null") { CodeMirror.defaults.mode = name }
         defineMode.apply(this, arguments)
     }

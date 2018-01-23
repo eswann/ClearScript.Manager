@@ -73,7 +73,7 @@
       if (!data || !data.list.length || !this.active()) return this.close();
 
       if (this.options.completeSingle && data.list.length == 1)
-        this.pick(data, 0);
+          this.pick(data, 0);
       else
         this.showWidget(data);
     },
@@ -132,7 +132,9 @@
           completion.close();
         } else {
           debounce = requestAnimationFrame(update);
-          if (completion.widget) completion.widget.close();
+          if (completion.widget){
+              completion.widget.close();
+          }
         }
       }
       this.cm.on("cursorActivity", activity);

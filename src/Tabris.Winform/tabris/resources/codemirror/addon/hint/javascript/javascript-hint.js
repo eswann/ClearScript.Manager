@@ -28,7 +28,7 @@
     return arr.indexOf(item) != -1;
   }
 
-  function scriptHint(editor, keywords, getToken, options) {
+  function scriptHint(editor, keywords,ukeys, getToken, options) {
     // Find the token at the cursor
     var cur = editor.getCursor(), token = getToken(editor, cur);
     if (/\b(?:string|comment)\b/.test(token.type)) return;
@@ -52,13 +52,14 @@
       if (!context) var context = [];
       context.push(tprop);
     }
-    return {list: getCompletions(token, context, keywords, options),
+    return {list: getCompletions(token, context, keywords,ukeys, options),
             from: Pos(cur.line, token.start),
             to: Pos(cur.line, token.end)};
   }
 
   function javascriptHint(editor, options) {
-    return scriptHint(editor, javascriptKeywords,
+      var ukeys =  editor.ukeys;//获取用户的所有的输入的单词
+    return scriptHint(editor, javascriptKeywords,ukeys,
                       function (e, cur) {return e.getTokenAt(cur);},
                       options);
   };
@@ -97,7 +98,11 @@
   var coffeescriptKeywords = ("and break catch class continue delete do else extends false finally for " +
                   "if in instanceof isnt new no not null of off on or return switch then throw true try typeof until void while with yes").split(" ");
 
-  function getCompletions(token, context, keywords, options) {
+  function getCompletions(token, context, keywords, ukeys,options) {
+      //这里是处理没有任何字母输入时也会有代码提示的原因。
+      if (token.string == "") {
+          return {list:{}};
+      }
     var found = [], start = token.string, global = options && options.globalScope || window;
     function maybeAdd(str) {
       if (str.lastIndexOf(start, 0) == 0 && !arrayContains(found, str)) found.push(str);
@@ -106,6 +111,7 @@
       if (typeof obj == "string") forEach(stringProps, maybeAdd);
       else if (obj instanceof Array) forEach(arrayProps, maybeAdd);
       else if (obj instanceof Function) forEach(funcProps, maybeAdd);
+      forEach(ukeys,maybeAdd);//匹配我们传进来的用户输入的代码中的所有的单词
       for (var name in obj) maybeAdd(name);
     }
 

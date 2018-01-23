@@ -192,7 +192,6 @@
         var token = tokens[i];
         if (token.variable) {
             if (token == '}' && i == tokens.length - 1) {
-                debugger
                 for (var k = 0; k < data.from.ch; k++) {
                     content += ' ';
                 }

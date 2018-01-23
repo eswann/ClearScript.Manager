@@ -75,7 +75,7 @@
         if (token == '' && !(from.line == 0 && from.ch == 0)) {
           // don't display templates if the before char is '.'
           var beforeChar = cm.getRange(Pos(from.line, from.ch - 1), from);
-          processTemplates = (beforeChar != '.');
+          processTemplates = (beforeChar != '.' && beforeChar!=':');
         }
         if (processTemplates) {
           CodeMirror.templatesHint.getCompletions(cm, completions, token);

@@ -17,7 +17,7 @@
                 {
                     "name": "forin",
                     "description": "iterate using for .. in",
-                    "template": "for (var ${iterable_element} in ${iterable}) {\n  ${cursor}\n}"
+                    "template": "for (var ${element} in ${iterable}) {\n  ${cursor}\n}"
                 },
                 {
                     "name": "do",
@@ -67,12 +67,12 @@
                 {
                     "name": "function",
                     "description": "anonymous function",
-                    "template": "function () {\n  ${cursor}\n}"
+                    "template": "function (${condition}) {\n  ${line_selection}${cursor}\n}"
                 },
                 {
                     "name": "new",
                     "description": "create new object",
-                    "template": "var ${name} = new ${type}(${arguments});"
+                    "template": "var ${name} = new ${type}();\n${cursor}"
                 },
                 {
                     "name": "lazy",
