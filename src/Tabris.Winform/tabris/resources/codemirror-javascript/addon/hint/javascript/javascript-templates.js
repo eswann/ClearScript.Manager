@@ -77,52 +77,92 @@
                 {
                     "name": "lazy",
                     "description": "lazy creation",
-                    "template": "if (${name:var} == null) {\n  ${name} = new ${type}(${arguments});\n  ${cursor}\n}\n\nreturn ${name};"
-                },
-                {
-                    "name": "<code>",
-                    "description": "<code></code>",
-                    "template": "<code>${word_selection}${}</code>${cursor}"
-                },
-                {
-                    "name": "null",
-                    "description": "<code>null</code>",
-                    "template": "null"
-                },
-                {
-                    "name": "true",
-                    "description": "<code>true</code>",
-                    "template": "true"
-                },
-                {
-                    "name": "false",
-                    "description": "<code>false</code>",
-                    "template": "false"
-                },
-                {
-                    "name": "<pre>",
-                    "description": "<pre></pre>",
-                    "template": "<pre>${word_selection}${}</pre>${cursor}"
-                },
-                {
-                    "name": "<b>",
-                    "description": "<b></b>",
-                    "template": "<b>${word_selection}${}</b>${cursor}"
-                },
-                {
-                    "name": "<i>",
-                    "description": "<i></i>",
-                    "template": "<i>${word_selection}${}</i>${cursor}"
-                },
-                {
-                    "name": "@author",
-                    "description": "author name",
-                    "template": "@author ${user}"
+                    "template": "if (${name} == null) {\n  ${name} = new ${type}(${arguments});\n  ${cursor}\n}\n\nreturn ${name};"
                 },
                 {
                     "name": "while",
                     "description": "while loop with condition",
                     "template": "while (${condition}) {\n  ${line_selection}${cursor}\n}"
+                },
+                {
+                    "name": "null",
+                    "description": "null",
+                    "template": "null"
+                },
+                {
+                    "name": "true",
+                    "description": "true",
+                    "template": "true"
+                },
+                {
+                    "name": "return",
+                    "description": "return",
+                    "template": "return"
+                },
+                {
+                    "name": "false",
+                    "description": "false",
+                    "template": "false"
+                },
+                {
+                    "name": "break",
+                    "description": "break",
+                    "template": "break"
+                },
+                {
+                    "name": "case",
+                    "description": "case",
+                    "template": "case"
+                },
+                {
+                    "name": "continue",
+                    "description": "continue",
+                    "template": "continue"
+                },
+                {
+                    "name": "delete",
+                    "description": "delete",
+                    "template": "delete"
+                },
+                {
+                    "name": "instanceof ",
+                    "description": "instanceof",
+                    "template": "instanceof"
+                },
+                {
+                    "name": "this",
+                    "description": "this",
+                    "template": "this"
+                },
+                {
+                    "name": "throw",
+                    "description": "throw",
+                    "template": "throw"
+                },
+                {
+                    "name": "typeof",
+                    "description": "typeof",
+                    "template": "typeof"
+                },
+                {
+                    "name": "var",
+                    "description": "var",
+                    "template": "var"
+                },
+                {
+                    "name": "with",
+                    "description": "with",
+                    "template": "with"
+                },
+                {
+                    "name": "void",
+                    "description": "void",
+                    "template": "void"
+                },
+                {
+                    "name": "debugger",
+                    "description": "debugger",
+                    "template": "debugger"
                 }
             ]
         };CodeMirror.templatesHint.addTemplates(templates);

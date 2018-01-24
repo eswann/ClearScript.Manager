@@ -200,7 +200,6 @@
     ts.request(cm, {type: "completions", types: true, docs: true, urls: true}, function(error, data) {
       if (error) return showError(ts, cm, error);
       var completions = [], after = "";
-        
       var from = data.start, to = data.end;
       //var line = cm.getLineHandle(cm.getCursor(false).line);
       //if (line && line.stateAfter && line.stateAfter.lastType == 'string') {
@@ -243,6 +242,8 @@
         }
       });
       if(obj.list.length>100 && prefixWord!='.') return {from: from, to: to, list: []};
+      if (cm.tabrisAutoComplete) cm.off("cursorActivity", cm.tabrisAutoComplete);
+      cm.showHitTime = new Date().getTime();
       c(obj);
     });
   }

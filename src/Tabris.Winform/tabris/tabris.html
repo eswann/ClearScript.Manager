@@ -202,12 +202,18 @@
             cmEditor.editor.on('change',cmEditor.editor.tabrisOnchange);
 
 
-            function autoComplete(a){
+            function autoComplete(cm) {
+                
+                if (cm.showHitTime > 0) {
+                    cm.showHitTime = 0;
+                    return;
+                }
                 //调用显示提示
-                CodeMirror.showHint(a, CodeMirror.ternHint, { async: !0 })
-                a.off("cursorActivity", autoComplete);
-            }
+                CodeMirror.showHint(cm, CodeMirror.ternHint, { async: !0 })
+                cm.off("cursorActivity", autoComplete);
 
+            }
+            cmEditor.editor.tabrisAutoComplete = autoComplete;
             function makeMarker() {
                 var marker = document.createElement("div");
                 marker.style.color = "#822";

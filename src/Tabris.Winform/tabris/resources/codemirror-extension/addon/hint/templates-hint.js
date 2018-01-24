@@ -73,6 +73,8 @@
             if (cm._templateState) {
                 uninstall(cm);
             }
+            CodeMirror.commands.newlineAndIndent(cm);
+            return;
         };
         $('.CodeMirror-templates-variable-selected').removeClass('CodeMirror-templates-variable-selected');
         $('.CodeMirror-templates-variable').removeClass('CodeMirror-templates-variable');
@@ -233,12 +235,16 @@
             else if (token == "\n") {
                 line++;
                 variables["newline"] = true; 
-              for (var k = 0; k < data.from.ch; k++) {
-                  content += ' ';
-              }
-              content += token;
+                content += token;
+                //if (line % 2 == 0 &&  i != tokens.length - 1) {
+                //    for (var k = 0; k < data.from.ch; k++) {
+                //        content += ' ';
+                //    }
+                //}
+              
+              
             } else {
-                if (line == 1 && variables["newline"] == true) {
+                if (i != tokens.length - 1 && variables["newline"] == true) {
                     variables["newline"] = false;
                     for (var k = 0; k < data.from.ch; k++) {
                         content += ' ';
