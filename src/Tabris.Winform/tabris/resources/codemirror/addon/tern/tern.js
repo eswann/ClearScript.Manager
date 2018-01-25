@@ -209,8 +209,8 @@
       var prefixWord = cm.getRange(Pos(from.line, from.ch - 1), from);
       var lastxWord =cm.getRange({ line: to.line, ch: to.ch }, { line: to.line, ch: to.ch+1 });
       var selectionWord =cm.getRange(from, to) || '';
-//console.log(prefixWord, lastxWord, data, from, to, selectionWord);
-      if (prefixWord == '\'' || lastxWord == '\'' || prefixWord == '\"' || lastxWord == '\"' || prefixWord == '/'|| lastxWord == '/') {
+//console.log(prefixWord, data, from, to, selectionWord);
+      if (prefixWord == '\'' || lastxWord == '\'' || prefixWord == '\"' || lastxWord == '\"' || prefixWord == '/'|| lastxWord == '/'|| prefixWord == ':') {
           return {from: from, to: to, list: []};
       }
       //if(words.length<=0 || from.line === to.line && from.ch === to.ch) return {from: from, to: to, list: []};
