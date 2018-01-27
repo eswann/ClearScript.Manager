@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JavaScript.Manager.Loaders;
+﻿using JavaScript.Manager.Loaders;
 using JavaScript.Manager.Sql.Interface;
 using Microsoft.ClearScript;
+using System;
 
 namespace JavaScript.Manager.Sql.Package
 {
@@ -59,6 +55,7 @@ namespace JavaScript.Manager.Sql.Package
         {
             PackageId = "javascript_sql_factory";
             ScriptUri = "JavaScript.Manager.Sql.Scripts.sql.js";
+            RequiredPackageType = RequiredPackageType.EmbeddedFile;
             HostObjects.Add(new HostObject { Name = "xHost", Target = new ExtendedHostFunctions() });
         }
     }

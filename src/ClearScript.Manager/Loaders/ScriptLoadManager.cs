@@ -8,7 +8,7 @@ namespace JavaScript.Manager.Loaders
     /// </summary>
     public static class ScriptLoadManager
     {
-        private static readonly List<IScriptLoader> _loaders = new List<IScriptLoader> {new FileScriptLoader(),new EmbeddedScriptLoader()};
+        private static readonly List<IScriptLoader> _loaders = new List<IScriptLoader> {new EmbeddedScriptLoader(), new HttpScriptLoader(), new DllScriptLoader(), new FileScriptLoader()};
 
         /// <summary>
         /// Register a script loader with the manager.

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JavaScript.Manager.Loaders;
+﻿using JavaScript.Manager.Loaders;
 using JavaScript.Manager.Log.Impl;
 using JavaScript.Manager.Log.Interface;
+using System;
 
 namespace JavaScript.Manager.Log.Package
 {
@@ -60,6 +56,7 @@ namespace JavaScript.Manager.Log.Package
         {
             PackageId = "javascript_log_factory";
             ScriptUri = "JavaScript.Manager.Log.Scripts.log.js";
+            RequiredPackageType = RequiredPackageType.EmbeddedFile;
         }
     }
 

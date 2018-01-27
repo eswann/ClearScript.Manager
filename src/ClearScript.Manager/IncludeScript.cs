@@ -1,8 +1,27 @@
-﻿using System.Globalization;
-using JavaScript.Manager.Loaders;
+﻿using JavaScript.Manager.Loaders;
+using System.Globalization;
 
 namespace JavaScript.Manager
 {
+
+    internal class FilePath
+    {
+        /// <summary>
+        /// dll绝对路径
+        /// </summary>
+        public string NativeRequirePath { get; set; }
+
+        /// <summary>
+        /// 自定义的
+        /// </summary>
+        public string PackageId { get; set; }
+
+        /// <summary>
+        /// 父亲节点
+        /// </summary>
+        public string ParentNativeRequirePath { get; set; }
+    }
+
     /// <summary>
     /// Script to include in the execution of another script.  This script is executed first.  Can contain functions, libraries etc...
     /// </summary>
@@ -36,6 +55,9 @@ namespace JavaScript.Manager
         /// Code of the script to include.  Need to include script code or script Url.
         /// </summary>
         public string Code { get; set; }
+
+        public object Exports { get; set; }
+
 
         /// <summary>
         /// Sets the script Id if it is not set.

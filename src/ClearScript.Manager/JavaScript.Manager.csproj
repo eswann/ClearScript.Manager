@@ -73,6 +73,7 @@
     <Compile Include="Loaders\FileScriptLoader.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Loaders\HttpScriptLoader.cs" />
     <Compile Include="Loaders\RequiredPackage.cs" />
     <Compile Include="Loaders\IScriptLoader.cs" />
     <Compile Include="Loaders\RequireManager.cs" />

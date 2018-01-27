@@ -1,1 +1,12 @@
-﻿var x = 'test string1';
+﻿
+function aaaaaaaaaaaaaaaaa() {
+
+}
+
+
+aaaaaaaaaaaaaaaaa.hello = function () {
+    return 'aaaaaaaaaaaaaaaaa';
+}
+
+
+this.exports = aaaaaaaaaaaaaaaaa;

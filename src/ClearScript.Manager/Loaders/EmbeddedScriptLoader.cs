@@ -8,14 +8,17 @@ namespace JavaScript.Manager.Loaders
     /// </summary>
     public class EmbeddedScriptLoader : IScriptLoader
     {
-        public string Name { get { return "EmbeddedScriptLoader"; } }
+        public string Name { get { return nameof(EmbeddedScriptLoader); } }
 
         public bool ShouldUse(IncludeScript script)
         {
             try
             {
-                if (!string.IsNullOrEmpty(script.Code) || script.RequiredPackage == null)
+                if (!string.IsNullOrEmpty(script.Code) || script.RequiredPackage == null ||
+                    script.RequiredPackage.RequiredPackageType != RequiredPackageType.EmbeddedFile)
+                {
                     return false;
+                }
 
                 if (!script.RequiredPackage.ScriptUri.Equals(script.Uri))
                 {

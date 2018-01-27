@@ -1,8 +1,8 @@
-﻿using System;
-using System.Text;
-using JavaScript.Manager.Caching;
+﻿using JavaScript.Manager.Caching;
 using JavaScript.Manager.Loaders;
 using Microsoft.ClearScript.V8;
+using System;
+using System.Text;
 
 namespace JavaScript.Manager
 {
@@ -28,7 +28,7 @@ namespace JavaScript.Manager
             }
 
             V8Script compiledScript = _v8Runtime.Compile(scriptId, code);
-
+            
             if (addToCache)
             {
                 if (!cacheExpirationSeconds.HasValue)
@@ -62,6 +62,7 @@ namespace JavaScript.Manager
                 {
                     script.LoadScript();
                 }
+
                 if (!string.IsNullOrEmpty(script.Code))
                 {
                     if (script.RequiredPackage != null && !string.IsNullOrEmpty(script.RequiredPackage.PackageId))

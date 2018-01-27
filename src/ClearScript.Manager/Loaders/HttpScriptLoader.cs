@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Net.Http;
-using JavaScript.Manager.Loaders;
 
-namespace JavaScript.Manager.Http.Loaders
+namespace JavaScript.Manager.Loaders
 {
     /// <summary>
     /// Loads scripts if they are file-system based scripts.
     /// </summary>
     public class HttpScriptLoader : IScriptLoader
     {
-        public string Name { get { return "FileScriptLoader"; } }
+        public string Name { get { return nameof(HttpScriptLoader); } }
 
-        public static void Register()
-        {
-            new HttpScriptLoader().RegisterLoader();
-        }
-
+     
         public bool ShouldUse(IncludeScript script)
         {
             if (!string.IsNullOrEmpty(script.Code))
                 return false;
+
+            if (!script.Uri.ToLower().StartsWith("http://") && !script.Uri.ToLower().StartsWith("https://"))
+            {
+                return false;
+            }
 
             if (Uri.IsWellFormedUriString(script.Uri, UriKind.RelativeOrAbsolute))
             {
@@ -27,7 +27,6 @@ namespace JavaScript.Manager.Http.Loaders
                 if (!uri.IsFile)
                     return true;
             }
-
             return false;
         }
 

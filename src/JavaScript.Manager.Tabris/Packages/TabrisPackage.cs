@@ -10,13 +10,6 @@ using JavaScript.Manager.Loaders;
 
 namespace JavaScript.Manager.Tabris.Packages
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
-
     /// <summary>
     /// 
     /// </summary>
@@ -26,6 +19,7 @@ namespace JavaScript.Manager.Tabris.Packages
         {
             PackageId = "javascript_tabris";
             ScriptUri = "JavaScript.Manager.Tabris.Scripts.tabris.js";
+            RequiredPackageType = RequiredPackageType.EmbeddedFile;
         }
     }
 }

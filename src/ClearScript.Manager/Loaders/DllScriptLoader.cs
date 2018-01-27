@@ -1,5 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using Microsoft.ClearScript;
+using System;
+using System.Reflection;
 
 namespace JavaScript.Manager.Loaders
 {
@@ -8,21 +9,16 @@ namespace JavaScript.Manager.Loaders
     /// </summary>
     public class DllScriptLoader : IScriptLoader
     {
-        public string Name { get { return "EmbeddedScriptLoader"; } }
+        public string Name { get { return nameof(DllScriptLoader); } }
 
         public bool ShouldUse(IncludeScript script)
         {
             try
             {
-                if (!string.IsNullOrEmpty(script.Code) || script.RequiredPackage == null)
+                if (!string.IsNullOrEmpty(script.Code) || string.IsNullOrEmpty(script.Uri))
                     return false;
 
-                if (!script.RequiredPackage.ScriptUri.ToLower().EndsWith(".dll"))
-                {
-                    return false;
-                }
-
-                if (script.Uri.Contains("/") || script.Uri.Contains("\\"))
+                if (!script.Uri.ToLower().EndsWith(".dll"))
                 {
                     return false;
                 }
@@ -38,11 +34,8 @@ namespace JavaScript.Manager.Loaders
 
         public void LoadCode(IncludeScript script)
         {
-            script.Code = script.RequiredPackage.GetEmbeddedAsset(script.RequiredPackage.ScriptUri);
-            if (string.IsNullOrEmpty(script.Code))
-            {
-                throw new FileNotFoundException("Embedded Resource not found or content is empty : " + script.RequiredPackage.ScriptUri);
-            }
+            var asm = Assembly.LoadFrom(script.Uri);
+            script.Exports = new HostTypeCollection(asm);
         }
     }
 }

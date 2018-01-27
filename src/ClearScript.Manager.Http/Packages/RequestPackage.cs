@@ -1,5 +1,4 @@
-﻿using System.IO;
-using JavaScript.Manager.Loaders;
+﻿using JavaScript.Manager.Loaders;
 
 namespace JavaScript.Manager.Http.Packages
 {
@@ -9,6 +8,7 @@ namespace JavaScript.Manager.Http.Packages
         {
             PackageId = "javascript_request_factory";
             ScriptUri = "JavaScript.Manager.Http.Scripts.request.js";
+            RequiredPackageType = RequiredPackageType.EmbeddedFile;
         }
 
        

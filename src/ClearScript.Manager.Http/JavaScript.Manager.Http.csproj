@@ -59,7 +59,6 @@
     <Compile Include="Helpers\Node\NodeHttpRequestOptions.cs" />
     <Compile Include="Helpers\Node\NodeHttpResponse.cs" />
     <Compile Include="Helpers\Node\NodeRequestModule.cs" />
-    <Compile Include="Loaders\HttpScriptLoader.cs" />
     <Compile Include="Packages\HttpPackage.cs" />
     <Compile Include="Packages\HttpPackageHelpers.cs" />
     <Compile Include="Packages\RequestPackage.cs" />

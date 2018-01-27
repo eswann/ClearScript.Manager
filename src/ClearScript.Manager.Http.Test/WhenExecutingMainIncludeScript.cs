@@ -1,20 +1,14 @@
-﻿using System.Collections.Generic;
-using JavaScript.Manager;
-using JavaScript.Manager.Http.Loaders;
+﻿using JavaScript.Manager;
 using NUnit.Framework;
 using Should;
+using System.Collections.Generic;
 
 namespace ClearScript.Manager.Http.Test
 {
     [TestFixture]
     public class WhenExecutingMainIncludeScript
     {
-        [SetUp]
-        public void SetUp()
-        {
-            HttpScriptLoader.Register();
-        }
-
+      
         [Test]
         public async void Script_With_Http_Reference_Is_Run()
         {
@@ -40,7 +34,7 @@ namespace ClearScript.Manager.Http.Test
 
             await manager.ExecuteAsync(new List<IncludeScript>
                 {
-                    new IncludeScript {Uri = ".\\TestMainScript.js", ScriptId = "testScript"},
+                    new IncludeScript {Uri = "./TestMainScript.js", ScriptId = "testScript"},
                     new IncludeScript {Code = "subject.TestString = 'test string3';", ScriptId = "testScript3"},
                     new IncludeScript {Uri = "https://gist.githubusercontent.com/eswann/62fc90e542f7697263db/raw/026c42ef0043a70a8c3b720e3026ecee9c691a06/gistfile1.txt", ScriptId = "TestScript4"}
                 },

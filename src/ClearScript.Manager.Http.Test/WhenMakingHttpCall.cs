@@ -121,10 +121,12 @@ namespace ClearScript.Manager.Http.Test
             ManagerPool.InitializeCurrentPool(new ManagerSettings());
             using (var scope = new ManagerScope(requireManager))
             {
-               
-                var code = "var log = this.tabris.create('LOG');" +
-                           "try{ aa.ttt =1}catch(err){log.info(err)}";
-                code = "var tabris;" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
+
+                var code = "var aaaaa = require('./TestMainScript.js');";
+
+                //           "var log = this.tabris.create('LOG');" +
+                //           "try{ aa.ttt =1}catch(err){log.info(err)}";
+                //code = "var tabris;" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
                 await scope.RuntimeManager.ExecuteAsync("btnExcutor_Click", code);
 
                 code = "var log = this.tabris.create('LOG');" +
@@ -133,6 +135,31 @@ namespace ClearScript.Manager.Http.Test
                 await scope.RuntimeManager.ExecuteAsync("btnExcutor_Click", code);
             }
             
+
+            //RequireManager.ClearPackages();
+
+        }
+
+        [Test]
+        public async void Testtabris1()
+        {
+            RequireManager requireManager = new RequireManager();
+            ManagerPool.InitializeCurrentPool(new ManagerSettings());
+            using (var scope = new ManagerScope(requireManager))
+            {
+
+                var code = "var aaaaa = require('./TestMainScript.js');" +
+                           "var bbbbb = require('./TestIncludeScript.js');" +
+                           "var lib = require('/TestDll.dll');" +
+                           "var ccccc = require('./Config/TestIncludeScript2.js');";
+
+                //           "var log = this.tabris.create('LOG');" +
+                //           "try{ aa.ttt =1}catch(err){log.info(err)}";
+                code += "var myClrObject = new lib.TestDll.MyClass('tttt');myClrObject.SayHello(); ";
+                await scope.RuntimeManager.ExecuteAsync("btnExcutor_Click", code);
+
+            }
+
 
             //RequireManager.ClearPackages();
 

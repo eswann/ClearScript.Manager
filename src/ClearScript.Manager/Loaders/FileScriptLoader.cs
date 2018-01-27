@@ -8,23 +8,26 @@ namespace JavaScript.Manager.Loaders
     /// </summary>
     public class FileScriptLoader : IScriptLoader
     {
-        public string Name { get { return "FileScriptLoader"; } }
+        public string Name { get { return nameof(FileScriptLoader); } }
 
         public bool ShouldUse(IncludeScript script)
         {
             try
             {
-                if (!string.IsNullOrEmpty(script.Code))
+                if (!string.IsNullOrEmpty(script.Code) || string.IsNullOrEmpty(script.Uri))
                     return false;
 
-                if (Uri.IsWellFormedUriString(script.Uri, UriKind.RelativeOrAbsolute))
+                if (script.RequiredPackage != null &&
+                    !script.RequiredPackage.RequiredPackageType.Equals(RequiredPackageType.Default))
                 {
-                    var uri = new Uri(script.Uri);
-
-                    if (!uri.IsFile)
-                        return false;
+                    return false;
                 }
 
+                if (!File.Exists(script.Uri))
+                {
+                    return false;
+                }
+                
                 return true;
             }
             catch (Exception)
