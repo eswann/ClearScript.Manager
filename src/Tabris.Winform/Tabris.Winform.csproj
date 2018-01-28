@@ -234,6 +234,9 @@
     <Content Include="tabris\resources\codemirror\addon\lint\lint.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="tabris\resources\codemirror\addon\overlay\overlay.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="tabris\resources\codemirror\addon\scroll\simplescrollbars.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

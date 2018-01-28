@@ -1410,6 +1410,13 @@
         else { ok = ch && (match.test ? match.test(ch) : match(ch)) }
         if (ok) { ++this.pos; return ch }
     };
+    StringStream.prototype.eatNo = function (match) {
+        var ch = this.string.charAt(this.pos)
+        var ok
+        if (typeof match == "string") { ok = ch == match }
+        else { ok = ch && (match.test ? match.test(ch) : match(ch)) }
+        if (ok) { --this.pos; return ch }
+    };
     StringStream.prototype.eatWhile = function (match) {
         var start = this.pos
         while (this.eat(match)) { }

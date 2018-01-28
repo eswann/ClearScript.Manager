@@ -56,7 +56,6 @@
     var map = {
       name : "autoCloseBrackets",
       Backspace: function (cm) {
-          debugger
         if (cm.getOption("disableInput")) return CodeMirror.Pass;
         var ranges = cm.listSelections();
         for (var i = 0; i < ranges.length; i++) {
