@@ -60,9 +60,14 @@
                     "template": "catch (e) {\n  ${cursor}// ${todo}: handle exception\n}"
                 },
                 {
+                    "name": "require",
+                    "description": "require js or dll",
+                    "template": "require(${name}); \n${cursor}"
+                },
+                {
                     "name": "function",
                     "description": "function",
-                    "template": "function ${name}() {\n  ${cursor}\n}"
+                    "template": "function ${path}() {\n  ${cursor}\n}"
                 },
                 {
                     "name": "function",

@@ -145,17 +145,24 @@ namespace ClearScript.Manager.Http.Test
         {
             RequireManager requireManager = new RequireManager();
             ManagerPool.InitializeCurrentPool(new ManagerSettings());
+            JavaScript.Manager.Tabris.Tabris.Register(requireManager, new JavaScript.Manager.Tabris.TabrisOptions
+            {
+            });
             using (var scope = new ManagerScope(requireManager))
             {
 
-                var code = "var aaaaa = require('./TestMainScript.js');" +
-                           "var bbbbb = require('./TestIncludeScript.js');" +
-                           "var lib = require('/TestDll.dll');" +
-                           "var ccccc = require('./Config/TestIncludeScript2.js');";
-
-                //           "var log = this.tabris.create('LOG');" +
-                //           "try{ aa.ttt =1}catch(err){log.info(err)}";
-                code += "var myClrObject = new lib.TestDll.MyClass('tttt');myClrObject.SayHello(); ";
+                var code = @"var tabris;
+(function (){
+  tabris = tabris || require('javascript_tabris'); 
+try{
+var lib = require('../TestDll.dll');
+var myClrObject = new lib.TestDll.MyClass('tttt');
+myClrObject.SayHello(); 
+}catch(err){
+host.err=err.message;
+host.ex=err;
+}
+})();";
                 await scope.RuntimeManager.ExecuteAsync("btnExcutor_Click", code);
 
             }

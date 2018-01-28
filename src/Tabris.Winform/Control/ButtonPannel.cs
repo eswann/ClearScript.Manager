@@ -11,6 +11,7 @@ using CefSharp;
 using CefSharp.WinForms;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -658,23 +659,85 @@ namespace Tabris.Winform.Control
 
         private void invokeJsCode(string code,bool isDebuger = false)
         {
-            if (this.catchBox.CheckState.Equals(CheckState.Checked))
-            {
-                code = "try{\n" + code + "\n}catch(err){\nhost.err=err.message;\nhost.ex=err;\n}";
-            }
+            bool tryCatch = this.catchBox.CheckState.Equals(CheckState.Checked);
             isRun = true;
             Enable(false);
             Task.Factory.StartNew(async () =>
             {
                 try
                 {
+
+                    var codeLines = string.Join("\n",code.Split('\n').ToList().Select(r=> (tryCatch? "        " : "    ") +r));
+                    if (codeLines.StartsWith("        "))
+                    {
+                        codeLines = codeLines.Substring(8);
+                    }
+                    else if (codeLines.StartsWith("    "))
+                    {
+                        codeLines = codeLines.Substring(4);
+                    }
                     if (isDebuger)
                     {
-                        code = "debugger;\nvar tabris;\n" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
+                        if (tryCatch)
+                        {
+code = $@"
+var tabris;
+(function () 
+{{
+    debugger;
+    try{{
+        tabris = tabris || require('javascript_tabris');
+        {codeLines}
+    }}catch(err){{
+        host.err=err.message;
+        host.ex=err;
+    }}
+}})()";
+                        }
+                        else
+                        {
+code = $@"
+var tabris;
+(function () 
+{{
+    debugger;
+    tabris = tabris || require('javascript_tabris');
+    {codeLines}
+}})()";
+                        }
+
+
+                        //code = "debugger;\nvar tabris;\n" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
                     }
                     else
                     {
-                        code = "var tabris;\n" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
+                        if (tryCatch)
+                        {
+code = $@"
+var tabris;
+(function () 
+{{
+    try{{
+        tabris = tabris || require('javascript_tabris');
+        {codeLines}
+    }}catch(err){{
+        host.err=err.message;
+        host.ex=err;
+    }}
+}})()";
+                            //code = "var tabris;\n" + "(function (){\n  tabris = tabris || require('javascript_tabris'); \n" + code + "\n})();";
+                        }
+                        else
+                        {
+code = $@"
+var tabris;
+(function () 
+{{
+    tabris = tabris || require('javascript_tabris');
+    {codeLines}
+}})()";
+
+                        }
                     }
                    
                     dynamic host = new ExpandoObject();

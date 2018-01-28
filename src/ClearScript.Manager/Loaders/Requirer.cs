@@ -147,10 +147,12 @@ namespace JavaScript.Manager.Loaders
                 {
                     RequireManager.RegisterPackage(package);
                 }
-
-               
-                _LastRequireDic.TryRemove(_lastRequireIdex,out string _a);
-                _lastRequireIdex--;
+                if (_lastRequireIdex > 0)
+                {
+                    _LastRequireDic.TryRemove(_lastRequireIdex, out string _a);
+                    _lastRequireIdex--;
+                }
+                
                 return outputObject.exports;
             }
 

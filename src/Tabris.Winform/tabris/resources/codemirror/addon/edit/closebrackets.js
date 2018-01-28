@@ -52,10 +52,11 @@
     }
   }
 
-  function buildKeymap(pairs) {
+  function  buildKeymap(pairs) {
     var map = {
       name : "autoCloseBrackets",
-      Backspace: function(cm) {
+      Backspace: function (cm) {
+          debugger
         if (cm.getOption("disableInput")) return CodeMirror.Pass;
         var ranges = cm.listSelections();
         for (var i = 0; i < ranges.length; i++) {
@@ -108,10 +109,22 @@
             for (var i = 0; i < 3; i++)
               cm.execCommand("goCharRight");
           } else if (type == "surround") {
+              var ranges = cm.listSelections();
             var sels = cm.getSelections();
             for (var i = 0; i < sels.length; i++)
               sels[i] = left + sels[i] + right;
             cm.replaceSelections(sels, "around");
+
+            try {
+                if (ranges) {
+                    var firstSelet = ranges[0];
+                    var from = { line: firstSelet.anchor.line, ch: firstSelet.anchor.ch + 1 };
+                    var to = { line: firstSelet.head.line, ch: firstSelet.head.ch + 1 };
+                    cm.setSelection(from, to);
+                }
+            } catch (e) {
+
+            }
           } else if (type == "both") {
             cm.replaceSelection(left + right, null);
             cm.execCommand("goCharLeft");
@@ -136,7 +149,7 @@
   }
 
   function buildExplodeHandler(pairs) {
-    return function(cm) {
+      return function (cm) {
       if (cm.getOption("disableInput")) return CodeMirror.Pass;
       var ranges = cm.listSelections();
       for (var i = 0; i < ranges.length; i++) {

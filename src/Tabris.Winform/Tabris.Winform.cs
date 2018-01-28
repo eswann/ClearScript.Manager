@@ -237,7 +237,14 @@ namespace Tabris.Winform
 
         private static void pro_Exited(object sender, EventArgs e)
         {
-            Application.Exit();
+            try
+            {
+                Application.Exit();
+            }
+            catch (Exception)
+            {
+
+            }
         }
         /// <summary>
         /// 检测是否存在进程， 存在就杀进程
