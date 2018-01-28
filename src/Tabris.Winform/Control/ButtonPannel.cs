@@ -239,6 +239,11 @@ namespace Tabris.Winform.Control
             InvokeJS(flag ? "commentSelection(true)" : "commentSelection(false)");
             OnModify();
         }
+
+        public void Tip()
+        {
+            InvokeJS("CodeMirror.showHint(cmEditor.editor, CodeMirror.ternHint, { async: !0 })");
+        }
         /// <summary>
         /// 是否存在有选中
         /// </summary>
@@ -372,6 +377,7 @@ namespace Tabris.Winform.Control
                 Format = 26506,
                 Annotation = 26507,
                 UnAnnotation = 26508,
+                Tip = 26509,
             }
 
             private readonly ButtonPannel _buttonPannel;
@@ -506,6 +512,7 @@ namespace Tabris.Winform.Control
                 
                 model.AddItem((CefMenuCommand)(int)MenuItem.Annotation,   "注释     (Ctrl + /)");
                 model.AddItem((CefMenuCommand)(int)MenuItem.UnAnnotation, "反注释   (Ctrl +Alt + /)");
+                model.AddItem((CefMenuCommand)(int)MenuItem.Tip,          "提示     (Alt + /)");
 
                 //Removing existing menu item
                 //bool removed = model.Remove(CefMenuCommand.ViewSource); // Remove "View Source" option
@@ -578,6 +585,13 @@ namespace Tabris.Winform.Control
                     new Task(() =>
                     {
                         _buttonPannel.Annotation(false);
+                    }).Start();
+                }
+                if ((int)commandId == (int)MenuItem.Tip)
+                {
+                    new Task(() =>
+                    {
+                        _buttonPannel.Tip();
                     }).Start();
                 }
                 return false;

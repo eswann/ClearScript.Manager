@@ -67,12 +67,17 @@
                 {
                     "name": "function",
                     "description": "function",
-                    "template": "function ${path}() {\n  ${cursor}\n}"
+                    "template": "function ${name}() {\n  ${cursor}\n}"
                 },
                 {
                     "name": "function",
                     "description": "anonymous function",
                     "template": "function (${condition}) {\n  ${line_selection}${cursor}\n}"
+                },
+                {
+                    "name": "function",
+                    "description": "function with param",
+                    "template": "function ${name}(${condition}) {\n  ${cursor}\n}"
                 },
                 {
                     "name": "new",
