@@ -5,6 +5,6 @@
 # js编辑器有 remoteDebugger 代码智能提示 语法高亮 语法错误提示 智能搜索 代码收缩 打标签 等功能
 
 ![image](https://github.com/yuzd/ClearScript.Manager/blob/master/tabris.gif)
-# 支持debugger版本 链接：https://pan.baidu.com/s/1oAeJdmM 密码：c8sx
+# 支持debugger版本 download:https://pan.baidu.com/s/1ghgZ1tD
 ![image](https://github.com/yuzd/ClearScript.Manager/blob/master/tabris4.gif)
 ![image](https://github.com/yuzd/ClearScript.Manager/blob/master/tabris3.gif)
