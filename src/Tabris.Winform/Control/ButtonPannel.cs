@@ -673,6 +673,7 @@ namespace Tabris.Winform.Control
 
         private void invokeJsCode(string code,bool isDebuger = false)
         {
+            code = code.Replace("``{{", "\"+").Replace("}}``", "+\"").Replace("`{{", "\'+").Replace("}}`", "+\'").Replace("{{","\"+").Replace("}}", "+\"");
             bool tryCatch = this.catchBox.CheckState.Equals(CheckState.Checked);
             isRun = true;
             Enable(false);

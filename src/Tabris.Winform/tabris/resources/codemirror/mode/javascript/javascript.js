@@ -100,7 +100,7 @@
             }
             ch = stream.next();
             if (ch == '"' || ch == "'") {
-                lastQuote = ch;
+                if (!lastQuote)lastQuote = ch;
                 state.tokenize = tokenString(ch);
                 return state.tokenize(stream, state);
             } else if (state.lastType == "mustache") {
@@ -161,7 +161,7 @@
                     state.tokenize = tokenBase;
                     return ret("jsonld-keyword", "meta");
                 }
-                if (ismustache && lastQuote && lastQuote == quote) {
+                if ((ismustache || state.lastType == 'mustache') && lastQuote && lastQuote == quote) {
                     state.tokenize = tokenBase;
                     return ret("string", "string", stream.current());
                 }
