@@ -6970,7 +6970,18 @@
                 cm.setSelections(newSel)
             });
         },
+
         newlineAndIndent: function (cm) {
+            var pos = cm.getCursor(true);
+            var lineNumber = pos.line;
+            var line = cm.getLine(lineNumber);
+            var word = line.trim();
+            if(pos.ch!=0 && word == '/*'){
+                return runInOp(cm, function () {
+                    cm.replaceRange("\n comment \n" + '*/', cm.getCursor(true));
+                    cm.setSelection({line:lineNumber+1,ch:1},{line:lineNumber+1,ch:8})
+                });
+            }
             return runInOp(cm, function () {
                 var sels = cm.listSelections()
                 for (var i = sels.length - 1; i >= 0; i--) { cm.replaceRange(cm.doc.lineSeparator(), sels[i].anchor, sels[i].head, "+input") }

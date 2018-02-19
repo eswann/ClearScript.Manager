@@ -4,7 +4,7 @@
 .cm-s-eclipse span.cm-number {color: #164;}
 .cm-s-eclipse span.cm-def {color: #331ea0;}
 .cm-s-eclipse span.cm-variable {color: #000;}
-.cm-s-eclipse span.cm-variable-2 {color: #331ea0;}
+.cm-s-eclipse span.cm-variable-2 {color: #4c9ea0;font-weight: bold}
 .cm-s-eclipse span.cm-variable-3 {color: #331ea0;}
 .cm-s-eclipse span.cm-property {color:#006699;    font-weight: bold;}
 .cm-s-eclipse span.cm-operator {color: black;}

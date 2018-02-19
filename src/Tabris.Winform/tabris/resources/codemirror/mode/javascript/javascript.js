@@ -110,6 +110,19 @@
                 return ret("number", "number");
             } else if (ch == "." && stream.match("..")) {
                 return ret("spread", "meta");
+            }else if (state.functionScope && state.functionVarScope && ch == ")") {
+                delete state.functionVarScope;
+                return ret(ch);
+            }else if (state.functionScope&&ch == "{") {
+                state.functionScopeIndex++;
+                return ret(ch);
+            } else if (state.functionScope && ch == "}") {
+                state.functionScopeIndex--;
+                if(state.functionScopeIndex<=0){
+                    delete state.functionScope;
+                    delete state.functionVars;
+                }
+                return ret(ch);
             } else if (/[\[\]{}\(\),;\:\.]/.test(ch)) {
                 return ret(ch);
             } else if (ch == "=" && stream.eat(">")) {
@@ -148,6 +161,23 @@
             } else if (wordRE.test(ch)) {
                 stream.eatWhile(wordRE);
                 var word = stream.current(), known = keywords.propertyIsEnumerable(word) && keywords[word];
+                if((known && known.type == "function")){
+                    state.functionVarScope = true;
+                    state.functionScopeIndex = 1;
+                    if(state.functionScope){
+                        state.functionScopeIndex++;
+                        //console.log('state.functionScope 重复了');
+                    }
+                    if(state.functionScopeIndex==1){
+                        state.functionScope = true;
+                        state.functionVars = [];
+                    }
+                }else{
+                    if(state.functionVarScope && state.functionVars){
+                        state.functionVars.push(word);
+                    }
+                }
+
                 return (known && state.lastType != ".") ? ret(known.type, known.style, word) :
                     ret("variable", "variable", word);
             }
@@ -287,6 +317,15 @@
             }
         }
 
+        function inFunctionVars(state,varname) {
+            if(!state.functionVars)return false;
+            for (var i=0,len=state.functionVars.length; i<len; i++)
+            {
+                if(state.functionVars[i] == varname)return true;
+            }
+            return false;
+        }
+
         function parseJS(state, style, type, content, stream) {
             var cc = state.cc;
             // Communicate our context to the combinators.
@@ -301,8 +340,9 @@
                 if (combinator(type, content)) {
                     while (cc.length && cc[cc.length - 1].lex)
                         cc.pop()();
+                    if (state.functionScope && inFunctionVars(state,content)) return "variable-2";
                     if (cx.marked) return cx.marked;
-                    if (type == "variable" && inScope(state, content)) return "variable-2";
+                    if (type == "variable" && inScope(state, content)) return "def";
                     return style;
                 }
             }
@@ -318,6 +358,7 @@
             pass.apply(null, arguments);
             return true;
         }
+        
         function register(varname) {
             function inList(list) {
                 for (var v = list; v; v = v.next)

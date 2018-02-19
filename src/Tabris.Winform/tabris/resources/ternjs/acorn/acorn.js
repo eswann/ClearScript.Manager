@@ -621,7 +621,7 @@
   function skipBlockComment() {
     var startLoc = options.onComment && options.locations && new Position;
     var start = tokPos, end = input.indexOf("*/", tokPos += 2);
-    if (end === -1) raise(tokPos - 2, "Unterminated comment");
+    if (end === -1) return;//raise(tokPos - 2, "Unterminated comment");
     tokPos = end + 2;
     if (options.locations) {
       lineBreak.lastIndex = start;
