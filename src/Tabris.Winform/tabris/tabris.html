@@ -127,7 +127,7 @@
                         "Alt-.": function (a) { CodeMirror.tern.jumpToDef(a) },
                         "Alt-,": function (a) { CodeMirror.tern.jumpBack(a) },
                         "Ctrl-Q": function (a) { CodeMirror.tern.rename(a) },
-                        "Alt-\\": function (a) { cmEditor.editor.showHint({isFunc:true}) },
+                        "Alt-\\": function (a) { cmEditor.editor.off("cursorActivity", autoComplete);cmEditor.editor.showHint({isFunc:true}) },
                         "Ctrl-S": function (a) {
 							try{csharpJsFunction && csharpJsFunction.Save(getCode());}catch(e){}
 						},

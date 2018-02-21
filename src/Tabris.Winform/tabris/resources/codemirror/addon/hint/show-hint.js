@@ -34,10 +34,39 @@
             for(var item in CodeMirror.functionTempList)
             {
                 var line = CodeMirror.functionTempList[item];
-                var lineText = this.getLineHandle(line).text;
+                var lineText = this.getLine(line);
                 if(lineText.indexOf(item)>=0){
                     if(lineNumber == line) continue;
-                    items.push(CodeMirror.functionList[line]);
+                    var Lineitem = CodeMirror.functionList[line];
+                    //逆解析 拿到comment
+                    Lineitem.comment = getComment(line-1,this);
+                    var appendText = '';
+                    if(Lineitem.comment){
+                        if(Lineitem.comment.parms){
+                            var palist = [];
+                            for(var u=Lineitem.comment.parms.length-1;u>=0;u--){
+                                var name = Lineitem.comment.parms[u].name || '';
+                                var desc = Lineitem.comment.parms[u].desc || '';
+                                palist.push(name + (desc.length>0?'[' + desc +']' : ''));
+                            }
+                            appendText +='(' + palist.join(',') + ')';
+                        }
+                        if(Lineitem.comment.title){
+                            appendText += '【' + Lineitem.comment.title + '】';
+                        }
+                    }else{
+                        try{
+                            var tmp1 = lineText.split(')')[0].split(Lineitem.text + '(')[1];
+                            Lineitem.displayText = Lineitem.text + '(' + tmp1 + ')';
+                        }catch(ee){
+
+                        }
+
+                    }
+                    if(appendText.length>0){
+                        Lineitem.displayText = Lineitem.text+appendText;
+                    }
+                    items.push(Lineitem);
                     lineNumber = line;
                 }
             }
@@ -264,6 +293,47 @@
         else return completion.text;
     }
 
+    function getComment(line,cm) {
+        var commentEnd = false;
+        var commentStart = false;
+
+        var result = {title:'',returnText:'',parms:[]};
+        for(var i=line;i>=0;i--){
+            var lineText = cm.getLine(i);
+            if(lineText.indexOf('*/')>=0){
+                if(commentEnd){
+                    return undefined;
+                }
+                commentEnd = true;
+                continue;
+            }
+            if(!commentEnd){
+                return undefined;
+            }
+            if(lineText.indexOf('return:')>=0){
+                result.returnText =lineText.split('return:')[1].replace(' ','').trim();
+                continue;
+            }
+
+            if(lineText.indexOf('/*')>=0){
+                commentStart = true;
+                return result;
+            }
+
+            if(lineText.indexOf(':')>=0){
+                var arr = lineText.replace(' ','').trim().split(':');
+                if(arr.length == 2){
+                    result.parms.push({name:arr[0],desc:arr[1]})
+                }else{
+                    return undefined;
+                }
+                continue;
+            }else{
+                result.title = lineText.replace(' ','').trim();
+            }
+        }
+        return undefined;
+    }
     function buildKeyMap(completion, handle) {
         var baseMap = {
             Up: function () { handle.moveFocus(-1); },

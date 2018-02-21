@@ -220,7 +220,7 @@
                         if(stream.lineOracle){
                             state.functionName = {className:"CodeMirror-hint-template",text:word,line:stream.lineOracle.line,range:{start:{line:stream.lineOracle.line,ch:stream.start},end:{line:stream.lineOracle.line,ch:stream.pos}}};
                         }
-                        return ret('variable-func', 'variable-func', word);
+                        return ret('variable-func' + ' func-'+word, 'variable-func'+ ' func-'+word, word);
                     }else{
                         if(state.functionVarScope && state.functionVars){
                             state.functionVars.push(word);
