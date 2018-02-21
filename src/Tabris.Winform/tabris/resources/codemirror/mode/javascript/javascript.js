@@ -161,7 +161,7 @@
                 return ret(ch);
             } else if (state.functionScope && ch == "}") {
                 state.functionScopeIndex--;
-                if(state.functionScopeIndex<=0){
+                if(state.functionScopeIndex<=1){
                     delete state.functionScope;
                     delete state.functionVars;
                 }
@@ -220,7 +220,7 @@
                         if(stream.lineOracle){
                             state.functionName = {className:"CodeMirror-hint-template",text:word,line:stream.lineOracle.line,range:{start:{line:stream.lineOracle.line,ch:stream.start},end:{line:stream.lineOracle.line,ch:stream.pos}}};
                         }
-                        return ret('variable-func ttt', 'variable-func', word);
+                        return ret('variable-func', 'variable-func', word);
                     }else{
                         if(state.functionVarScope && state.functionVars){
                             state.functionVars.push(word);

@@ -44,6 +44,13 @@
             if(items.length<1)return;
             return completion.showHints({isFunc:true,list:items,from:this.getCursor(true),to:this.getCursor(true)});
         }
+
+        if(options && options.isQuick){
+            if (this.state.completionActive) this.state.completionActive.close();
+            var completion = this.state.completionActive = new Completion(this, options);
+            CodeMirror.signal(this, "startCompletion", this);
+            return completion.showHints({isQuick:true,list:options.data,from:this.getCursor(true),to:this.getCursor(true)});
+        }
         // We want a single cursor position.
         if (this.listSelections().length > 1 || this.somethingSelected()) return;
 
@@ -86,9 +93,76 @@
                 that.cm.setCursor(Number(completion.range.end.line), Number(completion.range.end.ch));
                 return;
             }
-            if (completion.hint) completion.hint(that.cm, data, completion);
-            else that.cm.replaceRange(getText(completion), completion.from || data.from,
-                completion.to || data.to, "complete");
+            function getSpaceText(num) {
+                var ss = '';
+                for(var yy=0;yy<num;yy++){
+                    ss += ' ';
+                }
+                return ss;
+            }
+
+            function splitAndJoin(text,num,num2) {
+                var aa = text.split('\n');
+                var arr = [];
+                for(var ii=0;ii<aa.length;ii++){
+                    if(ii==0){
+                        if(num2>0){
+                            arr.push(getSpaceText(num2) + aa[ii]);continue;
+                        }else{
+                            arr.push(aa[ii]);continue;
+                        }
+
+                    }
+                    arr.push(getSpaceText(num)+aa[ii]);
+                }
+
+                return arr.join('\n');
+            }
+            var replaceText = '';
+            if(completion.selection && completion.temp){
+                var globalIdx =completion.selection.head.ch;
+                var startLine = that.cm.getLine(completion.selection.head.line);
+                var temp1 = 0;
+                for(var iy=0;iy<startLine.length;iy++){
+                    if(startLine[iy] == ' '){
+                        temp1++;
+                    }else{
+                        break;
+                    }
+                }
+                var firstLineIdx =temp1-completion.selection.head.ch;
+                if(firstLineIdx>0){
+                    completion.selection.head.ch = firstLineIdx;
+                }
+                var selectText = that.cm.getRange(completion.selection.head,completion.selection.anchor);
+                for(var y=0;y<completion.temp.length;y++){
+                    var tt =completion.temp[y];
+                    if(y==0){
+                        replaceText += tt.text + '\n';
+                        continue;
+                    }
+                    replaceText +=  getSpaceText(tt.idx+globalIdx);
+                    if(tt.text == '$'){
+                        replaceText +=   splitAndJoin(selectText,tt.idx,firstLineIdx) ;
+                    }else{
+                        replaceText += (firstLineIdx>0 ? getSpaceText(firstLineIdx):'') + tt.text;
+                    }
+                    if(y!=completion.temp.length-1){
+                        replaceText += '\n';
+                    }
+                }
+
+            }
+            if (completion.hint) {
+                completion.hint(that.cm, data, completion);
+            }else if(replaceText.length>0){
+                that.cm.replaceRange(replaceText, completion.selection.head,
+                    completion.selection.anchor, "complete");
+            }
+            else {
+                that.cm.replaceRange(getText(completion), completion.from || data.from,
+                    completion.to || data.to, "complete");
+            }
             CodeMirror.signal(data, "pick", completion);
             if (completion.template &&
                 completion.template.name == completion.template.description &&
@@ -248,11 +322,18 @@
             inp.hintId = 'input';
             var isFirstDown = true;
             CodeMirror.on(inp, "keydown", function (e) {
-                //console.log(e.keyCode);
+                console.log(e.keyCode);
                 // if(e.keyCode == 8 || e.keyCode == 46){
                 //     //delete
                 //     return;
                 // }
+                if(e.keyCode == 27){
+                    //esc
+                    setTimeout(function () { cm.focus(); }, 20);
+                    setTimeout(function () { widget.close(); }, 20);
+                    CodeMirror.e_stop(e);
+                    return;
+                }
                 if(e.keyCode == 40){
                     //down
                     var i = widget.selectedHint + 1;
@@ -305,6 +386,10 @@
                 },20);
 
             });
+        }
+
+        if(data.isQuick){
+
         }
         var completions = data.list;
         for (var i = 0; i < completions.length; ++i) {
@@ -476,7 +561,7 @@
                 }else{
                     return;
                 }
-            }else if(this.selectedHint==1&&avoidWrap&& avoidWrap.isClear){
+            }else if(this.selectedHint<=1&&avoidWrap&& avoidWrap.isClear){
                 i=1;
             }
             var childNodes = [];

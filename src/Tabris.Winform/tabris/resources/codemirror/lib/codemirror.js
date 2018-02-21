@@ -6566,7 +6566,7 @@
         "Ctrl-F": "goCharRight", "Ctrl-B": "goCharLeft", "Ctrl-P": "goLineUp", "Ctrl-N": "goLineDown",
         "Alt-F": "goWordRight", "Alt-B": "goWordLeft", "Ctrl-A": "goLineStart", "Ctrl-E": "goLineEnd",
         "Ctrl-V": "goPageDown", "Shift-Ctrl-V": "goPageUp", "Ctrl-D": "delCharAfter", "Ctrl-H": "delCharBefore",
-        "Alt-D": "delWordAfter", "Alt-Backspace": "delWordBefore", "Ctrl-K": "killLine", "Ctrl-T": "transposeChars",
+        "Alt-D": "delWordAfter", "Alt-Backspace": "delWordBefore",  "Ctrl-K": "killLine","Ctrl-T": "transposeChars",
         "Ctrl-O": "openLine"
     }
     keyMap.macDefault = {
@@ -6821,15 +6821,30 @@
         selectAll: selectAll,
         singleSelection: function (cm) { return cm.setSelection(cm.getCursor("anchor"), cm.getCursor("head"), sel_dontScroll); },
         killLine: function (cm) {
-            return deleteNearSelection(cm, function (range) {
-                if (range.empty()) {
-                    var len = getLine(cm.doc, range.head.line).text.length
-                    if (range.head.ch == len && range.head.line < cm.lastLine()) { return { from: range.head, to: Pos(range.head.line + 1, 0) } }
-                    else { return { from: range.head, to: Pos(range.head.line, len) } }
-                } else {
-                    return { from: range.from(), to: range.to() }
-                }
+            var sels = cm.listSelections();
+            if(!sels || sels.length!=1){
+                return;
+            }
+            return runInOp(cm, function () {
+                cm.showHint({
+                    isQuick:true,
+                    data:[
+                        {className:"CodeMirror-hint-template",text:'try',
+                            temp:[{text:'try {',idx:0},{text:'$',idx:2},{text:'} catch (e) {',idx:0},{text:'// todo: handle exception',idx:2},{text:'}',idx:0}],selection:sels[0]},
+                        {className:"CodeMirror-hint-template",text:'tryf',
+                            temp:[{text:'try {',idx:0},{text:'$',idx:2},{text:'} catch (e) {',idx:0},{text:'// todo: handle exception',idx:2},{text:'} finally {',idx:0},{text:'// todo: handle finally',idx:2},{text:'}',idx:0}],selection:sels[0]}
+                    ]
+                });
             });
+            // return deleteNearSelection(cm, function (range) {
+            //     if (range.empty()) {
+            //         var len = getLine(cm.doc, range.head.line).text.length
+            //         if (range.head.ch == len && range.head.line < cm.lastLine()) { return { from: range.head, to: Pos(range.head.line + 1, 0) } }
+            //         else { return { from: range.head, to: Pos(range.head.line, len) } }
+            //     } else {
+            //         return { from: range.from(), to: range.to() }
+            //     }
+            // });
         },
         copyLine: function (cm) {
             return runInOp(cm, function () {
@@ -7244,7 +7259,43 @@
         if (clickInGutter(cm, e)) { return }
         var pos = posFromMouse(cm, e), button = e_button(e), repeat = pos ? clickRepeat(pos, button) : "single"
         window.focus()
+        if(e.ctrlKey && e.which == 1){
+            //ctrl+click
 
+            setTimeout(function () {
+                try {
+                    var cur =cm.getCursor(true);
+
+                    var match = cm.state.matchHighlighter.matchesonscroll.matches[0];
+                    var text = cm.getRange(match.from,match.to);
+                    if(text && text.length>0){
+                        for(var item in CodeMirror.functionTempList)
+                        {
+                            var line = CodeMirror.functionTempList[item];
+                            var lineText = cm.getLineHandle(line).text;
+                            if(lineText.indexOf(item)>=0){
+                                if(item == text){
+                                    var range = CodeMirror.functionList[line].range;
+                                    if(cur.line ==range.end.line )break;
+                                    cm.setCursor(Number(range.end.line), Number(range.end.ch));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    // for(var y=1;y<matchs.length;y++){
+                    //     if(cur.line == matchs[y].from.line){
+                    //         if(cur.ch>=matchs[y].from.ch &&cur.ch>=matchs[y].to.ch){
+                    //
+                    //         }
+                    //     }
+                    // }
+                }catch(e){
+
+                }
+            },200)
+
+        }
         // #3261: make sure, that we're not starting a second selection
         if (button == 1 && cm.state.selectingText) { cm.state.selectingText(e) }
 
