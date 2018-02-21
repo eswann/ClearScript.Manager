@@ -127,6 +127,7 @@
                         "Alt-.": function (a) { CodeMirror.tern.jumpToDef(a) },
                         "Alt-,": function (a) { CodeMirror.tern.jumpBack(a) },
                         "Ctrl-Q": function (a) { CodeMirror.tern.rename(a) },
+                        "Alt-\\": function (a) { cmEditor.editor.showHint({isFunc:true}) },
                         "Ctrl-S": function (a) {
 							try{csharpJsFunction && csharpJsFunction.Save(getCode());}catch(e){}
 						},
@@ -161,7 +162,7 @@
                     scrollbarStyle: "simple",
                     foldGutter: true,
                 });
-
+            CodeMirror.cm =cmEditor.editor;
             cmEditor.editor.on("gutterClick", function (cm, n) {
 				try{
 					var info = cm.lineInfo(n);

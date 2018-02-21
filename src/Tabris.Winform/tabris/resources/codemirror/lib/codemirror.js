@@ -6552,7 +6552,7 @@
     // default. User code or addons can define them. Unknown commands
     // are simply ignored.
     keyMap.pcDefault = {
-        "Ctrl-A": "selectAll", "Ctrl-D": "deleteLine", "Ctrl-Z": "undo", "Shift-Ctrl-Z": "redo", "Ctrl-Y": "redo",
+        "Ctrl-A": "selectAll", "Ctrl-D": "copyLine", "Ctrl-Z": "undo", "Shift-Ctrl-Z": "redo", "Ctrl-Y": "redo",
         "Ctrl-Home": "goDocStart", "Ctrl-End": "goDocEnd", "Ctrl-Up": "goLineUp", "Ctrl-Down": "goLineDown",
         "Ctrl-Left": "goGroupLeft", "Ctrl-Right": "goGroupRight", "Alt-Left": "goLineStart", "Alt-Right": "goLineEnd",
         "Ctrl-Backspace": "delGroupBefore", "Ctrl-Delete": "delGroupAfter", "Ctrl-S": "save", "Ctrl-F": "find",
@@ -6570,7 +6570,7 @@
         "Ctrl-O": "openLine"
     }
     keyMap.macDefault = {
-        "Cmd-A": "selectAll", "Cmd-D": "deleteLine", "Cmd-Z": "undo", "Shift-Cmd-Z": "redo", "Cmd-Y": "redo",
+        "Cmd-A": "selectAll", "Cmd-D": "copyLine", "Cmd-Z": "undo", "Shift-Cmd-Z": "redo", "Cmd-Y": "redo",
         "Cmd-Home": "goDocStart", "Cmd-Up": "goDocStart", "Cmd-End": "goDocEnd", "Cmd-Down": "goDocEnd", "Alt-Left": "goGroupLeft",
         "Alt-Right": "goGroupRight", "Cmd-Left": "goLineLeft", "Cmd-Right": "goLineRight", "Alt-Backspace": "delGroupBefore",
         "Ctrl-Alt-Backspace": "delGroupAfter", "Alt-Delete": "delGroupAfter", "Cmd-S": "save", "Cmd-F": "find",
@@ -6831,6 +6831,19 @@
                 }
             });
         },
+        copyLine: function (cm) {
+            return runInOp(cm, function () {
+                var pos = cm.getCursor(true);
+                var lineNumber = pos.line;
+                var line = cm.getLine(lineNumber);
+                cm.setCursor({line:lineNumber,ch:line.length})
+                cm.replaceRange("\n" + line, cm.getCursor(true));
+                cm.setCursor({line:lineNumber+1,ch:line.length})
+                // cm.setSelection({line:lineNumber+1,ch:1},{line:lineNumber+1,ch:8})
+                // for (var i = kill.length - 1; i >= 0; i--) { replaceRange(cm.doc, "", kill[i].from, kill[i].to, "+delete") }
+                 ensureCursorVisible(cm)
+            })
+        },
         deleteLine: function (cm) {
             return deleteNearSelection(cm, function (range) {
                 return ({
@@ -6978,8 +6991,23 @@
             var word = line.trim();
             if(pos.ch!=0 && word == '/*'){
                 return runInOp(cm, function () {
-                    cm.replaceRange("\n comment \n" + '*/', cm.getCursor(true));
+                    var replaceStr = '\n comment ';
+                    try{
+                        //解析下面的一行 如果是function的话 拿到参数
+                        var nextline = cm.getLine(lineNumber+1);
+                        var s2 = nextline.match(/function[^(]*\(([^)]*)\)/)[1];
+                        var paramList = s2.split(/\W+/);
+                        for (var i=0,len=paramList.length; i<len; i++)
+                        {
+                            if(paramList[i]&& paramList[i].length>0)replaceStr += '\n ' + paramList[i] + ":";
+                        }
+                        replaceStr+='\n return:void';
+                    }catch(e){
+
+                    }
+                    cm.replaceRange(replaceStr + '\n*/', cm.getCursor(true));
                     cm.setSelection({line:lineNumber+1,ch:1},{line:lineNumber+1,ch:8})
+
                 });
             }
             return runInOp(cm, function () {

@@ -70,6 +70,31 @@
         var isOperatorChar = /[+\-*&%=<>!?|~^]/;
         var isJsonldKeyword = /^@(context|id|value|language|type|container|list|set|reverse|index|base|vocab|graph)"/;
 
+        function resetFunctionList() {
+            var items = [];
+            var lineNumber=-1;
+            for(var item in CodeMirror.functionTempList)
+            {
+                var line = CodeMirror.functionTempList[item];
+                var lineText = CodeMirror.cm.getLineHandle(line).text;
+                if(lineText.indexOf(item)>=0){
+                    if(lineNumber == line) continue;
+                    items.push(CodeMirror.functionList[line]);
+                    lineNumber = line;
+                }
+            }
+
+            delete CodeMirror.functionTempList;
+            delete CodeMirror.functionList;
+            CodeMirror.functionTempList = {};
+            CodeMirror.functionList = {};
+            for (var i=0,len=items.length; i<len; i++)
+            {
+                CodeMirror.functionList[items[i].line] =items[i];
+                CodeMirror.functionTempList[items[i].text]=items[i].line;
+            }
+        }
+        
         function readRegexp(stream) {
             var escaped = false, next, inSet = false;
             while ((next = stream.next()) != null) {
@@ -113,7 +138,25 @@
             }else if (state.functionScope && state.functionVarScope && ch == ")") {
                 delete state.functionVarScope;
                 return ret(ch);
-            }else if (state.functionScope&&ch == "{") {
+            }else if(state.functionScope&&ch == "("){
+                if(!CodeMirror.functionList){
+                    CodeMirror.functionList = {};
+                    CodeMirror.functionTempList = {};
+                }
+                if(state.functionName){
+                    CodeMirror.functionList[state.functionName.line]=state.functionName;
+                    CodeMirror.functionTempList[state.functionName.text]=state.functionName.line;
+                    if(CodeMirror.resetFunctionListTimeOut){
+                        clearTimeout(CodeMirror.resetFunctionListTimeOut);
+                    }
+                    CodeMirror.resetFunctionListTimeOut = setTimeout(function () {
+                        resetFunctionList();
+                    }, 200);
+                }
+                delete state.functionName;
+                return ret(ch);
+            }
+            else if (state.functionScope&&ch == "{") {
                 state.functionScopeIndex++;
                 return ret(ch);
             } else if (state.functionScope && ch == "}") {
@@ -173,8 +216,15 @@
                         state.functionVars = [];
                     }
                 }else{
-                    if(state.functionVarScope && state.functionVars){
-                        state.functionVars.push(word);
+                    if(state.lastType == 'function'){
+                        if(stream.lineOracle){
+                            state.functionName = {className:"CodeMirror-hint-template",text:word,line:stream.lineOracle.line,range:{start:{line:stream.lineOracle.line,ch:stream.start},end:{line:stream.lineOracle.line,ch:stream.pos}}};
+                        }
+                        return ret('variable-func ttt', 'variable-func', word);
+                    }else{
+                        if(state.functionVarScope && state.functionVars){
+                            state.functionVars.push(word);
+                        }
                     }
                 }
 

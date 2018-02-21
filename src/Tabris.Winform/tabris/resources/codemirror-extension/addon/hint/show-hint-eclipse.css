@@ -12,6 +12,20 @@
   padding: 0px;
 }
 
+.CodeMirror-hint-hide{
+    display: none !important;
+}
+
+.CodeMirror-hint-input {
+    margin: 0px;
+    padding: 0px;
+    width: 99%;
+    cursor: hand;
+    white-space: nowrap;
+    display: inline-block;
+    clear: left;
+    float: left;
+}
 .CodeMirror-hint {
   margin: 0px;
   padding: 0px;

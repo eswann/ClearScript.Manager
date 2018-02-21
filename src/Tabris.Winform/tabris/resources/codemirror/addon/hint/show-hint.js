@@ -25,6 +25,25 @@
     };
 
     CodeMirror.defineExtension("showHint", function (options) {
+        if(options && options.isFunc){
+            if (this.state.completionActive) this.state.completionActive.close();
+            var completion = this.state.completionActive = new Completion(this, options);
+            CodeMirror.signal(this, "startCompletion", this);
+            var items = [];
+            var lineNumber=-1;
+            for(var item in CodeMirror.functionTempList)
+            {
+                var line = CodeMirror.functionTempList[item];
+                var lineText = this.getLineHandle(line).text;
+                if(lineText.indexOf(item)>=0){
+                    if(lineNumber == line) continue;
+                    items.push(CodeMirror.functionList[line]);
+                    lineNumber = line;
+                }
+            }
+            if(items.length<1)return;
+            return completion.showHints({isFunc:true,list:items,from:this.getCursor(true),to:this.getCursor(true)});
+        }
         // We want a single cursor position.
         if (this.listSelections().length > 1 || this.somethingSelected()) return;
 
@@ -63,6 +82,10 @@
         pick: function (data, i) {
             var that = this;
             var completion = data.list[i];
+            if(completion.range){
+                that.cm.setCursor(Number(completion.range.end.line), Number(completion.range.end.ch));
+                return;
+            }
             if (completion.hint) completion.hint(that.cm, data, completion);
             else that.cm.replaceRange(getText(completion), completion.from || data.from,
                 completion.to || data.to, "complete");
@@ -217,12 +240,80 @@
         var hints = this.hints = document.createElement("ul");
         hints.className = "CodeMirror-hints";
         this.selectedHint = data.selectedHint || 0;
+        var inp;
+        if(data.isFunc){
 
+            inp = hints.appendChild(document.createElement("input"))
+            inp.className = 'CodeMirror-hint-input';
+            inp.hintId = 'input';
+            var isFirstDown = true;
+            CodeMirror.on(inp, "keydown", function (e) {
+                //console.log(e.keyCode);
+                // if(e.keyCode == 8 || e.keyCode == 46){
+                //     //delete
+                //     return;
+                // }
+                if(e.keyCode == 40){
+                    //down
+                    var i = widget.selectedHint + 1;
+                    widget.changeActive(i,{isFunc:true,flag :'down'});
+                    CodeMirror.e_stop(e);
+                    return;
+                }
+                if(e.keyCode == 38){
+                    //up
+                    widget.changeActive(widget.selectedHint - 1,{isFunc:isFirstDown,flag :'up'});
+                    isFirstDown = false;
+                    CodeMirror.e_stop(e);
+                    return;
+                }
+
+                if (e.keyCode == 13) {
+                    try{
+                        var arr = $($('.CodeMirror-hint-active')[0]).attr('class').split('_');
+                        if(arr.length == 3){
+                            cm.setCursor(Number(arr[1]), Number(arr[2].split(' ')[0]));
+                            setTimeout(function () { cm.focus(); }, 20);
+                            setTimeout(function () { widget.close(); }, 20);
+                            return;
+                        }
+                    }catch (ee){
+
+                    }
+
+                    return;
+                }
+
+                setTimeout(function () {
+                    var nodes = hints.childNodes;
+                    if(nodes.length<=1)return;
+                    for (var i = 1;i<nodes.length;i++){
+                        var node = nodes[i];
+                        if(inp.value.length == 0){
+                            node.className =node.className.replace(" CodeMirror-hint-hide", "");
+                        }else if(node.innerHTML.split(inp.value).length==1){
+                            if(node.className.indexOf(' CodeMirror-hint-hide')==-1){
+                                node.className += ' CodeMirror-hint-hide';
+                            }
+                        }else{
+                            node.className =node.className.replace(" CodeMirror-hint-hide", "");
+                        }
+                        node.className =node.className.replace(" CodeMirror-hint-active", "");
+                    }
+
+                    widget.changeActive(2,{isFunc:true,flag :'down',isClear:true});
+                },20);
+
+            });
+        }
         var completions = data.list;
         for (var i = 0; i < completions.length; ++i) {
             var elt = hints.appendChild(document.createElement("li")), cur = completions[i];
             var className = HINT_ELEMENT_CLASS + (i != this.selectedHint ? "" : " " + ACTIVE_HINT_ELEMENT_CLASS);
             if (cur.className != null) className = cur.className + " " + className;
+            if(cur.range){
+                className += ' pos_' + cur.range.end.line + "_" +cur.range.end.ch;
+            }
             elt.className = className;
             if (cur.render) cur.render(elt, data, cur);
             else elt.appendChild(document.createTextNode(cur.displayText || getText(cur)));
@@ -273,7 +364,7 @@
             data: data
         }));
 
-        if (completion.options.closeOnUnfocus) {
+        if (completion.options.closeOnUnfocus && !data.isFunc) {
             var closingOnBlur;
             cm.on("blur", this.onBlur = function () { closingOnBlur = setTimeout(function () { completion.close(); }, 100); });
             cm.on("focus", this.onFocus = function () { clearTimeout(closingOnBlur); });
@@ -291,23 +382,43 @@
         });
 
         CodeMirror.on(hints, "dblclick", function (e) {
-            var t = getHintElement(hints, e.target || e.srcElement);
+            var ele = e.target || e.srcElement;
+            if(ele &&  ele.nodeName && ele.nodeName== 'INPUT'){
+                return;
+            }
+            var t = getHintElement(hints, ele);
             if (t && t.hintId != null) { widget.changeActive(t.hintId); widget.pick(); }
         });
 
         CodeMirror.on(hints, "click", function (e) {
-            var t = getHintElement(hints, e.target || e.srcElement);
+            var ele = e.target || e.srcElement;
+            if(ele &&  ele.nodeName && ele.nodeName== 'INPUT'){
+                CodeMirror.e_stopPropagation(e);
+                return;
+            }
+            var t = getHintElement(hints, ele);
             if (t && t.hintId != null) {
                 widget.changeActive(t.hintId);
-                widget.pick();// if (completion.options.completeOnSingleClick) 
+                widget.pick();// if (completion.options.completeOnSingleClick)
             }
         });
 
-        CodeMirror.on(hints, "mousedown", function () {
+        CodeMirror.on(hints, "mousedown", function (e) {
+            var ele = e.target || e.srcElement;
+            if(ele &&  ele.nodeName && ele.nodeName== 'INPUT'){
+                CodeMirror.e_stopPropagation(e);
+                return;
+            }
+
             setTimeout(function () { cm.focus(); }, 20);
         });
 
         CodeMirror.signal(data, "select", completions[0], hints.firstChild);
+
+        if(inp){
+            inp.focus();
+        }
+
         return true;
     }
 
@@ -332,13 +443,68 @@
 
         changeActive: function (i, avoidWrap) {
             if (i >= this.data.list.length)
-                i = avoidWrap ? this.data.list.length - 1 : 0;
+            {
+                if(avoidWrap&& avoidWrap.isFunc){
+                    if(i > this.data.list.length){
+                        i = i -1;
+                    }
+                }else{
+                    i = avoidWrap ? this.data.list.length - 1 : 0;
+                }
+
+            }else if(i==1&&avoidWrap&& avoidWrap.isFunc && avoidWrap.flag =='down'){
+
+                i = 2;
+            }
             else if (i < 0)
-                i = avoidWrap ? 0 : this.data.list.length - 1;
-            if (this.selectedHint == i) return;
-            var node = this.hints.childNodes[this.selectedHint];
+            {
+                if(avoidWrap&& avoidWrap.isFunc){
+                    if(i==-1){
+                        i=1;
+                    }
+                    else if(i <= 1){
+                        i = 2;
+                    }
+                }else{
+                    i = avoidWrap ? 0 : this.data.list.length - 1;
+                }
+
+            }
+            if (this.selectedHint == i) {
+                if(avoidWrap&& avoidWrap.isClear){
+                    this.selectedHint = i = i -1;
+                }else{
+                    return;
+                }
+            }else if(this.selectedHint==1&&avoidWrap&& avoidWrap.isClear){
+                i=1;
+            }
+            var childNodes = [];
+            for(var y = 0;y<this.hints.childNodes.length;y++){
+                if(this.hints.childNodes[y].className.indexOf('hide')>=0){
+                    continue;
+                }
+                childNodes.push(this.hints.childNodes[y]);
+            }
+
+            if(i>=childNodes.length){
+                this.selectedHint=i=childNodes.length-1;
+            }
+
+            var node = childNodes[this.selectedHint];
+            if(!node)return;
+            if(node.nodeName == 'INPUT'){
+                node = this.hints.childNodes[this.selectedHint+1];
+                if(!node)return;
+            }
             node.className = node.className.replace(" " + ACTIVE_HINT_ELEMENT_CLASS, "");
-            node = this.hints.childNodes[this.selectedHint = i];
+            node = childNodes[this.selectedHint = i];
+            if(!node)return;
+            if(node.nodeName == 'INPUT'){
+                this.selectedHint = i + 1;
+                node = childNodes[this.selectedHint];
+                if(!node)return;
+            }
             node.className += " " + ACTIVE_HINT_ELEMENT_CLASS;
             if (node.offsetTop < this.hints.scrollTop)
                 this.hints.scrollTop = node.offsetTop - 3;
@@ -353,6 +519,7 @@
     };
 
     CodeMirror.registerHelper("hint", "auto", function (cm, options) {
+        return;
         var helpers = cm.getHelpers(cm.getCursor(), "hint"), words;
         if (helpers.length) {
             for (var i = 0; i < helpers.length; i++) {
