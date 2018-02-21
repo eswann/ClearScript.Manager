@@ -6826,14 +6826,18 @@
                 return;
             }
             return runInOp(cm, function () {
+                var data = [];
+                if(!CodeMirror.quickTemplatesHint){
+                    return;
+                }
+                for(var i=0;i<CodeMirror.quickTemplatesHint.length;i++){
+                    var item = CodeMirror.quickTemplatesHint[i];
+                    item.selection = sels[0];
+                    data.push(item);
+                }
                 cm.showHint({
                     isQuick:true,
-                    data:[
-                        {className:"CodeMirror-hint-template",text:'try',
-                            temp:[{text:'try {',idx:0},{text:'$',idx:2},{text:'} catch (e) {',idx:0},{text:'// todo: handle exception',idx:2},{text:'}',idx:0}],selection:sels[0]},
-                        {className:"CodeMirror-hint-template",text:'tryf',
-                            temp:[{text:'try {',idx:0},{text:'$',idx:2},{text:'} catch (e) {',idx:0},{text:'// todo: handle exception',idx:2},{text:'} finally {',idx:0},{text:'// todo: handle finally',idx:2},{text:'}',idx:0}],selection:sels[0]}
-                    ]
+                    data:data
                 });
             });
             // return deleteNearSelection(cm, function (range) {
