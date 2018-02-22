@@ -7015,9 +7015,24 @@
             var lineNumber = pos.line;
             var line = cm.getLine(lineNumber);
             var word = line.trim();
-            if(pos.ch!=0 && word == '/*'){
+            if (pos.ch != 0 && word == "/*") {
+                var temp1 = 0;
+                for (var iy = 0; iy < line.length; iy++) {
+                    if (line[iy] == ' ') {
+                        temp1++;
+                    } else {
+                        break;
+                    }
+                }
+                function getSpaceText(num) {
+                    var ss = '';
+                    for (var yy = 0; yy < num; yy++) {
+                        ss += ' ';
+                    }
+                    return ss;
+                }
                 return runInOp(cm, function () {
-                    var replaceStr = '\n comment ';
+                    var replaceStr = '\n' + getSpaceText(temp1)  +' comment';
                     try{
                         //解析下面的一行 如果是function的话 拿到参数
                         var nextline = cm.getLine(lineNumber+1);
@@ -7025,14 +7040,14 @@
                         var paramList = s2.split(/\W+/);
                         for (var i=0,len=paramList.length; i<len; i++)
                         {
-                            if(paramList[i]&& paramList[i].length>0)replaceStr += '\n ' + paramList[i] + ":";
+                            if (paramList[i] && paramList[i].length > 0) replaceStr += '\n ' + getSpaceText(temp1)+ paramList[i] + ":";
                         }
-                        replaceStr+='\n return:void';
+                        replaceStr += '\n' + getSpaceText(temp1) +' return:void';
                     }catch(e){
 
                     }
-                    cm.replaceRange(replaceStr + '\n*/', cm.getCursor(true));
-                    cm.setSelection({line:lineNumber+1,ch:1},{line:lineNumber+1,ch:8})
+                    cm.replaceRange(replaceStr + '\n' + getSpaceText(temp1) +'*/', cm.getCursor(true));
+                    cm.setSelection({ line: lineNumber + 1, ch: 1 + temp1 }, { line: lineNumber + 1, ch: temp1+8 });
 
                 });
             }
