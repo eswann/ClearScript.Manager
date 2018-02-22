@@ -6558,7 +6558,7 @@
         "Ctrl-Backspace": "delGroupBefore", "Ctrl-Delete": "delGroupAfter", "Ctrl-S": "save", "Ctrl-F": "find",
         "Ctrl-G": "findNext", "Shift-Ctrl-G": "findPrev", "Shift-Ctrl-F": "replace", "Shift-Ctrl-R": "replaceAll",
         "Ctrl-[": "indentLess", "Ctrl-]": "indentMore",
-        "Ctrl-U": "undoSelection", "Shift-Ctrl-U": "redoSelection", "Alt-U": "redoSelection",
+        "Ctrl-U": "undoSelection", "Shift-Ctrl-U": "redoSelection", "Alt-U": "redoSelection", "Ctrl-K": "killLine",
         fallthrough: "basic"
     }
     // Very basic readline/emacs-style bindings, which are standard on Mac.
@@ -6832,7 +6832,14 @@
                 }
                 for(var i=0;i<CodeMirror.quickTemplatesHint.length;i++){
                     var item = CodeMirror.quickTemplatesHint[i];
-                    item.selection = sels[0];
+                    var se = sels[0];
+                    if (se.head.line > se.anchor.line) {
+                        item.selection = { anchor: se.head, head: se.anchor }
+                    } else if (se.anchor.sticky && se.anchor.sticky=='after') {
+                        item.selection = { anchor: se.head, head: se.anchor }
+                    }else {
+                        item.selection = sels[0];
+                    } 
                     data.push(item);
                 }
                 cm.showHint({
