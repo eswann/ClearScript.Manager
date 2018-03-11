@@ -13,12 +13,12 @@ namespace Tabris.Winform.Control
     using System.ComponentModel;
     using System.Reflection;
 
-
     /// <summary>
     /// 每个Tab对应一个LogPannel
     /// </summary>
     public class LogPannel : DSkin.Controls.DSkinPanel
     {
+        public event EventHandler OnLoging;
         private DSkin.Controls.DSkinListBox logList;
         public LogPannel()
         {
@@ -52,44 +52,73 @@ namespace Tabris.Winform.Control
 
         public void Log(LogLevel level, string msgStr, string trace = null)
         {
+           
             var msgAll = msgStr + trace;
-            this.BeginInvoke(new EventHandler(delegate
+            if (OnLoging != null)
+                OnLoging(new LogEventModel
+                {
+                    LogLevel = level,
+                    Message = msgAll
+                }, new EventArgs());
+
+            try
             {
-                foreach (var msg in Split(msgAll, 70))
-                {
-                    var levelStr = GetDescription(level);
-                    if (level.Equals(LogLevel.ERROR))
-                    {
-                        logList.Items.Add(new DuiHtmlLabel
-                        {
-                            Text = string.Format("&nbsp;&nbsp; <label color='red'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
-                            AutoSize = true
-                        });
-                    }
-                    else if (level.Equals(LogLevel.WARN))
-                    {
-                        logList.Items.Add(new DuiHtmlLabel
-                        {
-                            Text = string.Format("&nbsp;&nbsp; <label color='blue'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
-                            AutoSize = true
-                        });
-                    }
-                    else
-                    {
-                        logList.Items.Add(new DuiHtmlLabel
-                        {
-                            Text = string.Format("&nbsp;&nbsp; [{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2}", DateTime.Now, levelStr, msg),
-                            AutoSize = true
-                        });
-                    }
-                }
+                this.BeginInvoke(new EventHandler(delegate
+                   {
+                       try
+                       {
+                           foreach (var msg in Split(msgAll, 70))
+                           {
+                               var levelStr = GetDescription(level);
+                               if (level.Equals(LogLevel.ERROR))
+                               {
+                                   logList.Items.Add(new DuiHtmlLabel
+                                   {
+                                       Text = string.Format("&nbsp;&nbsp; <label color='red'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
+                                       AutoSize = true
+                                   });
 
-                SetTimeout(100, () =>
-                {
-                    logList.Value = 1;
-                });
-            }));
+                               }
+                               else if (level.Equals(LogLevel.WARN))
+                               {
+                                   logList.Items.Add(new DuiHtmlLabel
+                                   {
+                                       Text = string.Format("&nbsp;&nbsp; <label color='blue'>[{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2} </label>", DateTime.Now, levelStr, msg),
+                                       AutoSize = true
+                                   });
+                               }
+                               else
+                               {
+                                   logList.Items.Add(new DuiHtmlLabel
+                                   {
+                                       Text = string.Format("&nbsp;&nbsp; [{0:yyyy-MM-dd HH:mm:ss} {1}]--------{2}", DateTime.Now, levelStr, msg),
+                                       AutoSize = true
+                                   });
+                               }
+                           }
 
+                           SetTimeout(100, () =>
+                           {
+                               logList.Value = 1;
+                           });
+                       }
+                       catch (Exception)
+                       {
+                           logList.Items.Add(new DuiTextBox()
+                           {
+                               Text = msgAll,
+                               Width = 800
+                           });
+                       }
+
+
+                   }));
+
+            }
+            catch (Exception)
+            {
+
+            }
            
 
         }

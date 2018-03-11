@@ -12,6 +12,7 @@ using JavaScript.Manager.Log.Packages;
 using JavaScript.Manager.Sql.AntOrm;
 using JavaScript.Manager.Sql.Packages;
 using JavaScript.Manager.Tabris.Packages;
+using JavaScript.Manager.WebView.Packages;
 
 namespace JavaScript.Manager.Tabris
 {
@@ -39,6 +40,8 @@ namespace JavaScript.Manager.Tabris
             //log
             LogPackageHelpers.RegisterPackage(RequireManager,options?.LogExecutor);
 
+            //view
+            WebViewPackageHelpers.RegisterPackage(RequireManager, options?.ViewExecutor);
         }
 
 
@@ -48,5 +51,6 @@ namespace JavaScript.Manager.Tabris
     {
         public object DbExecutor { get; set; }    
         public object LogExecutor { get; set; }    
+        public object ViewExecutor { get; set; }    
     }
 }

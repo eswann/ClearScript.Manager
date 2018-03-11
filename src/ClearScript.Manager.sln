@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager", "ClearScript.Manager\JavaScript.Manager.csproj", "{CFAB8382-B76F-4AA1-AB38-52674F932E52}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Log", "JavaScript.Manager.Log\JavaScript.Manager.Log.csproj", "{D6D9CCD8-9A9B-4F48-8E82-51F28B35A79A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Sql.AntOrm", "JavaScript.Manager.Sql.AntOrm\JavaScript.Manager.Sql.AntOrm.csproj", "{6CD3F9CE-9186-4F9D-B71B-AFA4ED932DBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.WebView", "JavaScript.Manager.WebView\JavaScript.Manager.WebView.csproj", "{AF037D8E-B7FD-4A1D-A66D-D78A6D36635C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +76,10 @@ Global
 		{6CD3F9CE-9186-4F9D-B71B-AFA4ED932DBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CD3F9CE-9186-4F9D-B71B-AFA4ED932DBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CD3F9CE-9186-4F9D-B71B-AFA4ED932DBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF037D8E-B7FD-4A1D-A66D-D78A6D36635C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF037D8E-B7FD-4A1D-A66D-D78A6D36635C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF037D8E-B7FD-4A1D-A66D-D78A6D36635C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF037D8E-B7FD-4A1D-A66D-D78A6D36635C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

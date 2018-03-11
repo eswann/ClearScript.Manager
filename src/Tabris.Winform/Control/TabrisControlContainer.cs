@@ -36,4 +36,26 @@ namespace Tabris.Winform.Control
             }
         }
     }
+
+
+    public class ViewControlContainer
+    {
+        public ChromeButtonPannel ButtonPannel { get; set; }
+
+        public LogPannel LogPannel { get; set; }
+        public Action OnClosing { get; set; }
+
+        public void Dispose()
+        {
+            try
+            {
+                ButtonPannel.Dispose();
+                LogPannel.Dispose();
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+    }
 }

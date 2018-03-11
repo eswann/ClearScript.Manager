@@ -75,6 +75,10 @@
       <Project>{6cd3f9ce-9186-4f9d-b71b-afa4ed932dbb}</Project>
       <Name>JavaScript.Manager.Sql.AntOrm</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JavaScript.Manager.WebView\JavaScript.Manager.WebView.csproj">
+      <Project>{af037d8e-b7fd-4a1d-a66d-d78a6d36635c}</Project>
+      <Name>JavaScript.Manager.WebView</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

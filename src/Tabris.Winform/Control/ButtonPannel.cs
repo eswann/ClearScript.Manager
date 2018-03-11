@@ -57,7 +57,7 @@ namespace Tabris.Winform.Control
 
         public Action<string> OnTitleChange { get; set; }
         public Action OnModify { get; set; }
-        public ButtonPannel(ChromiumWebBrowser brower, ChromiumWebBrowser _debuggerBrower,int DebuggerPort ,Action<LogLevel, string, string> logAction)
+        public ButtonPannel(ChromiumWebBrowser brower, ChromiumWebBrowser _debuggerBrower,int DebuggerPort ,Action<LogLevel, string, string> logAction, Action<ChromiumWebBrowser,Action> AddChrome)
         {
             this.logAction = logAction;
             init();
@@ -91,7 +91,11 @@ namespace Tabris.Winform.Control
 
             JavaScript.Manager.Tabris.Tabris.Register(manager.RequireManager, new JavaScript.Manager.Tabris.TabrisOptions
             {
-                LogExecutor = new WinformLogExcutor(logAction)
+                LogExecutor = new WinformLogExcutor(logAction),
+                ViewExecutor = new ChromeViewExecutor
+                {
+                    AddChrome = AddChrome
+                }
             });
 
             //GetDebuggerTargetId();
@@ -696,12 +700,13 @@ namespace Tabris.Winform.Control
                         if (tryCatch)
                         {
 code = $@"
-var tabris;
+var tabris,console;
 (function () 
 {{
     debugger;
     try{{
         tabris = tabris || require('javascript_tabris');
+        console = console || this.tabris.create('LOG');
         {codeLines}
     }}catch(err){{
         host.err=err.message;
@@ -712,11 +717,12 @@ var tabris;
                         else
                         {
 code = $@"
-var tabris;
+var tabris,console;
 (function () 
 {{
     debugger;
     tabris = tabris || require('javascript_tabris');
+    console = console || this.tabris.create('LOG');
     {codeLines}
 }})()";
                         }
@@ -729,11 +735,12 @@ var tabris;
                         if (tryCatch)
                         {
 code = $@"
-var tabris;
+var tabris,console;
 (function () 
 {{
     try{{
         tabris = tabris || require('javascript_tabris');
+        console = console || this.tabris.create('LOG');
         {codeLines}
     }}catch(err){{
         host.err=err.message;
@@ -745,10 +752,11 @@ var tabris;
                         else
                         {
 code = $@"
-var tabris;
+var tabris,console;
 (function () 
 {{
     tabris = tabris || require('javascript_tabris');
+    console = console || this.tabris.create('LOG');
     {codeLines}
 }})()";
 
@@ -763,11 +771,20 @@ var tabris;
                             new HostObject { Name = "host", Target = host }
                         }
                     };
-
+                    var scriptAwaiter = new ScriptAwaiter();
+                    if (code.Contains("scriptAwaiter"))
+                    {
+                        option.HostObjects.Add(new HostObject { Name = "scriptAwaiter", Target = scriptAwaiter });
+                    }
+                
                     try
                     {
                         await manager.ExecuteAsync(Guid.NewGuid().ToString(), code, option);
-
+                        if (code.Contains("scriptAwaiter"))
+                        {
+                            await scriptAwaiter.T;
+                        }
+                      
                     }
                     catch (Exception)
                     {

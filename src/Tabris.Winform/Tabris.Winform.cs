@@ -75,6 +75,67 @@ namespace Tabris.Winform
         {
             SetItemSize();
         }
+
+        public void addPanel(ChromiumWebBrowser chrome,Action OnClosing)
+        {
+            this.BeginInvoke(new EventHandler(delegate
+            {
+                LogPannel logPannel = new LogPannel();
+                var selected = GetSelectedTabrisControlContainer();
+                if (selected != null)
+                {
+                    if (selected.LogPannel != null)
+                    {
+                        selected.LogPannel.OnLoging += delegate(object sender, EventArgs args)
+                        {
+                            var model = sender as LogEventModel;
+                            if (model != null)
+                            {
+                                logPannel.Log(model.LogLevel, model.Message);
+                            }
+                        };
+                    }
+                }
+                var index = dSkinTabBar1.Items.IndexOf(addButton);
+                TabrisTabItem item = new TabrisTabItem()
+                {
+                    Text = "view " + (index + 1),
+                    Image = Properties.Resources.JSS
+                };
+                dSkinTabBar1.Items.Insert(index, item);
+                TabPage page = new TabPage();
+                item.TabPage = page;
+                dSkinTabControl1.TabPages.Add(page);
+                dSkinTabBar1.LayoutContent();
+                dSkinTabBar1.SetSelect(item);
+                page.Controls.Add(chrome);
+                var buttonPanel = new ChromeButtonPannel(chrome);
+                this.dSkinPanel3.Controls.Add(buttonPanel);
+                this.dSkinPanel1.Controls.Add(logPannel);
+                item.Tag = new ViewControlContainer
+                {
+                    OnClosing = delegate()
+                    {
+                        OnClosing();
+                        if (selected != null)
+                        {
+                            selected.LogPannel.OnLoging -= delegate(object sender, EventArgs args)
+                            {
+                                var model = sender as LogEventModel;
+                                if (model != null)
+                                {
+                                    logPannel.Log(model.LogLevel, model.Message);
+                                }
+                            };
+                        }
+                    },
+                    ButtonPannel = buttonPanel,
+                    LogPannel = logPannel
+                };
+
+            }));
+           
+        }
         void add_MouseClick(object sender, DuiMouseEventArgs e)
         {
             var index = dSkinTabBar1.Items.IndexOf(addButton);
@@ -102,7 +163,7 @@ namespace Tabris.Winform
           
             
             LogPannel logPannel = new LogPannel();
-            ButtonPannel buttonPannel = new ButtonPannel(brower,DebuggerBrower,this.DebuggerPort, logPannel.Log)
+            ButtonPannel buttonPannel = new ButtonPannel(brower,DebuggerBrower,this.DebuggerPort, logPannel.Log, addPanel)
             {
                 Index = index,
                 OnTitleChange = s =>
@@ -122,8 +183,7 @@ namespace Tabris.Winform
                         item.Text = " * " + tag.TagName;
                     }
                     
-                },
-                
+                }
             };
 
             TabPage page = new TabPage();

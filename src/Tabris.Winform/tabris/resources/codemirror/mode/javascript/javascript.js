@@ -76,7 +76,7 @@
             for(var item in CodeMirror.functionTempList)
             {
                 var line = CodeMirror.functionTempList[item];
-                var lineText = CodeMirror.cm.getLineHandle(line).text;
+                var lineText = (CodeMirror.cm.getLineHandle(line)&&CodeMirror.cm.getLineHandle(line).text)||'';
                 if(lineText.indexOf(item)>=0){
                     if(lineNumber == line) continue;
                     items.push(CodeMirror.functionList[line]);
@@ -790,11 +790,18 @@
                     if (c == poplex) lexical = lexical.prev;
                     else if (c != maybeelse) break;
                 }
+               
                 if (lexical.type == "stat" && firstChar == "}") lexical = lexical.prev;
                 if (statementIndent && lexical.type == ")" && lexical.prev.type == "stat")
                     lexical = lexical.prev;
                 var type = lexical.type, closing = firstChar == type;
-
+                if (lexical.type == '}' && lexical.indented == 0 && state.indented > 0) {
+                    return state.indented;
+                } else if (lexical.type == '}' && lexical.indented == 0 && state.indented == 0) {
+                    //拿到当前的line
+                    var lastLine = CodeMirror.cm.getLine(CodeMirror.cm.getCursor(true).line - 1);
+                    return lastLine.indexOf('function') + indentUnit;
+                }
                 if (type == "vardef") return lexical.indented + (state.lastType == "operator" || state.lastType == "," ? lexical.info + 1 : 0);
                 else if (type == "form" && firstChar == "{") return lexical.indented;
                 else if (type == "form") return lexical.indented + indentUnit;

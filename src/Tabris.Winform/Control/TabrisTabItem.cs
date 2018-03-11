@@ -10,11 +10,7 @@ namespace Tabris.Winform.Control
     using DSkin.Controls;
     using DSkin.DirectUI;
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     /// <summary>
@@ -118,11 +114,20 @@ namespace Tabris.Winform.Control
             var container = this.Tag as TabrisControlContainer;
             if (container != null)
             {
-                container.ButtonPannel.Hide();
-                container.LogPannel.Hide();
-                container.Dispose();
+
+                container.ButtonPannel?.Hide();
+                container.LogPannel?.Hide();
+                container?.Dispose();
             }
 
+            var container2 = this.Tag as ViewControlContainer;
+            if (container2 != null)
+            {
+                container2.OnClosing();
+                container2.ButtonPannel?.Hide();
+                container2.LogPannel?.Hide();
+                container2?.Dispose();
+            }
             this.Dispose();
         }
 
@@ -144,13 +149,13 @@ namespace Tabris.Winform.Control
                         if (container == null) continue;
                         if (i == currentIndex)
                         {
-                            container.ButtonPannel.Show();
-                            container.LogPannel.Show();
+                            container.ButtonPannel?.Show();
+                            container.LogPannel?.Show();
                         }
                         else
                         {
-                            container.ButtonPannel.Hide();
-                            container.LogPannel.Hide();
+                            container.ButtonPannel?.Hide();
+                            container.LogPannel?.Hide();
                         }
                     }
 
@@ -159,7 +164,6 @@ namespace Tabris.Winform.Control
             catch (Exception ex)
             {
 
-                throw;
             }
         }
 
@@ -196,7 +200,6 @@ namespace Tabris.Winform.Control
             }
             catch (Exception ex)
             {
-                throw;
             }
         }
 

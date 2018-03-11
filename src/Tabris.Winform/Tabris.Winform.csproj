@@ -93,7 +93,12 @@
     <Compile Include="Control\ButtonPannel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Control\ChromeButtonPannel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Control\ChromeViewExecutor.cs" />
     <Compile Include="Control\EventHanders.cs" />
+    <Compile Include="Control\LogEventModel.cs" />
     <Compile Include="Control\LogPannel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -110,7 +115,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WinformLogExcutor.cs" />
+    <Compile Include="Control\WinformLogExcutor.cs" />
     <EmbeddedResource Include="Tabris.Winform.resx">
       <DependentUpon>Tabris.Winform.cs</DependentUpon>
     </EmbeddedResource>

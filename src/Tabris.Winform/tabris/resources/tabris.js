@@ -270,6 +270,16 @@
                     "headers": {
                         "!type": "properties",
                         "!doc": "The request headers(key-value)."
+                    },
+                    "cookieContainer": {
+                        "!type": "properties",
+                        "!doc": "The request cookieContainer"
+                    }
+                },
+                "VIEWProperties": {
+                    "url": {
+                        "!type": "string",
+                        "!doc": "The request url."
                     }
                 }
             },
@@ -277,6 +287,37 @@
 
             },
             "!types": {
+                "VIEW": {
+                    "!type": "fn()",
+                    "!url": "",
+                    "!doc": "VIEW Function .",
+                    "prototype": {
+                        "show": {
+                            "!type": "fn(options?: ?) -> ?",
+                            "!doc": "create and show webview "
+                        },
+                        "on": {
+                            "!type": "fn(name: string, options?: ?) -> ?",
+                            "!doc": "add callback event"
+                        },
+                        "getInitCookieString": {
+                            "!type": "fn() -> string",
+                            "!doc": "get the first initialized CookieString"
+                        },
+                        "getInitCookieContainer": {
+                            "!type": "fn() -> ?",
+                            "!doc": "get the first initialized CookieContainer"
+                        },
+                        "execJs": {
+                            "!type": "fn(js: string) -> string",
+                            "!doc": "Execute js in the webview"
+                        },
+                        "getDomHtml": {
+                            "!type": "fn() -> string",
+                            "!doc": "get all domString of the current webview"
+                        }
+                    }
+                },
                 "SQL": {
                     "!type": "fn()",
                     "!url": "",
