@@ -1,6 +1,7 @@
+using JavaScript.Manager.Extensions;
 using System;
 using System.Dynamic;
-using JavaScript.Manager.Extensions;
+using System.Net;
 
 namespace JavaScript.Manager.Http.Helpers.Node
 {
@@ -18,6 +19,16 @@ namespace JavaScript.Manager.Http.Helpers.Node
             url = config.GetMember<string>("uri") ?? config.GetMember<string>("url");
             method = config.GetMember<string>("method");
             headers = config.GetMember<DynamicObject>("headers");
+
+            Object outField;
+
+            if (config.TryGetMember(new SimpleGetMemberBinder("cookieContainer"), out outField))
+            {
+                if (outField is CookieContainer)
+                {
+                    this._CookieContainer = (CookieContainer) outField;
+                }
+            }
 
             port = config.GetMember("port", Convert.ToInt32, 80);
         }
@@ -46,6 +57,7 @@ namespace JavaScript.Manager.Http.Helpers.Node
 
         public DynamicObject auth { get; set; }
         public DynamicObject agent { get; set; }
+        public CookieContainer _CookieContainer { get; set; }
 
         public string scheme { get; set; }
 

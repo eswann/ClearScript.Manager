@@ -118,7 +118,7 @@ namespace JavaScript.Manager.Extensions
         }
     }
 
-    internal class SimpleGetMemberBinder : GetMemberBinder
+    public class SimpleGetMemberBinder : GetMemberBinder
     {
         public SimpleGetMemberBinder(string name)
             : base(name, true)

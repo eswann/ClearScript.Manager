@@ -9,6 +9,7 @@ using JavaScript.Manager.Tabris;
 using Microsoft.ClearScript;
 using NUnit.Framework;
 using Should;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace ClearScript.Manager.Http.Test
@@ -62,11 +63,12 @@ namespace ClearScript.Manager.Http.Test
 
             var scriptAwaiter = new ScriptAwaiter();
             options.HostObjects.Add(new HostObject { Name = "scriptAwaiter", Target = scriptAwaiter });
+            options.HostObjects.Add(new HostObject { Name = "cookieA", Target = new CookieContainer() });
 
             var code = "var requestFactory = require('javascript_request_factory');" +
                          "var http = requestFactory.create({url:'http://www.baidu.com/'});" +
                         "var data = encodeURIComponent('errorMsg=&to=http%253A%252F%252Fwww.zhonghuasuan.com%252F&token=5b9c1a3c6f2db8c737b7788ac560a397&account=111111&password=111111');" +
-                       "Console.WriteLine('aaaa111'); var aa = http.getString({timeout:10,headers:{token:'aaaaaatoken'}});Console.WriteLine(aa);";
+                       "Console.WriteLine('aaaa111'); var aa = http.getString({timeout:10,headers:{token:'aaaaaatoken'},cookieContainer:cookieA});Console.WriteLine(aa);";
 
             await manager.ExecuteAsync("testScript", code, options);
 

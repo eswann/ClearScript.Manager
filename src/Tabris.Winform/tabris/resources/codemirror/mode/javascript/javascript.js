@@ -800,7 +800,8 @@
                 } else if (lexical.type == '}' && lexical.indented == 0 && state.indented == 0) {
                     //拿到当前的line
                     var lastLine = CodeMirror.cm.getLine(CodeMirror.cm.getCursor(true).line - 1);
-                    return lastLine.indexOf('function') + indentUnit;
+                    var funIndex = lastLine.indexOf('function');
+                    return funIndex > 0 ? funIndex + indentUnit:0;
                 }
                 if (type == "vardef") return lexical.indented + (state.lastType == "operator" || state.lastType == "," ? lexical.info + 1 : 0);
                 else if (type == "form" && firstChar == "{") return lexical.indented;

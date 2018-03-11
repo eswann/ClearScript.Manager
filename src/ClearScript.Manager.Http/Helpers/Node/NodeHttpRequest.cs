@@ -1,17 +1,13 @@
+using JavaScript.Manager.Extensions;
+using Microsoft.ClearScript;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using JavaScript.Manager.Extensions;
-using Microsoft.ClearScript;
 
 namespace JavaScript.Manager.Http.Helpers.Node
 {
@@ -36,16 +32,6 @@ namespace JavaScript.Manager.Http.Helpers.Node
                 {
 
                 }
-                var handler = new HttpClientHandler();
-                if (Proxy == null)
-                {
-                    handler.UseProxy = false;
-                }
-                else
-                {
-                    handler.Proxy = Proxy;
-                }
-
             }
 
 
@@ -105,6 +91,12 @@ namespace JavaScript.Manager.Http.Helpers.Node
                 {
                     request.Proxy = Proxy;
                 }
+
+                if (_options._CookieContainer != null)
+                {
+                    request.CookieContainer = _options._CookieContainer;
+                }
+
                 if (!string.IsNullOrEmpty(_options.Accept))
                 {
                     request.ContentType = _options.Accept;

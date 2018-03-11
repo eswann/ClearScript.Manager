@@ -89,7 +89,7 @@ namespace Tabris.Winform.Control
             var param = _options.GetMember<dynamic>("param");
             if (param != null)
             {
-                this.@on("onReady", param);
+                this.@on("ready", param);
             }
             browser = new ChromiumWebBrowser(url)
             {
@@ -245,7 +245,7 @@ namespace Tabris.Winform.Control
         private void OnReady()
         {
             List<dynamic> listeners;
-            if (_listeners.TryGetValue("onReady", out listeners))
+            if (_listeners.TryGetValue("ready", out listeners))
             {
                 listeners.ForEach(listener =>
                 {
@@ -259,7 +259,7 @@ namespace Tabris.Winform.Control
         private void OnClose()
         {
             List<dynamic> listeners;
-            if (_listeners.TryGetValue("onClose", out listeners))
+            if (_listeners.TryGetValue("close", out listeners))
             {
                 listeners.ForEach(listener => listener.call(null, null));
             }
