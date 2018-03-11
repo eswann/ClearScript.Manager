@@ -72,6 +72,11 @@
                 {
                     "name": "function",
                     "description": "anonymous function",
+                    "template": "function () {\n  ${cursor}\n}"
+                },
+                {
+                    "name": "function",
+                    "description": "anonymous function with param",
                     "template": "function (${condition}) {\n  ${line_selection}${cursor}\n}"
                 },
                 {

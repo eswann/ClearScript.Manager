@@ -186,6 +186,22 @@
       return variable == 'cursor' || variable == 'line_selection';
     }
 
+    function hasOnlyCursor(tokens) {
+        var ii = 0;
+        for (var i = 0; i < tokens.length; i++) {
+            var token = tokens[i];
+            if (token.variable) {
+                if (token.variable == 'cursor') {
+                    ii++;
+                } else {
+                    ii--;
+                }
+            }
+        }
+
+        return ii == 1;
+    }
+
     function install(cm, data, completion) {
       if (cm._templateState) {
         uninstall(cm);
@@ -194,6 +210,7 @@
       cm._templateState = state;
       var template = completion.template;
       var tokens = parseTemplate(template);
+      var onlyCursor = hasOnlyCursor(tokens);
       var content = '';
       var line = 0;
       var markers = [];
@@ -258,7 +275,13 @@
       var from = data.from;
       var to = data.to;
       cm.replaceRange(content, from, to);
-
+      if (onlyCursor) {
+          //让cursor 设置在上一行的最后的位置
+          var line = cm.getCursor(true).line - 1;
+          var lineLength = cm.getLine(line).length;
+          cm.setCursor({ line: line, ch: lineLength });
+          delete cm._templateState_newLineNumber;
+      }
       for ( var i = 0; i < markers.length; i++) {
         var marker = markers[i], from = marker.from, to = marker.to;
         var markText = cm.markText(from, to, {

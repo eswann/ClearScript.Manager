@@ -293,11 +293,11 @@
                     "!doc": "VIEW Function .",
                     "prototype": {
                         "show": {
-                            "!type": "fn(options?: ?) -> ?",
+                            "!type": "fn(listener: fn()) -> ?",
                             "!doc": "create and show webview "
                         },
                         "on": {
-                            "!type": "fn(name: string, options?: ?) -> ?",
+                            "!type": "fn(name: string, listener: fn()) -> ?",
                             "!doc": "add callback event"
                         },
                         "getInitCookieString": {
@@ -309,12 +309,16 @@
                             "!doc": "get the first initialized CookieContainer"
                         },
                         "execJs": {
-                            "!type": "fn(js: string) -> string",
+                            "!type": "fn(js: string) -> +AwaitString",
                             "!doc": "Execute js in the webview"
                         },
                         "getDomHtml": {
-                            "!type": "fn() -> string",
+                            "!type": "fn() -> +AwaitString",
                             "!doc": "get all domString of the current webview"
+                        },
+                        "createTimer": {
+                            "!type": "fn(interval: number) -> +Timer",
+                            "!doc": "create a timer,inerval (millisecond)."
                         }
                     }
                 },

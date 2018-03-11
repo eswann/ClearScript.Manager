@@ -83,6 +83,10 @@ WebViewContext.prototype.getDomHtml = function () {
     return javascript_webview_factory_webviewExecutor.getDomHtml();
 }
 
+WebViewContext.prototype.createTimer = function (interval) {
+    return javascript_webview_factory_webviewExecutor.createTimer(interval);
+}
+
 //WebViewContext.prototype.getMillisecondTime = function (type) {
 //    return javascript_webview_factory_webviewExecutor.getMillisecondTime(type);
 //}

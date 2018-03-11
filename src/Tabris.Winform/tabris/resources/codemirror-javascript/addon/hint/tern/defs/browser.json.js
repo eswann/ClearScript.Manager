@@ -337,6 +337,59 @@ var def = {
     "!url": "https://developer.mozilla.org/en/docs/DOM/Node",
     "!doc": "A Node is an interface from which a number of DOM types inherit, and allows these various types to be treated (or tested) similarly."
   },
+  "TimerNode": {
+      "!type": "fn()",
+      "prototype": {
+          "textContent": {
+              "!type": "string",
+              "!url": "https://developer.mozilla.org/en/docs/DOM/Node.textContent",
+              "!doc": "Gets or sets the text content of a node and its descendants."
+          }
+      },
+      "!url": "https://developer.mozilla.org/en/docs/DOM/Node",
+      "!doc": "A Node is an interface from which a number of DOM types inherit, and allows these various types to be treated (or tested) similarly."
+  },
+  "Timer": {
+      "!type": "fn()",
+      "prototype": {
+          "pushCallback": {
+              "!type": "fn(listener: fn()) -> ?",
+              "!doc": "start the timer"
+          },
+          "start": {
+              "!type": "fn() -> ?",
+              "!doc": "start the timer"
+          },
+          "stop": {
+              "!type": "fn() -> ?",
+              "!doc": "stop the timer"
+          },
+          "RESTART": "number",
+          "DONEXT": "number"
+      },
+      "!url": "https://developer.mozilla.org/en/docs/DOM/Element",
+      "!doc": "Timer"
+  },
+  "AwaitStringNode": {
+      "!type": "fn()",
+      "prototype": {
+          "Result": {
+              "!type": "string",
+              "!url": "https://developer.mozilla.org/en/docs/DOM/Node.textContent",
+              "!doc": "Gets the result of await string"
+          }
+      },
+      "!url": "https://developer.mozilla.org/en/docs/DOM/Node",
+      "!doc": "A Node is an interface from which a number of DOM types inherit, and allows these various types to be treated (or tested) similarly."
+  },
+  "AwaitString": {
+      "!type": "fn()",
+      "prototype": {
+          "!proto": "AwaitStringNode.prototype"
+      },
+      "!url": "https://developer.mozilla.org/en/docs/DOM/Element",
+      "!doc": "AwaitString."
+  },
   "Element": {
     "!type": "fn()",
     "prototype": {

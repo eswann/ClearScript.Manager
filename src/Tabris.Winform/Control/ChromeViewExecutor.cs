@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace Tabris.Winform.Control
@@ -30,8 +32,43 @@ namespace Tabris.Winform.Control
         {
         }
     }
+
+    public class JsArg
+    {
+        public int Result { get; set; }
+    }
+    public class MyTimer
+    {
+        private ChromeViewExecutor _excutor;
+        System.Timers.Timer systemTimer;
+        public MyTimer(ChromeViewExecutor excutor, int interval)
+        {
+            _excutor = excutor;
+            systemTimer = new System.Timers.Timer(interval);
+            systemTimer.AutoReset = true;
+            systemTimer.Elapsed += excutor.SystemTimerOnElapsed;
+        }
+
+        public int RESTART { get; set; } = 1;
+        public int DONEXT { get; set; } = 2;
+        public void pushCallback(dynamic callbackFn)
+        {
+            _excutor.@on("timer", callbackFn);
+        }
+
+        public void start()
+        {
+            systemTimer.Start();
+        }
+
+        public void stop()
+        {
+            systemTimer.Stop();
+        }
+    }
     public class ChromeViewExecutor
     {
+        private MyTimer _myTimer;
         private ChromiumWebBrowser browser;
         private CookieContainer initCookieContainer = new CookieContainer();
         private string cookies = string.Empty;
@@ -62,6 +99,60 @@ namespace Tabris.Winform.Control
             browser.FrameLoadEnd += OnFrameLoadEnd;
 
             AddChrome(browser, close);
+        }
+
+
+        public MyTimer createTimer(int interval)
+        {
+            if (_myTimer != null)
+            {
+                _myTimer.stop();
+                _myTimer = null;
+            }
+
+            _myTimer = new MyTimer(this, interval);
+            return _myTimer;
+        }
+
+        public void SystemTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        {
+            if (_myTimer == null)
+            {
+                return;
+            }
+
+            _myTimer.stop();
+
+
+            List<dynamic> listeners;
+            if (_listeners.TryGetValue("timer", out listeners))
+            {
+              
+                Task.Factory.StartNew( () =>
+                {
+                    if (listeners.Count > 0)
+                    {
+                        var result = new JsArg { Result = 0 };
+                         listeners[0].call(null, result);
+
+                        if (result.Result == 2)
+                        {
+                            //去掉
+                            _listeners["timer"] = listeners.Skip(1).ToList();
+                            _myTimer.start();
+                        }
+                        else
+                        {
+                            _myTimer.start();
+                        }
+                    }
+
+                });
+            }
+            else
+            {
+                _myTimer.start();
+            }
         }
 
         public string getInitCookieString()
@@ -126,13 +217,16 @@ namespace Tabris.Winform.Control
         public void close()
         {
             closebrowser();
-           
+
 
             OnClose();
 
             _listeners = new Dictionary<string, List<dynamic>>();
             initCookieContainer = new CookieContainer();
             cookies = string.Empty;
+
+            _myTimer?.stop();
+            _myTimer = null;
         }
 
 
@@ -155,9 +249,9 @@ namespace Tabris.Winform.Control
             {
                 listeners.ForEach(listener =>
                 {
-                    Task.Factory.StartNew(async () =>
+                    Task.Factory.StartNew( () =>
                     {
-                        await listener.call(null, null);
+                         listener.call(null, null);
                     });
                 });
             }
