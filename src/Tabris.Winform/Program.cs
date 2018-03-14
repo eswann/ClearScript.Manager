@@ -19,10 +19,11 @@ namespace Tabris.Winform
                 Locale = "zh-CN",
                 //By default CefSharp will use an in-memory cache, you need to specify a Cache Folder to persist data
                 //CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CefSharp\\Cache"),
-                UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+                UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36",
             };
-            Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
 
+            Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
+            CefSharpSettings.LegacyJavascriptBindingEnabled = true;
             Application.Run(new TabrisWinform());
         }
     }
