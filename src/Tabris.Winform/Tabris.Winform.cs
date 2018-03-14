@@ -163,7 +163,7 @@ namespace Tabris.Winform
           
             
             LogPannel logPannel = new LogPannel();
-            ButtonPannel buttonPannel = new ButtonPannel(brower,DebuggerBrower,this.DebuggerPort, logPannel.Log, addPanel)
+            ButtonPannel buttonPannel = new ButtonPannel(brower,DebuggerBrower,this.DebuggerPort, logPannel.Log, logPannel.LogClear, addPanel)
             {
                 Index = index,
                 OnTitleChange = s =>

@@ -49,6 +49,21 @@ namespace Tabris.Winform.Control
 
         }
 
+        public void LogClear()
+        {
+            this.BeginInvoke(new EventHandler(delegate
+            {
+                try
+                {
+                    logList.Items.Clear();
+                }
+                catch (Exception)
+                {
+                    
+                }
+
+            }));
+        }
 
         public void Log(LogLevel level, string msgStr, string trace = null)
         {

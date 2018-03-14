@@ -57,9 +57,11 @@ namespace Tabris.Winform.Control
 
         public Action<string> OnTitleChange { get; set; }
         public Action OnModify { get; set; }
-        public ButtonPannel(ChromiumWebBrowser brower, ChromiumWebBrowser _debuggerBrower,int DebuggerPort ,Action<LogLevel, string, string> logAction, Action<ChromiumWebBrowser,Action> AddChrome)
+        public readonly Action ClearLog;
+        public ButtonPannel(ChromiumWebBrowser brower, ChromiumWebBrowser _debuggerBrower,int DebuggerPort ,Action<LogLevel, string, string> logAction, Action clearLog,Action<ChromiumWebBrowser,Action> AddChrome)
         {
             this.logAction = logAction;
+            this.ClearLog = clearLog;
             init();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TabrisWinform));
             this.codemirrow = brower;
@@ -382,6 +384,7 @@ namespace Tabris.Winform.Control
                 Annotation = 26507,
                 UnAnnotation = 26508,
                 Tip = 26509,
+                ClearLog = 26510,
             }
 
             private readonly ButtonPannel _buttonPannel;
@@ -524,6 +527,7 @@ namespace Tabris.Winform.Control
                 //Add new custom menu items
                 model.AddItem((CefMenuCommand)(int)MenuItem.ShowDevTools, "打开 DevTools");
                 model.AddItem((CefMenuCommand)(int)MenuItem.CloseDevTools, "Debugger  (F5)");
+                model.AddItem((CefMenuCommand)(int)MenuItem.ClearLog, "清除LOG");
                 //model.AddItem((CefMenuCommand)(int)MenuItem.CloseDevTools, "关闭 DevTools");
             }
 
@@ -596,6 +600,13 @@ namespace Tabris.Winform.Control
                     new Task(() =>
                     {
                         _buttonPannel.Tip();
+                    }).Start();
+                }
+                if ((int)commandId == (int)MenuItem.ClearLog)
+                {
+                    new Task(() =>
+                    {
+                        _buttonPannel.ClearLog();
                     }).Start();
                 }
                 return false;
