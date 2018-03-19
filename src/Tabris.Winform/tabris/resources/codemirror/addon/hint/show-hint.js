@@ -56,7 +56,7 @@
                         }
                     }else{
                         try{
-                            var tmp1 = lineText.split(')')[0].split(Lineitem.text + '(')[1];
+                            var tmp1 = lineText.split(')')[0].split(Lineitem.text + '(')[1]||"";
                             Lineitem.displayText = Lineitem.text + '(' + tmp1 + ')';
                         }catch(ee){
 

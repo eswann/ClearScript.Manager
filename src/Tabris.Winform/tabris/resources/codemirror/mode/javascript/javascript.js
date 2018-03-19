@@ -228,6 +228,14 @@
                     }
                 }
 
+				if(stream.string&&stream.string.replace(word,'').replace(/\s/g,'').indexOf(':function')>-1){
+                    if(state.functionVarScope && state.functionVars){
+                        state.functionVars.push(word);
+                    }
+                    state.functionName = {className:"CodeMirror-hint-template",text:word,line:stream.lineOracle.line,range:{start:{line:stream.lineOracle.line,ch:stream.start},end:{line:stream.lineOracle.line,ch:stream.pos}}};
+                    return ret('variable-func' + ' func-'+word, 'variable-func'+ ' func-'+word, word);
+                }
+				
                 return (known && state.lastType != ".") ? ret(known.type, known.style, word) :
                     ret("variable", "variable", word);
             }
