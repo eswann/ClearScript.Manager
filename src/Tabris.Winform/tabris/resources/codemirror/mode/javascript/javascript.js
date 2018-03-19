@@ -805,6 +805,8 @@
                 var type = lexical.type, closing = firstChar == type;
                 if (lexical.type == '}' && lexical.indented == 0 && state.indented > 0) {
                     return state.indented;
+                } else if (lexical.type == '}' && lexical.indented > 0 && state.indented > 0 && lexical.indented != state.indented && !closing) {
+                    return state.indented;
                 } else if (lexical.type == '}' && lexical.indented == 0 && state.indented == 0) {
                     //拿到当前的line
                     var lastLine = CodeMirror.cm.getLine(CodeMirror.cm.getCursor(true).line - 1);

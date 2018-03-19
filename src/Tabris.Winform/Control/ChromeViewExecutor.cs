@@ -51,9 +51,10 @@ namespace Tabris.Winform.Control
 
         public int RESTART { get; set; } = 1;
         public int DONEXT { get; set; } = 2;
-        public void pushCallback(dynamic callbackFn)
+        public MyTimer pushCallback(dynamic callbackFn)
         {
             _excutor.@on("timer", callbackFn);
+            return this;
         }
 
         public void start()

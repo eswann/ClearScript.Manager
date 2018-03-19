@@ -353,7 +353,7 @@ var def = {
       "!type": "fn()",
       "prototype": {
           "pushCallback": {
-              "!type": "fn(listener: fn()) -> ?",
+              "!type": "fn(listener: fn()) -> Timer.prototype",
               "!doc": "start the timer"
           },
           "start": {

@@ -69,6 +69,7 @@ namespace Tabris.Winform.Control
             debuggerPort = DebuggerPort;
             this.codemirrow.AllowDrop = true;
             this.codemirrow.MenuHandler = new JSFunc(this);
+            this.debuggerBrower.MenuHandler = new DebugJSFunc(this);
             codemirrow.RegisterJsObject("csharpJsFunction", new JSFunc(this), new BindingOptions { CamelCaseJavascriptNames = false });
 
             this.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -150,14 +151,14 @@ namespace Tabris.Winform.Control
             }
         }
 
-        private void OnDebugging()
+        private void OnDebugging(bool flag = false)
         {
             if (debuggerBrower == null) return;
             this.BeginInvoke(new EventHandler(delegate
             {
                 
-                this.codemirrow.Visible = false;
-                debuggerBrower.Visible = true;
+                this.codemirrow.Visible = flag;
+                debuggerBrower.Visible = !flag;
             }));
         }
         private void OnDebuggingInit()
@@ -306,8 +307,12 @@ namespace Tabris.Winform.Control
 
                 if (e != null && e is DebuggeEventArgs)
                 {
+                    //var eventArg = (DebuggeEventArgs) e;
                     this.OnDebugging();
-                    invokeJsCode(code,true);
+                    if (!this.isRun)
+                    {
+                        invokeJsCode(code, true);
+                    }
                     return;
                 }
                 invokeJsCode(code);
@@ -439,7 +444,10 @@ namespace Tabris.Winform.Control
                         return;
                     }
 
-                    _buttonPannel.btnExcutor_Click(code, new DebuggeEventArgs(true));
+                    _buttonPannel.btnExcutor_Click(code, new DebuggeEventArgs(true)
+                    {
+                        IsMenuDebugger = true
+                    });
                 }
             }
             #endregion
@@ -626,6 +634,51 @@ namespace Tabris.Winform.Control
         }
 
 
+        public class DebugJSFunc : IContextMenuHandler
+        {
+            private readonly ButtonPannel _buttonPannel;
+            public DebugJSFunc(ButtonPannel buttonPannel)
+            {
+                _buttonPannel = buttonPannel;
+            }
+            enum MenuItem
+            {
+                Hide = 16501,
+              
+            }
+            #region MenuHandler
+
+            void IContextMenuHandler.OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
+            {
+                //To disable the menu then call clear
+                model.Clear();
+
+                model.AddItem((CefMenuCommand)(int)MenuItem.Hide, "关闭DEBUG");
+               
+            }
+
+            bool IContextMenuHandler.OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
+            {
+
+                if ((int)commandId == (int)MenuItem.Hide)
+                {
+                    _buttonPannel.OnDebugging(true);
+                }
+                return false;
+            }
+
+            void IContextMenuHandler.OnContextMenuDismissed(IWebBrowser browserControl, IBrowser browser, IFrame frame)
+            {
+
+            }
+
+            bool IContextMenuHandler.RunContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model, IRunContextMenuCallback callback)
+            {
+                return false;
+            }
+
+            #endregion
+        }
         public bool Save()
         {
             try

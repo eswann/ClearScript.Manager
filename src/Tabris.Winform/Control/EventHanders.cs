@@ -20,6 +20,7 @@ namespace Tabris.Winform.Control
         }
 
         public bool IsDebugger { get; private set; }
+        public bool IsMenuDebugger { get;  set; }
     }
     public class EventBus
     {
