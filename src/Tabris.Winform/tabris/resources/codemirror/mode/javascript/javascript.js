@@ -203,7 +203,7 @@
                 return ret("operator", "operator", stream.current());
             } else if (wordRE.test(ch)) {
                 stream.eatWhile(wordRE);
-                var word = stream.current(), known = keywords.propertyIsEnumerable(word) && keywords[word];
+                var word = stream.current(), known = keywords.propertyIsEnumerable(word) && keywords[word],isvar=false;
                 if((known && known.type == "function")){
                     state.functionVarScope = true;
                     state.functionScopeIndex = 1;
@@ -224,11 +224,12 @@
                     }else{
                         if(state.functionVarScope && state.functionVars){
                             state.functionVars.push(word);
+							isvar=true;
                         }
                     }
                 }
 
-				if(stream.string&&stream.string.replace(word,'').replace(/\s/g,'').indexOf(':function')>-1){
+				if(stream.string&&stream.string.replace(word,'').replace(/\s/g,'').indexOf(':function')>-1 && !isvar){
                     if(state.functionVarScope && state.functionVars){
                         state.functionVars.push(word);
                     }

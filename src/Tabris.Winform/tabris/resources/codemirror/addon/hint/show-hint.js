@@ -56,7 +56,14 @@
                         }
                     }else{
                         try{
-                            var tmp1 = lineText.split(')')[0].split(Lineitem.text + '(')[1]||"";
+                            var tmp1 = lineText.split(')')[0].split(Lineitem.text + '(')[1];
+							if(!tmp1 && lineText.indexOf('function') > -1){
+								try{
+									tmp1 =lineText.split('(')[1].split(')')[0].replace(/\s/g,'');
+								}catch(e2){
+									
+								}
+							}
                             Lineitem.displayText = Lineitem.text + '(' + tmp1 + ')';
                         }catch(ee){
 
@@ -442,7 +449,7 @@
                         var node = nodes[i];
                         if(inp.value.length == 0){
                             node.className =node.className.replace(" CodeMirror-hint-hide", "");
-                        }else if(node.innerHTML.split(inp.value).length==1){
+                        }else if(node.innerHTML.toLocaleLowerCase().split(inp.value.toLocaleLowerCase()).length==1){
                             if(node.className.indexOf(' CodeMirror-hint-hide')==-1){
                                 node.className += ' CodeMirror-hint-hide';
                             }
