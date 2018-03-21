@@ -57,14 +57,16 @@
                     }else{
                         try{
                             var tmp1 = lineText.split(')')[0].split(Lineitem.text + '(')[1];
-							if(!tmp1 && lineText.indexOf('function') > -1){
-								try{
-									tmp1 =lineText.split('(')[1].split(')')[0].replace(/\s/g,'');
-								}catch(e2){
-									
-								}
-							}else{
-								continue;
+                            if (!tmp1) {
+                                if (lineText.indexOf('function') > -1) {
+                                    try {
+                                        tmp1 = lineText.split('(')[1].split(')')[0].replace(/\s/g, '');
+                                    } catch (e2) {
+
+                                    }
+                                } else {
+                                    continue;
+                                }
 							}
                             Lineitem.displayText = Lineitem.text + '(' + tmp1 + ')';
                         }catch(ee){

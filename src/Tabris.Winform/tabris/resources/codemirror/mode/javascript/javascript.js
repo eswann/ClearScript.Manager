@@ -116,6 +116,11 @@
         }
         function tokenBase(stream, state) {
             var ch;
+            if (stream.match("\"{\"")) {
+                while ((ch = stream.next()) != null) {
+                    return ret("string", "string");
+                }
+            }
             if (stream.match("{{")) {
                 while ((ch = stream.next()) != null) {
                     if (ch == "}" && stream.next() == "}") {
@@ -234,7 +239,7 @@
                         state.functionVars.push(word);
                     }
                     state.functionName = {className:"CodeMirror-hint-template",text:word,line:stream.lineOracle.line,range:{start:{line:stream.lineOracle.line,ch:stream.start},end:{line:stream.lineOracle.line,ch:stream.pos}}};
-                    return ret('variable-func' + ' func-'+word, 'variable-func'+ ' func-'+word, word);
+                    return ret("variable", "variable", word);
                 }
 				
                 return (known && state.lastType != ".") ? ret(known.type, known.style, word) :
@@ -265,6 +270,7 @@
                     state.tokenize = tokenBase;
                     return ret("string", "string");
                 } else if (next == '{') {
+                    
                     if (lastQuote && lastQuote == quote) {
                         stream.eatNo("{");
                         state.tokenize = tokenBase;

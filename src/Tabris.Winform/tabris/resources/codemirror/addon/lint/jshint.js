@@ -22141,7 +22141,7 @@ var JSHINT = (function() {
     case "^=":
     case "/=":
       if (!paren && !state.option.boss) {
-        warning("W084");
+        //warning("W084");
       }
     }
   }
