@@ -63,6 +63,8 @@
 								}catch(e2){
 									
 								}
+							}else{
+								continue;
 							}
                             Lineitem.displayText = Lineitem.text + '(' + tmp1 + ')';
                         }catch(ee){

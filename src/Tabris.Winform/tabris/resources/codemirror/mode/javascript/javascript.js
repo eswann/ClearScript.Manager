@@ -799,7 +799,44 @@
                     if (c == poplex) lexical = lexical.prev;
                     else if (c != maybeelse) break;
                 }
-               
+			
+				try{
+					var lastLine =CodeMirror.cm.getCursor(true).line-1;
+					while(CodeMirror.cm.getLine(lastLine).trim().length == 0){
+						lastLine--;
+					}
+					var lastTypeStr = CodeMirror.cm.getLine(lastLine).replace(/\s/g,'').substr(-2,2);
+					if(lastTypeStr == "},"){
+						
+						var lastFunctionStr = CodeMirror.cm.getLine(lastLine);
+						var spaceCount = 0;
+						for(var i =0;i<lastFunctionStr.length;i++){
+							if(lastFunctionStr[i]==' '){
+								spaceCount++;
+							}else{
+								break;
+							}
+						}
+						var head ={line:lastLine,ch:spaceCount};
+						var macthLine = CodeMirror.cm.findMatchingBracket(head,false,{});
+						if(macthLine && macthLine.to){
+							var lastFunctionStr2 = CodeMirror.cm.getLine(macthLine.to.line);
+							var spaceCount2 = 0;
+							for(var i =0;i<lastFunctionStr2.length;i++){
+								if(lastFunctionStr2[i]==' '){
+									spaceCount2++;
+								}else{
+									break;
+								}
+							}
+							return spaceCount2;
+						}
+						
+					}
+					if(CodeMirror.cm.getLine(lastLine).trim().substr(-1,1) == ',' && lexical.type != "stat" && lexical.prev.type != ")"){
+						lexical = lexical.prev;
+					}
+				}catch(ee){}
                 if (lexical.type == "stat" && firstChar == "}") lexical = lexical.prev;
                 if (statementIndent && lexical.type == ")" && lexical.prev.type == "stat")
                     lexical = lexical.prev;
@@ -808,17 +845,24 @@
                     return state.indented;
                 } else if (lexical.type == '}' && lexical.indented > 0 && state.indented > 0 && lexical.indented != state.indented && !closing) {
                     return state.indented;
-                } else if (lexical.type == '}' && lexical.indented == 0 && state.indented == 0) {
+                } else if (lexical.type == '}' && ((lexical.indented == 0 && state.indented == 0)) ) {
                     //拿到当前的line
                     var lastLine = CodeMirror.cm.getLine(CodeMirror.cm.getCursor(true).line - 1);
-                    var funIndex = lastLine.indexOf('function');
+                    var funIndex = lastLine && lastLine.indexOf('function');
                     return funIndex > 0 ? funIndex + indentUnit:0;
                 }
                 if (type == "vardef") return lexical.indented + (state.lastType == "operator" || state.lastType == "," ? lexical.info + 1 : 0);
                 else if (type == "form" && firstChar == "{") return lexical.indented;
                 else if (type == "form") return lexical.indented + indentUnit;
-                else if (type == "stat")
+                else if (type == "stat"){
+					if(lexical.indented != lexical.column){
+						if(lexical.column-lexical.indented==1){
+							return  lexical.prev.column - lexical.column + indentUnit + indentUnit + 1 ;
+						}
+						return lexical.indented-1-(isContinuedStatement(state, textAfter) ? statementIndent || indentUnit : 0);
+					}
                     return lexical.indented + (isContinuedStatement(state, textAfter) ? statementIndent || indentUnit : 0);
+				}
                 else if (lexical.info == "switch" && !closing && parserConfig.doubleIndentSwitch != false)
                     return lexical.indented + (/^(?:case|default)\b/.test(textAfter) ? indentUnit : 2 * indentUnit);
                 else if (lexical.align) return lexical.column + (closing ? 0 : 1);
