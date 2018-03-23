@@ -42,6 +42,10 @@ namespace JavaScript.Manager.Tabris
 
             //view
             WebViewPackageHelpers.RegisterPackage(RequireManager, options?.ViewExecutor);
+
+            //timer
+            TimerPackageHelpers.RegisterPackage(RequireManager);
+
         }
 
 

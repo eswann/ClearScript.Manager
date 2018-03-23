@@ -315,10 +315,6 @@
                         "getDomHtml": {
                             "!type": "fn() -> +AwaitString",
                             "!doc": "get all domString of the current webview"
-                        },
-                        "createTimer": {
-                            "!type": "fn(interval: number) -> +Timer",
-                            "!doc": "create a timer,inerval (millisecond)."
                         }
                     }
                 },
@@ -370,6 +366,31 @@
                             "!type": "fn(options?: ?) -> ?",
                             "!doc": "Execute httpr.request, return result as json object"
                         }
+                    }
+                },
+                "TIMER": {
+                    "!type": "fn()",
+                    "!url": "",
+                    "!doc": "TIMER Function .",
+                    "prototype": {
+                        "pushCallback": {
+                            "!type": "fn(listener: fn()) -> Timer.prototype",
+                            "!doc": "start the timer"
+                        },
+                        "start": {
+                            "!type": "fn() -> ?",
+                            "!doc": "start the timer"
+                        },
+                        "stop": {
+                            "!type": "fn() -> ?",
+                            "!doc": "stop the timer"
+                        },
+                        "destroy": {
+                            "!type": "fn() -> ?",
+                            "!doc": "destroy the timer"
+                        },
+                        "RESTART": "number",
+                        "DONEXT": "number"
                     }
                 },
                 "LOG": {

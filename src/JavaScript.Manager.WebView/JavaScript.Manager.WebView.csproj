@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TimerPackage.cs" />
     <Compile Include="WebViewPackage.cs" />
+    <Compile Include="TimerPackageHelpers.cs" />
     <Compile Include="WebViewPackageHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -56,6 +58,9 @@
       <Project>{cfab8382-b76f-4aa1-ab38-52674f932e52}</Project>
       <Name>JavaScript.Manager</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\timer.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

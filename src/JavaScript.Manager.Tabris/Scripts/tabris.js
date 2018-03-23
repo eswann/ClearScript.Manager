@@ -2,6 +2,7 @@
 var javascript_request_factory = require('javascript_request_factory');
 var javascript_log_factory = require('javascript_log_factory');
 var javascript_webview_factory = require('javascript_webview_factory');
+var javascript_timer_factory = require('javascript_timer_factory');
 
 function tabrisFactory() {
 
@@ -21,6 +22,8 @@ tabrisFactory.create = function (type, options) {
     }
     else if (type === 'view') {
         return javascript_webview_factory.create(options);
+    } else if (type === 'timer') {
+        return javascript_timer_factory.create(options);
     }
     return undefined;
 }
