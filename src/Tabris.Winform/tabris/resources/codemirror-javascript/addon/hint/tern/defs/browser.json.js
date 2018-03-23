@@ -2923,6 +2923,16 @@ var def = {
     "!url": "https://developer.mozilla.org/en/docs/DOM/window.scroll",
     "!doc": "Scrolls the window to a particular place in the document."
   },
+  "encodeURIComponent": {
+    "!type": "fn(str: string) -> string",
+    "!url": "https://developer.mozilla.org/en/docs/DOM/window.setTimeout",
+    "!doc": "encodeURIComponent."
+  },
+  "decodeURIComponent": {
+    "!type": "fn(str: string) -> string",
+    "!url": "https://developer.mozilla.org/en/docs/DOM/window.setTimeout",
+    "!doc": "decodeURIComponent."
+  },
   "setTimeout": {
     "!type": "fn(f: fn(), ms: number) -> number",
     "!url": "https://developer.mozilla.org/en/docs/DOM/window.setTimeout",

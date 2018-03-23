@@ -267,6 +267,7 @@
                     state.tokenize = tokenBase;
                     return ret("string", "string", stream.current());
                 } else if (next == quote) {
+					lastQuote = null;
                     state.tokenize = tokenBase;
                     return ret("string", "string");
                 } else if (next == '{') {
