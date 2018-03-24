@@ -393,12 +393,62 @@ var def = {
   "SystemFile": {
       "!type": "fn()",
       "prototype": {
+          "AppendAllLines": {
+              "!type": "fn(path: string, lines: [string])",
+              "!doc": "Appends lines to a file, and then closes the file. If the specified file does not exist, this method creates a file, writes the specified lines to the file, and then closes the file."
+          },
+          "AppendAllText": {
+              "!type": "fn(path: string, lines: string)",
+              "!doc": "Opens a file, appends the specified string to the file, and then closes the file. If the file does not exist, this method creates a file, writes the specified string to the file, then closes the file."
+          },
+          "Exists": {
+              "!type": "fn(path: string) -> bool",
+              "!doc": "Determines whether the specified file exists."
+          },
           "ReadAllText": {
               "!type": "fn(path: string) -> string",
-              "!doc": "ReadAllText"
+              "!doc": "Opens a text file, reads all lines of the file, and then closes the file."
+          },
+          "ReadAllLines": {
+              "!type": "fn(path: string) -> +ArrayList",
+              "!doc": "Opens a text file, reads all lines of the file, and then closes the file."
           }
       },
       "!doc": "SystemFile"
+  },
+  "ArrayList": {
+      "!type": "fn()",
+      "prototype": {
+          "Length": {
+              "!type": "number",
+              "!url": "https://developer.mozilla.org/en/docs/DOM/element.length",
+              "!doc": "Returns the number of items in a ArrayList."
+          },
+          "ElementAt": {
+              "!type": "fn(index: number) -> ?",
+              "!url": "https://developer.mozilla.org/en/docs/DOM/element.length",
+              "!doc": "Returns the value of items at index."
+          },
+          "ToList": {
+              "!type": "fn() -> CsharpList.prototype",
+              "!url": "https://developer.mozilla.org/en/docs/DOM/element.length",
+              "!doc": "convert to csharp list."
+          }
+      },
+      "!url": "https://developer.mozilla.org/en/docs/DOM/NodeList",
+      "!doc": "NodeList objects are collections of nodes returned by getElementsByTagName, getElementsByTagNameNS, Node.childNodes, querySelectorAll, getElementsByClassName, etc."
+  },
+  "CsharpList": {
+      "!type": "fn()",
+      "prototype": {
+          "Count": {
+              "!type": "number",
+              "!url": "https://developer.mozilla.org/en/docs/DOM/element.length",
+              "!doc": "Returns the number of items in a CsharpList."
+          }
+      },
+      "!url": "https://developer.mozilla.org/en/docs/DOM/NodeList",
+      "!doc": "NodeList objects are collections of nodes returned by getElementsByTagName, getElementsByTagNameNS, Node.childNodes, querySelectorAll, getElementsByClassName, etc."
   },
   "AwaitStringNode": {
       "!type": "fn()",
@@ -2927,11 +2977,6 @@ var def = {
     "!type": "fn(message: string)",
     "!url": "https://developer.mozilla.org/en/docs/DOM/window.alert",
     "!doc": "Display an alert dialog with the specified content and an OK button."
-  },
-  "confirm": {
-    "!type": "fn(message: string) -> bool",
-    "!url": "https://developer.mozilla.org/en/docs/DOM/window.confirm",
-    "!doc": "Displays a modal dialog with a message and two buttons, OK and Cancel."
   },
   "prompt": {
     "!type": "fn(message: string, value: string) -> string",

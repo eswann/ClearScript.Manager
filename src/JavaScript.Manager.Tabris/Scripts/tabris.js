@@ -32,4 +32,41 @@ tabrisFactory.create = function (type, options) {
 }
 
 
+Array.prototype.toCsharpList = function(type) {
+    var List = xHost.type('System.Collections.Generic.List');
+    if (!type) {
+        type = "string";
+    } else {
+        type = type.toLowerCase();
+    }
+
+    var objString;
+    if (type == "string") {
+        objString = xHost.type('System.String');
+    } else if (type == "int") {
+        objString = xHost.type('System.Int32');
+    } else if (type == "double") {
+        objString = xHost.type('System.Double');
+    } else if (type == "decimal") {
+        objString = xHost.type('System.Decimal');
+    } else {
+        throw new Error('convert to charp list error.');
+    }
+    
+    var total = xHost.newObj(List(objString));
+    for (var i = 0; i < this.length; i++) {
+        var value;
+        if (type == "string") {
+            value = this[i].toString();
+        } else if (type == "int") {
+            value = xHost.toInt32(this[i]);
+        } else if (type == "double") {
+            value = xHost.toDouble(this[i]);
+        } else if (type == "decimal") {
+            value = xHost.toDecimal(this[i]);
+        }
+        total.Add(value);
+    }
+    return total;
+};
 this.exports = tabrisFactory;
