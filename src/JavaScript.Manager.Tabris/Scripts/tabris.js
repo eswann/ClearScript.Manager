@@ -24,6 +24,9 @@ tabrisFactory.create = function (type, options) {
         return javascript_webview_factory.create(options);
     } else if (type === 'timer') {
         return javascript_timer_factory.create(options);
+    } else if (type === 'clr') {
+        if (!options) return xHost.lib('mscorlib', 'System', 'System.Core');
+        return xHost.lib(options);
     }
     return undefined;
 }

@@ -370,6 +370,36 @@ var def = {
       "!url": "https://developer.mozilla.org/en/docs/DOM/Element",
       "!doc": "Timer"
   },
+  "System": {
+      "!type": "fn()",
+      "prototype": {
+          "IO": {
+              "!type": "IO.prototype",
+              "!doc": "Io"
+          }
+      },
+      "!doc": "System"
+  },
+  "IO": {
+      "!type": "fn()",
+      "prototype": {
+          "File": {
+              "!type": "SystemFile.prototype",
+              "!doc": "File"
+          }
+      },
+      "!doc": "Io"
+  },
+  "SystemFile": {
+      "!type": "fn()",
+      "prototype": {
+          "ReadAllText": {
+              "!type": "fn(path: string) -> string",
+              "!doc": "ReadAllText"
+          }
+      },
+      "!doc": "SystemFile"
+  },
   "AwaitStringNode": {
       "!type": "fn()",
       "prototype": {

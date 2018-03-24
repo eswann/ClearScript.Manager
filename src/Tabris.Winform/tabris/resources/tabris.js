@@ -393,6 +393,14 @@
                         "DONEXT": "number"
                     }
                 },
+                "CLR": {
+                    "!type": "fn()",
+                    "!url": "",
+                    "!doc": "CLR Function .",
+                    "prototype": {
+                        "System": "System.prototype",
+                    }
+                },
                 "LOG": {
                     "!type": "fn()",
                     "!url": "",
