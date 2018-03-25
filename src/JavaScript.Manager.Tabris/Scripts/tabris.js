@@ -45,7 +45,9 @@ Array.prototype.toCsharpList = function(type) {
         objString = xHost.type('System.String');
     } else if (type == "int") {
         objString = xHost.type('System.Int32');
-    } else if (type == "double") {
+    } else if (type == "byte") {
+        objString = xHost.type('System.Byte');
+    }else if (type == "double") {
         objString = xHost.type('System.Double');
     } else if (type == "decimal") {
         objString = xHost.type('System.Decimal');
@@ -64,9 +66,13 @@ Array.prototype.toCsharpList = function(type) {
             value = xHost.toDouble(this[i]);
         } else if (type == "decimal") {
             value = xHost.toDecimal(this[i]);
+        } else if (type == "byte") {
+            value = xHost.toByte(this[i]);
         }
         total.Add(value);
     }
     return total;
 };
+
+
 this.exports = tabrisFactory;

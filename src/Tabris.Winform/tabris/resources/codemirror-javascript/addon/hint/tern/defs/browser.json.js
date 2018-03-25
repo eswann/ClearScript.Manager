@@ -376,9 +376,47 @@ var def = {
           "IO": {
               "!type": "IO.prototype",
               "!doc": "Io"
+          },
+          "Text": {
+              "!type": "CSharpText.prototype",
+              "!doc": "Text"
           }
       },
       "!doc": "System"
+  },
+  "CSharpText": {
+      "!type": "fn()",
+      "prototype": {
+          "Encoding": {
+              "!type": "SystemEncoding.prototype",
+              "!doc": "Encoding"
+          }
+      },
+      "!doc": "CSharpText"
+  },
+  "SystemEncoding": {
+      "!type": "fn()",
+      "prototype": {
+          "UTF8": {
+              "!type": "UTF8.prototype",
+              "!doc": "UTF8"
+          }
+      },
+      "!doc": "SystemEncoding"
+  },
+  "UTF8": {
+      "!type": "fn()",
+      "prototype": {
+          "GetBytes": {
+              "!type": "fn(value: string) -> [+Byte]",
+              "!doc": "File"
+          },
+          "GetString": {
+              "!type": "fn(value: [+Byte]) -> string",
+              "!doc": "CSharpSeekOrigin"
+          }
+      },
+      "!doc": "UTF8"
   },
   "IO": {
       "!type": "fn()",
@@ -386,6 +424,14 @@ var def = {
           "File": {
               "!type": "SystemFile.prototype",
               "!doc": "File"
+          },
+          "SeekOrigin": {
+              "!type": "CSharpSeekOrigin.prototype",
+              "!doc": "CSharpSeekOrigin"
+          },
+          "FileMode": {
+              "!type": "CSharpFileMode.prototype",
+              "!doc": "CSharpFileMode"
           }
       },
       "!doc": "Io"
@@ -405,6 +451,26 @@ var def = {
               "!type": "fn(path: string) -> bool",
               "!doc": "Determines whether the specified file exists."
           },
+          "Create": {
+              "!type": "fn(path: string) -> Stream.prototype",
+              "!doc": "Creates or overwrites a file in the specified path."
+          },
+          "CreateText": {
+              "!type": "fn(path: string) -> StreamWriter.prototype",
+              "!doc": "Creates or opens a file for writing UTF-8 encoded text."
+          },
+          "Delete": {
+              "!type": "fn(path: string)",
+              "!doc": "Deletes the specified file."
+          },
+          "Move": {
+              "!type": "fn(sourceFileName: string, destFileName: string)",
+              "!doc": "Moves a specified file to a new location, providing the option to specify a new file name."
+          },
+          "Open": {
+              "!type": "fn(path: string, mode: +CSharpFileMode) -> Stream.prototype",
+              "!doc": "Opens a FileStream on the specified path with read/write access."
+          },
           "ReadAllText": {
               "!type": "fn(path: string) -> string",
               "!doc": "Opens a text file, reads all lines of the file, and then closes the file."
@@ -415,6 +481,142 @@ var def = {
           }
       },
       "!doc": "SystemFile"
+  },
+  "StreamWriter": {
+      "!type": "fn()",
+      "prototype": {
+          "Close": {
+              "!type": "fn()",
+              "!doc": "Closes the current stream and releases any resources (such as sockets and file handles) associated with the current stream.Instead of calling this method, ensure that the stream is properly disposed."
+          },
+          "Dispose": {
+              "!type": "fn()",
+              "!doc": "Releases all resources used by the Stream."
+          },
+          "Flush": {
+              "!type": "fn()",
+              "!doc": "When overridden in a derived class, clears all buffers for this stream and causes any buffered data to be written to the underlying device."
+          },
+          "Write": {
+              "!type": "fn(value: string)",
+              "!doc": "Writes a string to the stream."
+          },
+          "WriteLine": {
+              "!type": "fn(value: string)",
+              "!doc": "Writes a string followed by a line terminator to the text string or stream."
+          }
+      },
+      "!doc": "Csharp StreamWriter."
+  },
+  "Stream": {
+      "!type": "fn()",
+      "prototype": {
+          "Length": {
+              "!type": "number",
+              "!doc": "Length of Stream."
+          },
+          "Close": {
+              "!type": "fn()",
+              "!doc": "Closes the current stream and releases any resources (such as sockets and file handles) associated with the current stream.Instead of calling this method, ensure that the stream is properly disposed."
+          },
+          "Dispose": {
+              "!type": "fn()",
+              "!doc": "Releases all resources used by the Stream."
+          },
+          "Flush": {
+              "!type": "fn()",
+              "!doc": "When overridden in a derived class, clears all buffers for this stream and causes any buffered data to be written to the underlying device."
+          },
+          "Read": {
+              "!type": "fn(buffer: [+Byte], offset: +Int32, count: +Int32) -> number",
+              "!doc": "Releases all resources used by the Stream."
+          },
+          "ReadByte": {
+              "!type": "fn() -> number",
+              "!doc": "Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at the end of the stream."
+          },
+          "Write": {
+              "!type": "fn(buffer: [+Byte], offset: +Int32, count: +Int32)",
+              "!doc": "Writes a block of bytes to the file stream."
+          },
+          "WriteByte": {
+              "!type": "fn(value: +Byte)",
+              "!doc": "Writes a byte to the current position in the file stream."
+          },
+          "Seek": {
+              "!type": "fn(offset: number, origin: +CSharpSeekOrigin) -> number",
+              "!doc": "sets the position within the current stream."
+          }
+      },
+      "!doc": "Provides a Stream for read and write operations."
+  },
+  "Byte": {
+      "!type": "fn()",
+      "prototype": {
+          "Close": {
+              "!type": "fn(number: value)",
+              "!doc": "convert to Csharp Byte."
+          }
+      },
+      "!doc": "Csharp Byte."
+  },
+  "Int32": {
+      "!type": "fn()",
+      "prototype": {
+          "new": {
+              "!type": "fn(number: value)",
+              "!doc": "convert to Csharp Int32."
+          }
+      },
+      "!doc": "Csharp Int32."
+  },
+  "CSharpFileMode": {
+      "!type": "fn()",
+      "prototype": {
+          "Append": {
+              "!type": "?",
+              "!doc": "Opens the file if it exists and seeks to the end of the file, or creates a new file"
+          },
+          "Create": {
+              "!type": "?",
+              "!doc": "Specifies that the operating system should create a new file. If the file already exists, it will be overwritten. "
+          },
+          "CreateNew": {
+              "!type": "?",
+              "!doc": "Specifies that the operating system should create a new file. "
+          },
+          "Open": {
+              "!type": "?",
+              "!doc": "Specifies that the operating system should open an existing file. "
+          },
+          "OpenOrCreate": {
+              "!type": "?",
+              "!doc": "Specifies that the operating system should open a file if it exists; otherwise, a new file should be created. "
+          },
+          "Truncate": {
+              "!type": "?",
+              "!doc": "Specifies that the operating system should open an existing file. When the file is opened, it should be truncated so that its size is zero bytes. "
+          }
+      },
+      "!doc": "Csharp SeekOrigin."
+  },
+  "CSharpSeekOrigin": {
+      "!type": "fn()",
+      "prototype": {
+          "Begin": {
+              "!type": "?",
+              "!doc": "Specifies the beginning of a stream."
+          },
+          "Current": {
+              "!type": "?",
+              "!doc": "Specifies the current position within a stream."
+          },
+          "End": {
+              "!type": "?",
+              "!doc": "Specifies the end of a stream."
+          }
+      },
+      "!doc": "Csharp SeekOrigin."
   },
   "ArrayList": {
       "!type": "fn()",
