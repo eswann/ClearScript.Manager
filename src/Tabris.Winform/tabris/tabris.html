@@ -102,9 +102,9 @@
     <script src="resources/codemirror/addon/fold/indent-fold.js"></script>
 
 
-    <!--<link rel="stylesheet" href="resources/codemirror-extension/addon/hover/text-hover.css">
+    <link rel="stylesheet" href="resources/codemirror-extension/addon/hover/text-hover.css">
         <script src="resources/codemirror-extension/addon/hover/text-hover.js"></script>
-        <script src="resources/codemirror-javascript/addon/hint/tern/tern-hover.js"></script>-->
+        <script src="resources/codemirror-javascript/addon/hint/tern/tern-hover.js"></script>
     <script type="text/javascript">
         var _setTimer = undefined;
         $(function () {
@@ -155,7 +155,7 @@
                     },
                     gutters: ["CodeMirror-lint-markers", "CodeMirror-foldgutter","CodeMirror-linenumbers", "breakpoints"],
                     highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
-                    textHover: { delay: 300 },
+                    textHover: { delay: 1000 },
                     ternWith: { plugins: { tabris: {} } },
                     lint: {
                         esversion: 6

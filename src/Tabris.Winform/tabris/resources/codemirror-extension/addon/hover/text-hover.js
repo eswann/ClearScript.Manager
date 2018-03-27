@@ -61,7 +61,7 @@
           }
           cm.removeKeyMap(state.keyMap);
         }
-      }, 1000);
+      }, 100);
     }
     var poll = setInterval(function() {
       if (tooltip)
@@ -80,7 +80,7 @@
       maybeHide();
     }, 2000);
     CodeMirror.on(node, "mousemove", maybeHide);
-    // CodeMirror.on(node, "click", maybeHide);
+    CodeMirror.on(node, "click", maybeHide);
     state.keyMap = {Esc: maybeHide};
     cm.addKeyMap(state.keyMap);
   }

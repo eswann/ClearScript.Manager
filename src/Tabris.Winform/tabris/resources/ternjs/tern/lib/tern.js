@@ -613,7 +613,7 @@
       // out when no prefix is provided.
       if (query.omitObjectPrototype !== false && obj == srv.cx.protos.Object && !word) return;
       if (query.filter !== false && word &&
-          (query.caseInsensitive ? prop.toLowerCase() : prop).indexOf(word) !== 0) return;
+          (query.caseInsensitive ? prop.toLowerCase() : prop).indexOf(word) == -1) return;
       if (ignoreObj && ignoreObj.props[prop]) return;
       for (var i = 0; i < completions.length; ++i) {
         var c = completions[i];
