@@ -1,13 +1,16 @@
-﻿using ClearScript.Manager.Loaders;
+﻿using JavaScript.Manager.Loaders;
 
-namespace ClearScript.Manager.Http.Packages
+namespace JavaScript.Manager.Http.Packages
 {
     public class RequestPackage : RequiredPackage
     {
         public RequestPackage()
         {
-            PackageId = "request";
-            ScriptUri = @".\Scripts\request.js";
+            PackageId = "javascript_request_factory";
+            ScriptUri = "JavaScript.Manager.Http.Scripts.request.js";
+            RequiredPackageType = RequiredPackageType.EmbeddedFile;
         }
+
+       
     }
 }

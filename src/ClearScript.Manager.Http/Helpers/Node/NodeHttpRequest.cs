@@ -1,28 +1,39 @@
+using JavaScript.Manager.Extensions;
+using Microsoft.ClearScript;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.ClearScript;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 
-namespace ClearScript.Manager.Http.Helpers.Node
+namespace JavaScript.Manager.Http.Helpers.Node
 {
     public class NodeHttpRequest
     {
-        private readonly HttpRequestMessage _requestMessage;
+        IWebProxy Proxy = null;
         private readonly NodeHttpRequestOptions _options;
-        private readonly HttpClient _client;
-        private Task<HttpResponseMessage> _responseTask;
-        private Stream _requestStream;
-        //private DynamicObject _callback;
         private readonly Dictionary<string, List<dynamic>> _listeners = new Dictionary<string, List<dynamic>>();
-        
-        public NodeHttpRequest(HttpClient client, HttpRequestMessage requestMessage, object options, DynamicObject callback = null)
+
+        public NodeHttpRequest(object options, DynamicObject callback = null)
         {
-            _client = client;
-            _requestMessage = requestMessage;
+
             _options = options as NodeHttpRequestOptions ?? new NodeHttpRequestOptions((dynamic)options);
+            if (!string.IsNullOrEmpty(_options.proxy))
+            {
+
+                try
+                {
+                    Proxy = new WebProxy(_options.proxy.ToLower().Contains("http://") ? _options.proxy : "http://" + _options.proxy, true);
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+
 
             if (callback != null)
             {
@@ -64,46 +75,121 @@ namespace ClearScript.Manager.Http.Helpers.Node
         }
 
 
-        public void write(string text, string encoding = null)
+        public string end()
         {
-            if (string.IsNullOrWhiteSpace(text))
+            HttpWebRequest request = null;
+            HttpWebResponse response = null;
+            List<dynamic> listeners;
+            _listeners.TryGetValue("response", out listeners);
+            try
             {
-                return;
-            }
+                request = (HttpWebRequest)WebRequest.Create(_options.url);
+                request.Method = string.IsNullOrEmpty(_options.method) ? "GET" : _options.method;
 
-            var enc = string.IsNullOrWhiteSpace(encoding) ? System.Text.Encoding.UTF8 : System.Text.Encoding.GetEncoding(encoding);
-            var data = enc.GetBytes(text);
-            write(data);
+                request.Timeout = _options.timeout * 1000;
+                if (Proxy != null)
+                {
+                    request.Proxy = Proxy;
+                }
+
+                if (_options._CookieContainer != null)
+                {
+                    request.CookieContainer = _options._CookieContainer;
+                }
+
+                if (!string.IsNullOrEmpty(_options.Accept))
+                {
+                    request.ContentType = _options.Accept;
+                }
+                if (_options.url.StartsWith("https"))
+                {
+                    ServicePointManager.ServerCertificateValidationCallback =
+                        new RemoteCertificateValidationCallback(CheckValidationResult);
+                }
+
+                if (_options.headers != null)
+                {
+                    var header = (DynamicObject) _options.headers;
+                    foreach (var kvp in header.GetDynamicProperties())
+                    {
+                        request.Headers[kvp.Key] = kvp.Value.ToString();
+                    }
+                }
+
+                if (!request.Method.ToLower().Equals("get"))
+                {
+                    if (!string.IsNullOrEmpty(_options.data))
+                    {
+                        byte[] data = Encoding.GetEncoding("UTF-8").GetBytes(_options.data);
+                        request.ContentLength = data.Length;
+                        Stream newStream = request.GetRequestStream();
+                        newStream.Write(data, 0, data.Length);
+                        newStream.Close();
+                    }
+                }
+                response = (HttpWebResponse)request.GetResponse();
+                using (var responseStream = response.GetResponseStream())
+                using (var reader = new StreamReader(responseStream, Encoding.UTF8))
+                {
+                    var content = reader.ReadToEnd();
+                    if (listeners != null)
+                    {
+                        var nodeResponse = new NodeHttpResponse(this, content);
+                        listeners.ForEach(listener =>
+                        {
+                            if (listener is Action<NodeHttpResponse>)
+                            {
+                                ((Action<NodeHttpResponse>)listener)(nodeResponse);
+                            }
+                            else
+                            {
+                                listener.call(null, nodeResponse);
+                            }
+                        });
+                        nodeResponse.InitEvents();
+                    }
+                    return content;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                if (listeners != null)
+                {
+                    var nodeResponse = new NodeHttpResponse(this);
+                    listeners.ForEach(listener =>
+                    {
+                        if (listener is Action<NodeHttpResponse>)
+                        {
+                            ((Action<NodeHttpResponse>)listener)(nodeResponse);
+                        }
+                        else
+                        {
+                            listener.call(null, nodeResponse);
+                        }
+                    });
+                    while (ex.InnerException != null) ex = ex.InnerException;
+                    nodeResponse.OnError(ex.Message);
+                }
+                return ex.Message;
+            }
+            finally
+            {
+                if (response != null)
+                {
+                    response.Close();
+                }
+                if (request != null)
+                {
+                    request.Abort();
+                }
+            }
         }
 
-        public void write(byte[] data, string encoding = null)
+        private bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
         {
-            if (data != null)
-            {
-                if (_requestStream == null)
-                {
-                    _requestStream = new MemoryStream();
-                    _requestMessage.Content = new StreamContent(_requestStream);
-                }
-                _requestStream.Write(data, 0, data.Length);
-            }
-        }
-
-        public void end(byte[] data = null, string encoding = null)
-        {
-            write(data, encoding);
-            var uriBuilder = new UriBuilder(_options.scheme, _options.hostname, _options.port.Value, _options.path).Uri;
-            _requestMessage.RequestUri = uriBuilder;
-            if (_options.headers != null)
-            {
-                foreach (var kvp in _options.headers.GetProperties())
-                {
-                    _requestMessage.Headers.TryAddWithoutValidation(kvp.Key, new[] { (kvp.Value ?? new object()).ToString() });
-                }
-            }
-            //todo set up cancel optons
-            _responseTask = _client.SendAsync(_requestMessage)
-                .ContinueWith<HttpResponseMessage>(OnResponse, TaskContinuationOptions.NotOnFaulted);
+            return true;
         }
 
         public void abort()
@@ -111,27 +197,6 @@ namespace ClearScript.Manager.Http.Helpers.Node
             //do cancelation
         }
 
-        HttpResponseMessage OnResponse(Task<HttpResponseMessage> responseTask)
-        {
-            var resp = responseTask.Result;
-            List<dynamic> listeners;
-            if (_listeners.TryGetValue("response", out listeners))
-            {
-                var nodeResponse = new NodeHttpResponse(this, responseTask);
-                listeners.ForEach(listener =>
-                {
-                    if (listener is Action<NodeHttpResponse>)
-                    {
-                        ((Action<NodeHttpResponse>)listener)(nodeResponse);
-                    }
-                    else
-                    {
-                        listener.call(null, nodeResponse);
-                    }
-                });
-                nodeResponse.InitEvents();
-            }
-            return resp;
-        }
+
     }
 }

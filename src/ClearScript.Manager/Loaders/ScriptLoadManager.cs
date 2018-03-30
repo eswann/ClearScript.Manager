@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ClearScript.Manager.Loaders
+namespace JavaScript.Manager.Loaders
 {
     /// <summary>
     /// Manages the loading of scripts for the runtime manager.
     /// </summary>
     public static class ScriptLoadManager
     {
-        private static readonly List<IScriptLoader> _loaders = new List<IScriptLoader> {new FileScriptLoader()};
+        private static readonly List<IScriptLoader> _loaders = new List<IScriptLoader> {new EmbeddedScriptLoader(), new HttpScriptLoader(), new DllScriptLoader(), new FileScriptLoader()};
 
         /// <summary>
         /// Register a script loader with the manager.

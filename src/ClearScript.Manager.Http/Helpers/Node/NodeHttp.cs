@@ -1,16 +1,19 @@
-﻿using System.Net.Http;
-
-namespace ClearScript.Manager.Http.Helpers.Node
+﻿
+namespace JavaScript.Manager.Http.Helpers.Node
 {
     
     public class NodeHttp
     {
         public NodeHttpRequest request(dynamic options, dynamic callback)
         {
-            var client = new HttpClient();
-            var requestMessage = new HttpRequestMessage();
-            var req = new NodeHttpRequest(client, requestMessage, options, callback);
+            var req = new NodeHttpRequest(options, callback);
             return req;
+        }
+
+        public string getResult(dynamic options)
+        {
+            var req = new NodeHttpRequest(options);
+            return req.end();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration;
 
-namespace ClearScript.Manager
+namespace JavaScript.Manager
 {
     /// <summary>
     /// Settings to apply to the RuntimeManager and to created runtimes.
@@ -57,7 +57,7 @@ namespace ClearScript.Manager
         /// <summary>
         /// What is the debug port.
         /// </summary>
-        int V8DebugPort { get; }
+        int V8DebugPort { get; set; }
     }
 
     /// <summary>
@@ -147,9 +147,15 @@ namespace ClearScript.Manager
             get { return SettingToBool("DebugEnabled"); }
         }
 
+
+        private int _V8DebugPort;
         public int V8DebugPort
         {
-            get { return SettingToInt("DebugPort", DefaultDebugPort); }
+            get
+            {
+               return _V8DebugPort;
+            }
+            set { _V8DebugPort = value; }
         }
 
 
@@ -237,6 +243,7 @@ namespace ClearScript.Manager
         public int ScriptCacheExpirationSeconds { get; set; }
 
         public bool V8DebugEnabled { get; set; }
+        public bool LocalV8DebugEnabled { get; set; }
 
         public int V8DebugPort { get; set; }
 

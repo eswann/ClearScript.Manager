@@ -1,62 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.ClearScript;
 
-namespace ClearScript.Manager.Http.Helpers.Node
+namespace JavaScript.Manager.Http.Helpers.Node
 {
-    public class NodeHttpResponse : NodeBuffer
+    public class NodeHttpResponse 
     {
-        private NodeHttpRequest _nodeHttpRequest;
-        private readonly Task<HttpResponseMessage> _resp;
+        private readonly string _resp;
         private bool _dataFired;
         private readonly Dictionary<string, List<dynamic>> _listeners = new Dictionary<string, List<dynamic>>();
 
-        public NodeHttpResponse(NodeHttpRequest nodeHttpRequest, Task<HttpResponseMessage> resp)
-            : base(null)
+        public NodeHttpResponse(NodeHttpRequest nodeHttpRequest, string resp = null)
+           
         {
-            // TODO: Complete member initialization
-            _nodeHttpRequest = nodeHttpRequest;
             _resp = resp;
-
-            if (!resp.IsFaulted)
-            {
-                statusCode = (int)resp.Result.StatusCode;
-
-                headers = new PropertyBag();
-
-                foreach (var kvp in resp.Result.Headers)
-                {
-                    headers[kvp.Key] = kvp.Value.FirstOrDefault();
-                }
-
-                if (resp.Result.Content != null)
-                {
-                    foreach (var kvp in resp.Result.Content.Headers)
-                    {
-                        headers[kvp.Key] = kvp.Value.FirstOrDefault();
-                    }
-                }
-            }
+            body = resp;
         }
 
         public void InitEvents()
         {
-            _resp.Result.Content.ReadAsStreamAsync().ContinueWith(x =>
+            try
             {
-                InnerStream = x.Result;
-                OnData();
-            });
+                OnData(_resp);
+
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null) ex = ex.InnerException;
+                OnError(ex.Message);
+            }
         }
         public object body { get; set; }
 
-        internal HttpResponseMessage GetHttpResponseMessage()
-        {
-            return _resp.Result;
-        }
-
+      
         public void on(string eventName, dynamic callbackFn)
         {
 
@@ -77,43 +52,24 @@ namespace ClearScript.Manager.Http.Helpers.Node
 
 
         //todo .. rework as chunked
-        private void OnData()
+        private void OnData(string body)
         {
             List<dynamic> listeners;
-            if (_listeners.TryGetValue("data", out listeners))
-            {
-                listeners.ForEach(listener => listener.call(null, this));
-            }
             if (_listeners.TryGetValue("end", out listeners))
             {
-                listeners.ForEach(listener => listener.call(null));
+                listeners.ForEach(listener => listener.call(null, body));
+            }
+        }
+        public void OnError(string error)
+        {
+            List<dynamic> listeners;
+            if (_listeners.TryGetValue("err", out listeners))
+            {
+                listeners.ForEach(listener => listener.call(null, error));
             }
         }
 
-        public string httpVersion { get; set; }
 
-        public dynamic headers { get; set; }
 
-        public int statusCode { get; set; }
-
-        public byte[] read(int? size = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void pipe(dynamic destinationStream, dynamic options = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void unpipe(dynamic destinationStream = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void unshift(dynamic chunk = null)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ClearScript.Manager.Http")]
-[assembly: AssemblyDescription("Http extension and helpers for ClearScript Manager")]
+[assembly: AssemblyTitle("JavaScript.Manager.Http")]
+[assembly: AssemblyDescription("Http extension and helpers for JavaScript.Manager")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ClearScript.Manager.Http")]
-[assembly: AssemblyCopyright("Copyright ©  2014 Eric Swann et. al. - All rights reserved.")]
+[assembly: AssemblyProduct("JavaScript.Manager.Http")]
+[assembly: AssemblyCopyright("Copyright ©  2014 Eric Swann et. al.2017 nainaigu - All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -15,7 +15,7 @@
 
 using System;
 
-namespace ClearScript.Manager.Caching
+namespace JavaScript.Manager.Caching
 {
     /// <summary> Provides a delegate that performs an atomic update of a key/value pair </summary>
     public delegate TValue KeyValueUpdate<TKey, TValue>(TKey key, TValue original);

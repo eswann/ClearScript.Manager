@@ -1,29 +1,40 @@
 ﻿using System;
 using System.IO;
 
-namespace ClearScript.Manager.Loaders
+namespace JavaScript.Manager.Loaders
 {
     /// <summary>
     /// Loads scripts if they are file-system based scripts.
     /// </summary>
     public class FileScriptLoader : IScriptLoader
     {
-        public string Name { get { return "FileScriptLoader"; } }
+        public string Name { get { return nameof(FileScriptLoader); } }
 
         public bool ShouldUse(IncludeScript script)
         {
-            if (!string.IsNullOrEmpty(script.Code))
-                return false;
-
-            if (Uri.IsWellFormedUriString(script.Uri, UriKind.RelativeOrAbsolute))
+            try
             {
-                var uri = new Uri(script.Uri);
-
-                if (!uri.IsFile)
+                if (!string.IsNullOrEmpty(script.Code) || string.IsNullOrEmpty(script.Uri))
                     return false;
-            }
 
-            return true;
+                if (script.RequiredPackage != null &&
+                    !script.RequiredPackage.RequiredPackageType.Equals(RequiredPackageType.Default))
+                {
+                    return false;
+                }
+
+                if (!File.Exists(script.Uri))
+                {
+                    return false;
+                }
+                
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
         }
 
         public void LoadCode(IncludeScript script)

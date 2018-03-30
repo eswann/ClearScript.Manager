@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager", "ClearScript.Manager\ClearScript.Manager.csproj", "{CFAB8382-B76F-4AA1-AB38-52674F932E52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager", "ClearScript.Manager\JavaScript.Manager.csproj", "{CFAB8382-B76F-4AA1-AB38-52674F932E52}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Test", "ClearScript.Manager.Test\ClearScript.Manager.Test.csproj", "{E7A8A86A-83AF-48CE-9266-E3094218F401}"
 EndProject
@@ -13,13 +13,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Artifacts", "Artifacts", "{
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Demo", "ClearScript.Manager.Demo\ClearScript.Manager.Demo.csproj", "{60385905-F78E-4933-9FB7-DD75D51CA2CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Http", "ClearScript.Manager.Http\JavaScript.Manager.Http.csproj", "{190EF179-83F2-4091-AB95-A609D278ACCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Http", "ClearScript.Manager.Http\ClearScript.Manager.Http.csproj", "{190EF179-83F2-4091-AB95-A609D278ACCC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Http.Test", "ClearScript.Manager.Http.Test\ClearScript.Manager.Http.Test.csproj", "{76F7C7E8-EB54-4840-989C-124DCC30128D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.Http.SQL.Test", "ClearScript.Manager.Http.Test\ClearScript.Manager.Http.SQL.Test.csproj", "{76F7C7E8-EB54-4840-989C-124DCC30128D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearScript.Manager.WebDemo", "ClearScript.Manager.WebDemo\ClearScript.Manager.WebDemo.csproj", "{15DC9470-1862-4F28-B3D9-55EC94BBA695}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Sql", "ClearScript.Manager.Sql\JavaScript.Manager.Sql.csproj", "{0433AA74-0153-4956-8597-D7153E040123}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Tabris", "JavaScript.Manager.Tabris\JavaScript.Manager.Tabris.csproj", "{E37165CD-D4EC-4125-BFF1-CA2D48EC8006}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mega", "Mega\Mega.csproj", "{2F92A6EE-8E12-4BCB-9425-5C98DCC1F94C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Log", "JavaScript.Manager.Log\JavaScript.Manager.Log.csproj", "{D6D9CCD8-9A9B-4F48-8E82-51F28B35A79A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.Sql.AntOrm", "JavaScript.Manager.Sql.AntOrm\JavaScript.Manager.Sql.AntOrm.csproj", "{6CD3F9CE-9186-4F9D-B71B-AFA4ED932DBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScript.Manager.WebView", "JavaScript.Manager.WebView\JavaScript.Manager.WebView.csproj", "{AF037D8E-B7FD-4A1D-A66D-D78A6D36635C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,9 +44,6 @@ Global
 		{E7A8A86A-83AF-48CE-9266-E3094218F401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E7A8A86A-83AF-48CE-9266-E3094218F401}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7A8A86A-83AF-48CE-9266-E3094218F401}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{60385905-F78E-4933-9FB7-DD75D51CA2CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{60385905-F78E-4933-9FB7-DD75D51CA2CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{60385905-F78E-4933-9FB7-DD75D51CA2CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{190EF179-83F2-4091-AB95-A609D278ACCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{190EF179-83F2-4091-AB95-A609D278ACCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{190EF179-83F2-4091-AB95-A609D278ACCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,8 +56,35 @@ Global
 		{15DC9470-1862-4F28-B3D9-55EC94BBA695}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15DC9470-1862-4F28-B3D9-55EC94BBA695}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15DC9470-1862-4F28-B3D9-55EC94BBA695}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0433AA74-0153-4956-8597-D7153E040123}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0433AA74-0153-4956-8597-D7153E040123}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0433AA74-0153-4956-8597-D7153E040123}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0433AA74-0153-4956-8597-D7153E040123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E37165CD-D4EC-4125-BFF1-CA2D48EC8006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E37165CD-D4EC-4125-BFF1-CA2D48EC8006}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E37165CD-D4EC-4125-BFF1-CA2D48EC8006}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E37165CD-D4EC-4125-BFF1-CA2D48EC8006}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F92A6EE-8E12-4BCB-9425-5C98DCC1F94C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F92A6EE-8E12-4BCB-9425-5C98DCC1F94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F92A6EE-8E12-4BCB-9425-5C98DCC1F94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F92A6EE-8E12-4BCB-9425-5C98DCC1F94C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6D9CCD8-9A9B-4F48-8E82-51F28B35A79A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6D9CCD8-9A9B-4F48-8E82-51F28B35A79A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6D9CCD8-9A9B-4F48-8E82-51F28B35A79A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6D9CCD8-9A9B-4F48-8E82-51F28B35A79A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CD3F9CE-9186-4F9D-B71B-AFA4ED932DBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CD3F9CE-9186-4F9D-B71B-AFA4ED932DBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CD3F9CE-9186-4F9D-B71B-AFA4ED932DBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CD3F9CE-9186-4F9D-B71B-AFA4ED932DBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF037D8E-B7FD-4A1D-A66D-D78A6D36635C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF037D8E-B7FD-4A1D-A66D-D78A6D36635C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF037D8E-B7FD-4A1D-A66D-D78A6D36635C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF037D8E-B7FD-4A1D-A66D-D78A6D36635C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7172D67-5AB7-453E-A64C-1060537119D5}
 	EndGlobalSection
 EndGlobal

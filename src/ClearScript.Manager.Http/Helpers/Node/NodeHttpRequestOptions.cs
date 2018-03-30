@@ -1,19 +1,34 @@
+using JavaScript.Manager.Extensions;
 using System;
 using System.Dynamic;
+using System.Net;
 
-namespace ClearScript.Manager.Http.Helpers.Node
+namespace JavaScript.Manager.Http.Helpers.Node
 {
     public class NodeHttpRequestOptions
     {
         public NodeHttpRequestOptions(DynamicObject config)
         {
             host = config.GetMember<string>("host");
+            proxy = config.GetMember<string>("proxy");
+            data = config.GetMember<string>("data");
+            Accept = config.GetMember<string>("accept");
             scheme = config.GetMember("scheme", "http");
             hostname = config.GetMember<string>("hostname") ?? host;
-
-            url = config.GetMember<object>("uri") ?? config.GetMember<object>("url");
+            timeout = config.GetMember("timeout", Convert.ToInt32, 5);
+            url = config.GetMember<string>("uri") ?? config.GetMember<string>("url");
             method = config.GetMember<string>("method");
             headers = config.GetMember<DynamicObject>("headers");
+
+            Object outField;
+
+            if (config.TryGetMember(new SimpleGetMemberBinder("cookieContainer"), out outField))
+            {
+                if (outField is CookieContainer)
+                {
+                    this._CookieContainer = (CookieContainer) outField;
+                }
+            }
 
             port = config.GetMember("port", Convert.ToInt32, 80);
         }
@@ -24,7 +39,11 @@ namespace ClearScript.Manager.Http.Helpers.Node
             set { hostname = value; }
         }
 
+        public int timeout { get; set; }
         public string hostname { get; set; }
+        public string Accept { get; set; }
+        public string data { get; set; }
+        public string proxy { get; set; }
 
         public int? port { get; set; }
         
@@ -38,59 +57,12 @@ namespace ClearScript.Manager.Http.Helpers.Node
 
         public DynamicObject auth { get; set; }
         public DynamicObject agent { get; set; }
+        public CookieContainer _CookieContainer { get; set; }
 
         public string scheme { get; set; }
 
-        public dynamic uri
-        {
-            get { return url; }
-            set { url = value; }
-        }
+        public string url { get; set; }
 
-        public dynamic url
-        {
-            get
-            {
-                if (hostname != null)
-                {
-                    try
-                    {
-                        return new UriBuilder(scheme, hostname, port.HasValue ? port.Value : 80, path).Uri;
-                    }
-                    catch
-                    {
-                    }
-                }
-                return null;
-            }
 
-            set
-            {
-                if (value != null)
-                {
-                    var uriString = value as string;
-                    if (uriString != null)
-                    {
-                        value = new Uri(uriString);
-
-                    }
-                    var valAsUri = value as Uri;
-                    if (valAsUri != null)
-                    {
-                        hostname = valAsUri.Host;
-                        port = valAsUri.Port;
-                        scheme = valAsUri.Scheme;
-                        path = valAsUri.PathAndQuery;
-                        return;
-                    }
-
-                    hostname = value.hostname;
-                    port = value.port;
-                    scheme = value.protocol;
-                    path = value.pathname + value.search;
-
-                }
-            }
-        }
     }
 }

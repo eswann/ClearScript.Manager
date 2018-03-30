@@ -1,6 +1,7 @@
-﻿using System;
+﻿using JavaScript.Manager.Loaders;
+using System;
 
-namespace ClearScript.Manager
+namespace JavaScript.Manager
 {
     /// <summary>
     /// Scope in which a Runtime Manager is requested from the pool and returned upon completion.
@@ -17,6 +18,12 @@ namespace ClearScript.Manager
             RuntimeManager = ManagerPool.CurrentPool.GetRuntime();
         }
 
+        public ManagerScope(RequireManager requireManager)
+        {
+            RuntimeManager = ManagerPool.CurrentPool.GetRuntime();
+            RuntimeManager.RequireManager = requireManager;
+        }
+
         /// <summary>
         /// Allows access to the allocated Runtime Manager from within this scope.
         /// </summary>
@@ -30,6 +37,7 @@ namespace ClearScript.Manager
             if (!_disposed)
             {
                 RuntimeManager.Cleanup();
+                RuntimeManager.RequireManager?.ClearPackages();
                 ManagerPool.CurrentPool.ReturnToPool(RuntimeManager);
                 _disposed = true;
             }

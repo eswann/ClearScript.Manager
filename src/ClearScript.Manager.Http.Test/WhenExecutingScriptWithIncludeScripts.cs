@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using ClearScript.Manager.Http.Loaders;
+﻿using JavaScript.Manager;
 using NUnit.Framework;
 using Should;
+using System.Collections.Generic;
 
 namespace ClearScript.Manager.Http.Test
 {
@@ -9,11 +9,7 @@ namespace ClearScript.Manager.Http.Test
     [TestFixture]
     public class WhenExecutingScriptWithIncludeScripts
     {
-        [SetUp]
-        public void SetUp()
-        {
-            HttpScriptLoader.Register();
-        }
+       
 
         [Test]
         public async void Script_With_Http_Include_Is_Included()

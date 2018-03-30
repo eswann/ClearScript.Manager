@@ -1,7 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
-namespace ClearScript.Manager.Loaders
+namespace JavaScript.Manager.Loaders
 {
+    public enum RequiredPackageType
+    {
+        Default,
+        EmbeddedFile,
+    }
     /// <summary>
     /// Provides a definition for a required package. Must contain a script or a hostobject.  
     /// </summary>
@@ -19,6 +25,40 @@ namespace ClearScript.Manager.Loaders
         /// A script URI of a package javascript.  The export from the package is returned from the require call.
         /// </summary>
         public string ScriptUri { get; set; }
+        public object Exports { get; set; }
+
+        public RequiredPackageType RequiredPackageType { get; set; }
+
+        /// <summary>
+        /// if the ScriptUri is the embedded resource
+        /// </summary>
+        /// <param name="embeddedUrl"></param>
+        /// <returns></returns>
+        public virtual string GetEmbeddedAsset(string embeddedUrl)
+        {
+            try
+            {
+                var thisAssembly = GetType().Assembly;
+                using (var stream = thisAssembly.GetManifestResourceStream(embeddedUrl))
+                {
+                    if (stream == null)
+                    {
+                        return string.Empty;
+                    }
+
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        string content = reader.ReadToEnd();
+                        return content;
+                    }
+                }
+            }
+            catch (System.Exception)
+            {
+                return string.Empty;
+            }
+        }
+
 
         /// <summary>
         /// Host objects needed for the package.  If a script is not included, the first host object is returned when the package is required.

@@ -1,21 +1,21 @@
-﻿using System;
+﻿using Microsoft.ClearScript.V8;
+using System;
 using System.Collections.Concurrent;
-using Microsoft.ClearScript.V8;
 
-namespace ClearScript.Manager.Loaders
+namespace JavaScript.Manager.Loaders
 {
     /// <summary>
     /// Manages Require packages.
     /// </summary>
     public class RequireManager
     {
-        private static readonly ConcurrentDictionary<string, RequiredPackage> _packages = new ConcurrentDictionary<string, RequiredPackage>();
+        private readonly ConcurrentDictionary<string, RequiredPackage> _packages = new ConcurrentDictionary<string, RequiredPackage>();
 
         /// <summary>
         /// Register a packaged for potential requirement.
         /// </summary>
         /// <param name="package">The package to register.</param>
-        public static void RegisterPackage(RequiredPackage package)
+        public  void RegisterPackage(RequiredPackage package)
         {
             _packages.TryAdd(package.PackageId, package);
         }
@@ -26,7 +26,7 @@ namespace ClearScript.Manager.Loaders
         /// <param name="packageId">Id of the package to retrieve.</param>
         /// <param name="package">Package to return.</param>
         /// <returns>Bool indicating if package was found.</returns>
-        public static bool TryGetPackage(string packageId, out RequiredPackage package)
+        public  bool TryGetPackage(string packageId, out RequiredPackage package)
         {
             return _packages.TryGetValue(packageId, out package);
         }
@@ -34,7 +34,7 @@ namespace ClearScript.Manager.Loaders
         /// <summary>
         /// Clears all registered packages.
         /// </summary>
-        public static void ClearPackages()
+        public  void ClearPackages()
         {
             _packages.Clear();
         }
@@ -45,12 +45,13 @@ namespace ClearScript.Manager.Loaders
         /// <param name="compiler">Compiles the required scripts if needed.</param>
         /// <param name="engine">The engine that will run the required script.</param>
         /// <returns></returns>
-        internal static Requirer BuildRequirer(ScriptCompiler compiler, V8ScriptEngine engine)
+        internal  Requirer BuildRequirer(ScriptCompiler compiler, V8ScriptEngine engine)
         {
             var requirer = new Requirer
             {
                 Compiler = compiler,
-                Engine = engine
+                Engine = engine,
+                RequireManager = this
             };
 
             //Need to add this as a host object to the script

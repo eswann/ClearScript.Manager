@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using ClearScript.Manager.Loaders;
+using JavaScript.Manager;
+using JavaScript.Manager.Loaders;
 using NUnit.Framework;
 using Should;
 
@@ -11,7 +12,6 @@ namespace ClearScript.Manager.Test
         [SetUp]
         public void Setup()
         {
-            RequireManager.ClearPackages();
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace ClearScript.Manager.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings {ScriptTimeoutMilliSeconds = 0});
 
-            RequireManager.RegisterPackage(new RequiredPackage { PackageId = "testRequire", ScriptUri = ".\\TestRequire.js" });
+            manager.RequireManager.RegisterPackage(new RequiredPackage { PackageId = "testRequire", ScriptUri = ".\\TestRequire.js" });
 
             await manager.ExecuteAsync("testscript",
                     "var testObject = require('testRequire'); subject.Count = 10; subject.TestString = testObject.getText();",
@@ -40,8 +40,8 @@ namespace ClearScript.Manager.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings {ScriptTimeoutMilliSeconds = 0});
 
-            RequireManager.RegisterPackage(new RequiredPackage { PackageId = "testRequire", ScriptUri = ".\\TestRequire.js" });
-            RequireManager.RegisterPackage(new RequiredPackage
+            manager.RequireManager.RegisterPackage(new RequiredPackage { PackageId = "testRequire", ScriptUri = ".\\TestRequire.js" });
+            manager.RequireManager.RegisterPackage(new RequiredPackage
             {
                 PackageId = "testParentRequire",
                 ScriptUri = ".\\TestParentRequire.js"
@@ -66,8 +66,8 @@ namespace ClearScript.Manager.Test
             var subject = new TestObject();
             var manager = new RuntimeManager(new ManualManagerSettings {ScriptTimeoutMilliSeconds = 0});
 
-            RequireManager.RegisterPackage(new RequiredPackage { PackageId = "testRequire", ScriptUri = ".\\TestRequire.js" });
-            RequireManager.RegisterPackage(new RequiredPackage { PackageId = "testRequire2", ScriptUri = ".\\TestRequire2.js" });
+            manager.RequireManager.RegisterPackage(new RequiredPackage { PackageId = "testRequire", ScriptUri = ".\\TestRequire.js" });
+            manager.RequireManager.RegisterPackage(new RequiredPackage { PackageId = "testRequire2", ScriptUri = ".\\TestRequire2.js" });
 
             await
                 manager.ExecuteAsync("testscript",

@@ -1,94 +1,114 @@
-﻿var http = require('http');
+﻿var javascript_request_factory_http = javascript_request_factory_http || require('javascript_request_factory_http');
 
-function requestFactory(options, callback) {
+function requestFactory() {
 
-    var cfg = options;
-    if (typeof options === 'string') {
-        cfg = { uri: options };
+    
+}
+
+requestFactory.create = function (option) {
+    
+    return new requestFactory.Request(option);
+}
+
+function Request(option) {
+    this.options = option || {};
+    if (!this.options.method) {
+        this.options.method = 'GET';
     }
-
-    cfg.callback = callback || options.callback;
-
-    return new requestFactory.Request(cfg);
+   
+    if (this.options.method.toLowerCase() != 'get') {
+        if (!this.options.accept) {
+            this.options.accept = 'application/json';
+        }
+    }
 }
 
+Request.prototype.getString = function (option) {
+    return javascript_request_factory_http.getResult(this.extend(option, this.options));
+};
 
-function Request(options) {
-    this.options = options;
-    this.go();
+Request.prototype.getJson = function (option) {
+    var body = javascript_request_factory_http.getResult(this.extend(option, this.options));
+    try {
+        body = JSON.parse(body);
+    } catch (e) { }
+    return body;
+};
 
-}
-
-Request.prototype.go = function () {
-    var me = this;
-    var strings = [];
-    var buffer;
-
-    me.req = http.request(me.options, function (res) {
-        if (me.options.callback) {
-            res.on('data', function (chunk) {
-                var me = this;
-                if (Buffer.isBuffer(chunk)) {
-                    if (!buffer) {
-                        buffer = new Buffer(1024);
+Request.prototype.extend = (function () {
+    var isObjFunc = function (name) {
+        var toString = Object.prototype.toString;
+        return function () {
+            return toString.call(arguments[0]) === '[object ' + name + ']';
+        }
+    }
+    var isObject = isObjFunc('Object'),
+        isArray = isObjFunc('Array'),
+        isBoolean = isObjFunc('Boolean');
+    return function extend() {
+        var index = 0, isDeep = false, obj, copy, destination, source, i;
+        if (isBoolean(arguments[0])) {
+            index = 1;
+            isDeep = arguments[0];
+        }
+        for (i = arguments.length - 1; i > index; i--) {
+            destination = arguments[i - 1];
+            source = arguments[i];
+            if (isObject(source) || isArray(source)) {
+                for (var property in source) {
+                    obj = source[property];
+                    if (isDeep && (isObject(obj) || isArray(obj))) {
+                        copy = isObject(obj) ? {} : [];
+                        var extended = extend(isDeep, copy, obj);
+                        destination[property] = extended;
+                    } else {
+                        destination[property] = source[property];
                     }
-                    //hack till i get the right bla
-                    chunk.copy(buffer);
-                } else {
-                    strings.push(chunk);
                 }
-            });
-            res.on('end', function () {
-                me.onEnd(strings, buffer, res, me.options.callback);
-            });
+            } else {
+                destination = source;
+            }
         }
-    });
-
-    me.req.end();
-    //todo sedn data on req.
-
-};
-
-
-Request.prototype.onEnd = function (strings, buffer, response, callback) {
-    var self = this;
-    if (self._aborted) {
-        return;
+        return destination;
     }
+})();
 
-    if (buffer.length) {
-        if (self.encoding === null) {
-            // response.body = buffer
-            // can't move to this until https://github.com/rvagg/bl/issues/13
-            response.body = buffer.slice();
-        } else {
-            response.body = buffer.asString(self.encoding);
-        }
-    } else if (strings.length) {
-        // The UTF8 BOM [0xEF,0xBB,0xBF] is converted to [0xFE,0xFF] in the JS UTC16/UCS2 representation.
-        // Strip this value out when the encoding is set to 'utf8', as upstream consumers won't expect it and it breaks JSON.parse().
-        if (self.encoding === 'utf8' && strings[0].length > 0 && strings[0][0] === '\uFEFF') {
-            strings[0] = strings[0].substring(1);
-        }
-        response.body = strings.join('');
-    }
+//Request.prototype.go = function () {
+//    var me = this;
 
-    if (self.options.json) {
-        try {
-            response.body = JSON.parse(response.body);
-        } catch (e) { }
-    }
+//    me.req = http.request(me.options, function (res) {
+//        if (me.options.callback) {
+//            res.on('end', function (body) {
+//                me.onEnd(body, me.options.callback);
+//            });
+//            res.on('err', function (errmsg) {
+//                me.options.callback(errmsg);
+//            });
+//        }
+//    });
 
-    if (typeof response.body === 'undefined' && !self._json) {
-        response.body = '';
-    }
-    callback.call(null, null, response, response.body);
-};
+//    return me.req.end();
 
-if (typeof module != 'undefined' && module != null) {
-    module.exports = request;
-}
+//};
+
+
+//Request.prototype.onEnd = function (body, callback) {
+//    var self = this;
+   
+//   // Console.WriteLine(body);
+//    if (self.options.json) {
+//        try {
+//            body = JSON.parse(body);
+//        } catch (e) { }
+//    }
+//    //Console.WriteLine(body[0].cargoTypeName);
+//    callback.call(null, null, body);
+//};
+
+//if (typeof module != 'undefined' && module != null) {
+//    module.exports = request;
+//}
 
 requestFactory.Request = Request;
 
-request.exports = requestFactory;
+this.exports = requestFactory;

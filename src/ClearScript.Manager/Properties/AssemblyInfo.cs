@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ClearScript.Manager")]
-[assembly: AssemblyDescription("ClearScript Manager encapsulates the use of the ClearScript V8 engine in multi-use scenarios.  Newest version supports ClearScript 5.4 on .Net 4.5")]
+[assembly: AssemblyTitle("JavaScript.Manager")]
+[assembly: AssemblyDescription("JavaScript.Manager encapsulates the use of the ClearScript V8 engine in multi-use scenarios.  Newest version supports ClearScript 5.4 on .Net 4.5")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ClearScript.Manager")]
-[assembly: AssemblyCopyright("Copyright ©  2014, 2015 Eric Swann et. al. - All rights reserved.")]
+[assembly: AssemblyProduct("JavaScript.Manager")]
+[assembly: AssemblyCopyright("Copyright ©  2014, 2015 Eric Swann et. al. 2017 nainaigu - All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

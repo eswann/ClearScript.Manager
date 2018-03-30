@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ClearScript.Manager
+namespace JavaScript.Manager
 {
     /// <summary>
     /// Options for execution of of scripts by the Runtime Manager

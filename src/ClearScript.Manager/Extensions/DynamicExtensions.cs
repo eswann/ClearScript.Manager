@@ -1,18 +1,19 @@
-﻿using System;
+﻿using Microsoft.CSharp.RuntimeBinder;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Microsoft.CSharp.RuntimeBinder;
 using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 
-namespace ClearScript.Manager.Extensions
+namespace JavaScript.Manager.Extensions
 {
     /// <summary>
     /// Extension methods to get properties of dynamic objects.
     /// </summary>
-    internal static class DynamicExtensions
+    public static class DynamicExtensions
     {
         private static readonly ConcurrentDictionary<string, Delegate> _delegateCache = new ConcurrentDictionary<string, Delegate>();
 
@@ -53,5 +54,80 @@ namespace ClearScript.Manager.Extensions
             return source.GetType().GetProperty(member, BindingFlags.Public | BindingFlags.Instance).GetValue(source, null);
         }
 
+
+        public static bool TryGetMember(this DynamicObject source, string name, out object outField)
+        {
+
+            outField = ((dynamic)source).field;
+            return !(outField is Microsoft.ClearScript.Undefined);
+        }
+
+        public static dynamic AsDynamic(this DynamicObject obj)
+        {
+            return obj;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static IEnumerable<KeyValuePair<string, object>> GetDynamicProperties(this DynamicObject obj)
+        {
+            if (obj == null)
+            {
+                yield break;
+            }
+            foreach (var varName in obj.GetDynamicMemberNames())
+            {
+                object prop = obj.GetMember<object>(varName);
+                yield return new KeyValuePair<string, object>(varName, prop);
+            }
+        }
+
+        public static T GetMember<T>(this DynamicObject source, string name, T defaultValue = default(T))
+        {
+            Object outField;
+
+            if (source.TryGetMember(new SimpleGetMemberBinder(name), out outField))
+            {
+                if (outField is Microsoft.ClearScript.Undefined)
+                {
+                    return defaultValue;
+                }
+                return (T)outField;
+            }
+
+            return defaultValue;
+        }
+
+        public static T GetMember<T>(this DynamicObject source, string name, Func<object, T> converter, T defaultValue = default(T))
+        {
+            Object outField;
+
+            if (source.TryGetMember(new SimpleGetMemberBinder(name), out outField))
+            {
+                if (outField is Microsoft.ClearScript.Undefined)
+                {
+                    return defaultValue;
+                }
+                return converter(outField);
+            }
+
+            return defaultValue;
+        }
+    }
+
+    public class SimpleGetMemberBinder : GetMemberBinder
+    {
+        public SimpleGetMemberBinder(string name)
+            : base(name, true)
+        {
+        }
+
+        public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
+        {
+            return null;
+        }
     }
 }

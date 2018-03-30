@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2F92A6EE-8E12-4BCB-9425-5C98DCC1F94C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mega</RootNamespace>
+    <AssemblyName>Tabris.Mega</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClearScript.Manager.Http\JavaScript.Manager.Http.csproj">
+      <Project>{190ef179-83f2-4091-ab95-a609d278accc}</Project>
+      <Name>JavaScript.Manager.Http</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClearScript.Manager.Sql\JavaScript.Manager.Sql.csproj">
+      <Project>{0433aa74-0153-4956-8597-d7153e040123}</Project>
+      <Name>JavaScript.Manager.Sql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClearScript.Manager\JavaScript.Manager.csproj">
+      <Project>{cfab8382-b76f-4aa1-ab38-52674f932e52}</Project>
+      <Name>JavaScript.Manager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JavaScript.Manager.Log\JavaScript.Manager.Log.csproj">
+      <Project>{d6d9ccd8-9a9b-4f48-8e82-51f28b35a79a}</Project>
+      <Name>JavaScript.Manager.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JavaScript.Manager.Sql.AntOrm\JavaScript.Manager.Sql.AntOrm.csproj">
+      <Project>{6cd3f9ce-9186-4f9d-b71b-afa4ed932dbb}</Project>
+      <Name>JavaScript.Manager.Sql.AntOrm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JavaScript.Manager.Tabris\JavaScript.Manager.Tabris.csproj">
+      <Project>{e37165cd-d4ec-4125-bff1-ca2d48ec8006}</Project>
+      <Name>JavaScript.Manager.Tabris</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JavaScript.Manager.WebView\JavaScript.Manager.WebView.csproj">
+      <Project>{af037d8e-b7fd-4a1d-a66d-d78a6d36635c}</Project>
+      <Name>JavaScript.Manager.WebView</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del /f /s /q merge* &amp; "$(SolutionDir)\Tools\ILMerge\ILMerge.exe" /t:dll /ndebug /targetplatform:v4 /log /out:Tabris.dll Tabris.Mega.dll JavaScript.Manager.dll JavaScript.Manager.Http.dll JavaScript.Manager.Sql.dll JavaScript.Manager.Sql.AntOrm.dll JavaScript.Manager.Log.dll JavaScript.Manager.WebView.dll JavaScript.Manager.Tabris.dll &gt; merge.log &amp; del /f /s /q Tabris.Mega*</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

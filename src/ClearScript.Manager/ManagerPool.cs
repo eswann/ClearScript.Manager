@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace ClearScript.Manager
+namespace JavaScript.Manager
 {
     /// <summary>
     /// Defines a pool from which Runtime Managers are requested.

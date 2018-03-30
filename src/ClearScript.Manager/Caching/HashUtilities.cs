@@ -15,7 +15,7 @@
 
 using System;
 
-namespace ClearScript.Manager.Caching
+namespace JavaScript.Manager.Caching
 {
     internal class HashUtilities
     {

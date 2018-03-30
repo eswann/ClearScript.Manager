@@ -1,8 +1,9 @@
 using System;
 using System.Dynamic;
 using System.Net.Http;
+using JavaScript.Manager.Extensions;
 
-namespace ClearScript.Manager.Http.Helpers.Node
+namespace JavaScript.Manager.Http.Helpers.Node
 {
     public class NodeRequestModule
     {
@@ -14,7 +15,7 @@ namespace ClearScript.Manager.Http.Helpers.Node
         {
             var options = new NodeHttpRequestOptions(config);
             var uriObj = new Uri((config.GetMember<object>("uri") ?? config.GetMember<object>("url")).ToString());
-            options.url = (config.GetMember<object>("uri") ?? config.GetMember<object>("url"));
+            options.url = (config.GetMember<string>("uri") ?? config.GetMember<string>("url"));
             options.host = uriObj.Host;
             options.hostname = uriObj.Host;
             options.scheme = uriObj.Scheme;
@@ -24,7 +25,7 @@ namespace ClearScript.Manager.Http.Helpers.Node
             options.headers = config.GetMember<DynamicObject>("headers");
             bool isJson = config.GetMember("json", false);
 
-            var req = new NodeHttpRequest(new HttpClient(), new HttpRequestMessage(), options);
+            var req = new NodeHttpRequest(options);
             Action<NodeHttpResponse> wrapperCallback = resp =>
             {
                 if (callback == null)
@@ -33,19 +34,15 @@ namespace ClearScript.Manager.Http.Helpers.Node
                 }
                 //    string body = null;
                 object body = null;
-                var apiResp = resp.GetHttpResponseMessage();
-                if (apiResp.Content != null && apiResp.Content.Headers.ContentLength > 0)
+                var apiResp = resp.body as string;
+                if (isJson)
                 {
-                    if (isJson)
-                    {
-                        string xxx = apiResp.Content.ReadAsStringAsync().Result;
-                        var parser = (dynamic)engine.Evaluate("JSON.parse");
-                        body = parser(xxx);
-                    }
-                    else
-                    {
-                        body = apiResp.Content.ReadAsStringAsync().Result;
-                    }
+                    var parser = (dynamic)engine.Evaluate("JSON.parse");
+                    body = parser(apiResp);
+                }
+                else
+                {
+                    body = apiResp;
                 }
 
                 callback.AsDynamic().call(null, null, resp, body);
